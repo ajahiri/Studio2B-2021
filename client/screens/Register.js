@@ -1,9 +1,9 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-const RegisterScreen = () => {
+const Register = () => {
   return (
-    <View>
+    <View style={styles}>
       <Text>Register Screen</Text>
     </View>
   );
@@ -11,4 +11,4 @@ const RegisterScreen = () => {
 
 const styles = StyleSheet.create({});
 
-export default RegisterScreen;
+export default Register;
