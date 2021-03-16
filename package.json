@@ -2,9 +2,10 @@
   "name": "studio2b-2021",
   "version": "0.1.0",
   "scripts": {
-    "install-deps": "npm i && npm run install-deps:client && npm run install-deps:server",
-    "install-deps:client": "cd ./client && npm i",
-    "install-deps:server": "cd ./server && npm i"
+    "install-deps": "npm install && npm run install-deps:client && npm run install-deps:server",
+    "install-deps:client": "cd ./client && npm install",
+    "install-deps:server": "cd ./server && npm install",
+    "test:client": "cd ./client && npm test"
   },
   "devDependencies": {
     "prettier": "2.2.1"
