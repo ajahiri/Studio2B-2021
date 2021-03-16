@@ -8,7 +8,7 @@ import Register from "../screens/Register";
 
 const Stack = createStackNavigator();
 
-function AppNavigator() {
+export default function AppNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -23,5 +23,3 @@ function AppNavigator() {
     </NavigationContainer>
   );
 }
-
-export default AppNavigator;

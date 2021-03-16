@@ -1,4 +1,5 @@
 {
+  "name": "@studio2b-2021/client",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -31,8 +32,7 @@
     "@babel/core": "~7.9.0",
     "@testing-library/react-native": "^7.2.0",
     "jest": "^26.6.3",
-    "jest-expo": "^40.0.2",
-    "prettier": "2.2.1"
+    "jest-expo": "^40.0.2"
   },
   "private": true
 }

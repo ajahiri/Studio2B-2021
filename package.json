@@ -1,0 +1,12 @@
+{
+  "name": "studio2b-2021",
+  "version": "0.1.0",
+  "scripts": {
+    "install-deps": "npm i && npm run install-deps:client && npm run install-deps:server",
+    "install-deps:client": "cd ./client && npm i",
+    "install-deps:server": "cd ./server && npm i"
+  },
+  "devDependencies": {
+    "prettier": "2.2.1"
+  }
+}
