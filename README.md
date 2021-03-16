@@ -8,8 +8,8 @@ Software Engineering Studio 2B Autumn 2021 (Group 1)
 
 This project is split into two packages:
 
-* [`client`](./packages/client) (`@studio2b-2021/client`) – React frontend
-* [`server`](./packages/server) (`@studio2b-2021/server`) – Express.js backend
+* [`client`](./client) (`@studio2b-2021/client`) – React frontend
+* [`server`](./server) (`@studio2b-2021/server`) – Express.js backend
 
 More information for each package is available in their respective `README.md`
 files.
