@@ -5,7 +5,9 @@
     "install-deps": "npm install && npm run install-deps:client && npm run install-deps:server",
     "install-deps:client": "cd ./client && npm install",
     "install-deps:server": "cd ./server && npm install",
-    "test:client": "cd ./client && npm test"
+    "test:client": "cd ./client && npm test",
+    "test:server": "cd ./server && npm test",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "prettier": "2.2.1"

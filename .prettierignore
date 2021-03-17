@@ -1,0 +1,15 @@
+# Build artifacts
+node_modules
+client/node_modules
+server/node_modules
+
+# Client files and folders
+client/.expo
+client/.expo-shared
+client/assets
+client/package-lock.json
+client/README.md
+
+# Server files folders
+server/package-lock.json
+server/README.md
