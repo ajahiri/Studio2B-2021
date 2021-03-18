@@ -13,12 +13,17 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
           name="Login"
           component={Login}
           options={{ headerShown: false }}
         />
         <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Home" component={Home} />
       </Stack.Navigator>
     </NavigationContainer>
   );

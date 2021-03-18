@@ -19,7 +19,7 @@ import {
 } from "@expo-google-fonts/comfortaa";
 import { TextInput } from "react-native-gesture-handler";
 
-export default function Login() {
+export default function Login({ navigation }) {
   const returnImage = require("../../client/assets/Login/Union.png");
   const logo = require("../../client/assets/Login/Logo.png");
 
@@ -45,9 +45,15 @@ export default function Login() {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <View style={styles.returnImage}>
-          <Image source={returnImage} />
-        </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Home")}
+          style={styles.returnButton}
+        >
+          <View style={styles.returnImage}>
+            <Image source={returnImage} />
+          </View>
+        </TouchableOpacity>
+
         <View style={styles.logoContainer}>
           <Image source={logo} style={styles.logoImage} />
           <Text style={styles.title}>Login</Text>
@@ -91,7 +97,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     fontWeight: "600",
-    fontFamily: "Roboto",
   },
   input: {
     borderWidth: 2,
@@ -112,6 +117,7 @@ const styles = StyleSheet.create({
   logoContainer: {
     display: "flex",
     flexDirection: "row",
+    alignItems: "center",
   },
   loginButton: {
     height: 52,
@@ -124,12 +130,14 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     margin: "auto",
     fontWeight: "bold",
-    fontFamily: "Roboto",
   },
   forgotPassword: {
     color: "#828489",
     fontSize: 14,
     textAlign: "center",
     marginTop: 10,
+  },
+  returnButton: {
+    width: 20,
   },
 });
