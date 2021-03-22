@@ -1,15 +1,16 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import Home from "../screens/Home";
-import Login from "../screens/Login";
-import Register from "../screens/Register";
-import ImageAuthRegistration from "../screens/ImageAuthRegistration";
+import Home from '../screens/Home';
+import Login from '../screens/Login';
+import Register from '../screens/Register';
+import ImageAuthRegistration from '../screens/ImageAuthRegistration';
+import Dashboard from '../screens/Dashboard';
 
 const Stack = createStackNavigator();
 
-export default function AppNavigator() {
+const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -29,6 +30,11 @@ export default function AppNavigator() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{ headerLeft: null }}
+        />
+        <Stack.Screen
           name="ImageAuthRegistration"
           component={ImageAuthRegistration}
           options={{ headerShown: false }}
@@ -36,4 +42,6 @@ export default function AppNavigator() {
       </Stack.Navigator>
     </NavigationContainer>
   );
-}
+};
+
+export default AppNavigator;

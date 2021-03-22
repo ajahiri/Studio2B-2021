@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   Button,
   TouchableOpacity,
   Linking,
-} from "react-native";
+} from 'react-native';
 import {
   useFonts,
   Comfortaa_300Light,
@@ -16,23 +16,14 @@ import {
   Comfortaa_500Medium,
   Comfortaa_600SemiBold,
   Comfortaa_700Bold,
-} from "@expo-google-fonts/comfortaa";
-import { TextInput } from "react-native-gesture-handler";
+} from '@expo-google-fonts/comfortaa';
+import { TextInput } from 'react-native-gesture-handler';
+
+import { Formik } from 'formik';
 
 export default function Login({ navigation }) {
-  const returnImage = require("../../client/assets/Login/Union.png");
-  const logo = require("../../client/assets/Login/Logo.png");
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const onChangeEmail = email => {
-    setEmail(email);
-  };
-
-  const onChangePassword = password => {
-    setPassword(password);
-  };
+  const returnImage = require('../../client/assets/Login/Union.png');
+  const logo = require('../../client/assets/Login/Logo.png');
 
   let [fontsLoaded] = useFonts({
     Comfortaa_300Light,
@@ -46,9 +37,8 @@ export default function Login({ navigation }) {
     <SafeAreaView>
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
-          style={styles.returnButton}
-        >
+          onPress={() => navigation.navigate('Home')}
+          style={styles.returnButton}>
           <View style={styles.returnImage}>
             <Image source={returnImage} />
           </View>
@@ -59,24 +49,43 @@ export default function Login({ navigation }) {
           <Text style={styles.title}>Login</Text>
         </View>
 
-        <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            onChangeText={onChangeEmail}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry={true}
-            onChangeText={onChangePassword}
-          />
-        </View>
-        <View style={styles.loginButtonContainer}>
-          <TouchableOpacity style={styles.loginButton}>
-            <Text style={styles.buttonText}>LOG IN</Text>
-          </TouchableOpacity>
-        </View>
+        <Formik
+          initialValues={{
+            email: '',
+            password: '',
+          }}
+          onSubmit={values => {
+            console.log(values);
+            navigation.navigate('Dashboard');
+          }}>
+          {props => (
+            <View>
+              <View style={styles.form}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  onChangeText={props.handleChange('email')}
+                  value={props.values.email}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  secureTextEntry={true}
+                  onChangeText={props.handleChange('password')}
+                  value={props.values.password}
+                />
+              </View>
+              <View style={styles.loginButtonContainer}>
+                <TouchableOpacity
+                  style={styles.loginButton}
+                  onPress={props.handleSubmit}>
+                  <Text style={styles.buttonText}>LOG IN</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </Formik>
         <TouchableOpacity>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
@@ -96,11 +105,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 40,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   input: {
     borderWidth: 2,
-    borderColor: "black",
+    borderColor: 'black',
     height: 52,
     marginBottom: 20,
     paddingLeft: 20,
@@ -115,26 +124,26 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   logoContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   loginButton: {
     height: 52,
-    backgroundColor: "#3D3ABF",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#3D3ABF',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 8,
   },
   buttonText: {
-    color: "#FFFFFF",
-    margin: "auto",
-    fontWeight: "bold",
+    color: '#FFFFFF',
+    margin: 'auto',
+    fontWeight: 'bold',
   },
   forgotPassword: {
-    color: "#828489",
+    color: '#828489',
     fontSize: 14,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 10,
   },
   returnButton: {

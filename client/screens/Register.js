@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,23 +6,23 @@ import {
   View,
   TouchableOpacity,
   Image,
-} from "react-native";
-import CheckBox from "@react-native-community/checkbox";
-import Icon from "react-native-vector-icons/Feather";
+} from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
+import Icon from 'react-native-vector-icons/Feather';
+import { Formik } from 'formik';
 
-import { TextInput } from "react-native-gesture-handler";
+import { TextInput } from 'react-native-gesture-handler';
 
 export default function Register({ navigation }) {
-  const returnImage = require("../../client/assets/Login/Union.png");
-  const logo = require("../../client/assets/Login/Logo.png");
+  const returnImage = require('../../client/assets/Login/Union.png');
+  const logo = require('../../client/assets/Login/Logo.png');
 
   return (
     <SafeAreaView>
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
-          style={styles.returnButton}
-        >
+          onPress={() => navigation.navigate('Home')}
+          style={styles.returnButton}>
           <View style={styles.returnImage}>
             <Image source={returnImage} />
           </View>
@@ -31,35 +31,70 @@ export default function Register({ navigation }) {
           <Image source={logo} style={styles.logoImage} />
           <Text style={styles.title}>Register</Text>
         </View>
-        <View style={styles.form}>
-          <TextInput style={styles.input} placeholder="First Name"></TextInput>
-          <TextInput style={styles.input} placeholder="Last Name"></TextInput>
-          <TextInput style={styles.input} placeholder="University"></TextInput>
-          <TextInput style={styles.input} placeholder="Email"></TextInput>
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry={true}
-          ></TextInput>
-        </View>
-        <View style={styles.checkBoxContainer}>
-          <View style={styles.checkBox}>
-            <CheckBox style={{ boxType: "circle", lineWidth: 10 }} />
-            <Text>Register as Teacher?</Text>
-          </View>
-        </View>
-        <View style={styles.loginButtonContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("ImageAuthRegistration")}
-            style={styles.loginButton}
-          >
-            <Text style={styles.buttonText}>NEXT</Text>
-          </TouchableOpacity>
-          <Text style={styles.disclaimerText}>
-            By signing up, you agree to SES2B’s Terms of Service and Privacy
-            Policy.
-          </Text>
-        </View>
+        <Formik
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            university: '',
+            email: '',
+            password: '',
+          }}
+          onSubmit={values => {
+            console.log(values);
+            navigation.navigate('Dashboard');
+          }}>
+          {props => (
+            <View>
+              <View style={styles.form}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="First Name"
+                  onChangeText={props.handleChange('firstName')}
+                  value={props.values.firstName}></TextInput>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Last Name"
+                  onChangeText={props.handleChange('lastName')}
+                  value={props.values.lastName}></TextInput>
+                <TextInput
+                  style={styles.input}
+                  placeholder="University"
+                  onChangeText={props.handleChange('university')}
+                  value={props.values.university}></TextInput>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  onChangeText={props.handleChange('email')}
+                  value={props.values.email}></TextInput>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  secureTextEntry={true}
+                  onChangeText={props.handleChange('password')}
+                  value={props.values.password}></TextInput>
+              </View>
+              <View style={styles.checkBoxContainer}>
+                <View style={styles.checkBox}>
+                  <CheckBox style={{ boxType: 'circle', lineWidth: 10 }} />
+                  <Text>Register as Teacher?</Text>
+                </View>
+              </View>
+              <View style={styles.loginButtonContainer}>
+                <TouchableOpacity
+                  // onPress={() => navigation.navigate('ImageAuthRegistration')}
+                  onPress={props.handleSubmit}
+                  style={styles.loginButton}>
+                  <Text style={styles.buttonText}>NEXT</Text>
+                </TouchableOpacity>
+                <Text style={styles.disclaimerText}>
+                  By signing up, you agree to SES2B’s Terms of Service and
+                  Privacy Policy.
+                </Text>
+              </View>
+            </View>
+          )}
+        </Formik>
       </View>
     </SafeAreaView>
   );
@@ -76,11 +111,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 40,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   input: {
     borderWidth: 2,
-    borderColor: "black",
+    borderColor: 'black',
     height: 52,
     marginBottom: 20,
     paddingLeft: 20,
@@ -95,46 +130,46 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   logoContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   loginButton: {
     height: 52,
-    backgroundColor: "#3D3ABF",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#3D3ABF',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 8,
   },
   buttonText: {
-    color: "#FFFFFF",
-    margin: "auto",
-    fontWeight: "bold",
+    color: '#FFFFFF',
+    margin: 'auto',
+    fontWeight: 'bold',
   },
   forgotPassword: {
-    color: "#828489",
+    color: '#828489',
     fontSize: 14,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 10,
   },
   returnButton: {
     width: 20,
   },
   checkBox: {
-    backgroundColor: "#C8CCFF",
-    width: "50%",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    alignContent: "center",
-    justifyContent: "center",
+    backgroundColor: '#C8CCFF',
+    width: '50%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
     borderRadius: 7,
     padding: 7,
   },
   checkBoxContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginTop: -10,
   },
   loginButtonContainer: {
