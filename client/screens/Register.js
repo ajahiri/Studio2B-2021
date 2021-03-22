@@ -8,7 +8,7 @@ import {
   Image,
 } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
-import DropDownPicker from "react-native-dropdown-picker";
+import Icon from "react-native-vector-icons/Feather";
 
 import { TextInput } from "react-native-gesture-handler";
 
@@ -44,24 +44,22 @@ export default function Register({ navigation }) {
         </View>
         <View style={styles.checkBoxContainer}>
           <View style={styles.checkBox}>
-            {/* <CheckBox style={{ boxType: "circle", lineWidth: 10 }} /> */}
+            <CheckBox style={{ boxType: "circle", lineWidth: 10 }} />
             <Text>Register as Teacher?</Text>
           </View>
         </View>
         <View style={styles.loginButtonContainer}>
-          <TouchableOpacity style={styles.loginButton}>
-            <Text style={styles.buttonText}>LOG IN</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ImageAuthRegistration")}
+            style={styles.loginButton}
+          >
+            <Text style={styles.buttonText}>NEXT</Text>
           </TouchableOpacity>
+          <Text style={styles.disclaimerText}>
+            By signing up, you agree to SES2B’s Terms of Service and Privacy
+            Policy.
+          </Text>
         </View>
-        <DropDownPicker
-          items={[
-            { label: "Item 1", value: "item1" },
-            { label: "Item 2", value: "item2" },
-          ]}
-          defaultIndex={0}
-          containerStyle={{ height: 40 }}
-          onChangeItem={item => console.log(item.label, item.value)}
-        />
       </View>
     </SafeAreaView>
   );
@@ -140,6 +138,10 @@ const styles = StyleSheet.create({
     marginTop: -10,
   },
   loginButtonContainer: {
+    paddingTop: 10,
+  },
+  disclaimerText: {
+    fontSize: 12,
     paddingTop: 10,
   },
 });
