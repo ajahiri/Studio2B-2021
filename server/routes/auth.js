@@ -9,6 +9,12 @@ const router = express.Router();
 const User = require("../models/User");
 const { Mongoose } = require("mongoose");
 
+const JWT_SECRET = process.env.JWT_SECRET || "some_secret";
+if (JWT_SECRET === "some_secret")
+  console.log(
+    "JWT SECRET IS NOT SECURE, PLEASE SET A SECURE SECRET IN .ENV FILE!"
+  );
+
 const registerValidation = [
   check("fullName")
     .isLength({ min: 2 })
@@ -78,10 +84,7 @@ router.post("/login", loginValidation, async (req, res) => {
   if (!validPassword) res.status(404).send("Invalid email or password");
 
   // create and assign a token to user
-  const token = jwt.sign(
-    { _id: user._id, email: user.email },
-    "SUPERSECRETKEY"
-  );
+  const token = jwt.sign({ _id: user._id, email: user.email }, JWT_SECRET);
   res
     .header("auth-token", token)
     .send({ message: "Logged in successfully", token });
