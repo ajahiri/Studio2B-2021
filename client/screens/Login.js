@@ -8,6 +8,7 @@ import {
   Button,
   TouchableOpacity,
   Linking,
+  Alert,
 } from 'react-native';
 import {
   useFonts,
@@ -21,9 +22,22 @@ import { TextInput } from 'react-native-gesture-handler';
 
 import { Formik } from 'formik';
 
+import * as yup from 'yup';
+
+import { useDispatch } from 'react-redux';
+import * as authActions from '../redux/actions/authActions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const formSchema = yup.object({
+  email: yup.string().email().required(),
+  password: yup.string().required().min(6),
+});
+
 export default function Login({ navigation }) {
   const returnImage = require('../../client/assets/Login/Union.png');
   const logo = require('../../client/assets/Login/Logo.png');
+
+  const dispatch = useDispatch();
 
   let [fontsLoaded] = useFonts({
     Comfortaa_300Light,
@@ -55,9 +69,22 @@ export default function Login({ navigation }) {
             password: '',
           }}
           onSubmit={values => {
-            console.log(values);
-            navigation.navigate('Dashboard');
-          }}>
+            dispatch(authActions.loginUser(values))
+              .then(async result => {
+                if (result.success) {
+                  try {
+                    await AsyncStorage.setItem('token', result.token);
+                    navigation.navigate('Dashboard');
+                  } catch (error) {
+                    console.log(error);
+                  }
+                } else {
+                  Alert.alert(result.message);
+                }
+              })
+              .catch(err => console.log(err));
+          }}
+          validationSchema={formSchema}>
           {props => (
             <View>
               <View style={styles.form}>
@@ -67,14 +94,18 @@ export default function Login({ navigation }) {
                   keyboardType="email-address"
                   onChangeText={props.handleChange('email')}
                   value={props.values.email}
+                  onBlur={props.handleBlur('email')}
                 />
+                <Text>{props.touched.email && props.errors.email}</Text>
                 <TextInput
                   style={styles.input}
                   placeholder="Password"
                   secureTextEntry={true}
                   onChangeText={props.handleChange('password')}
                   value={props.values.password}
+                  onBlur={props.handleBlur('password')}
                 />
+                <Text>{props.touched.password && props.errors.password}</Text>
               </View>
               <View style={styles.loginButtonContainer}>
                 <TouchableOpacity
