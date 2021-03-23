@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,22 +6,53 @@ import {
   Image,
   SafeAreaView,
   TouchableOpacity,
+  Button,
 } from 'react-native';
 
-export default function Dashboard({ navigation }) {
+const jwtDecode = require('jwt-decode');
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const Dashboard = props => {
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+
   const logo = require('../../client/assets/Login/Logo.png');
+
+  const loadProfile = async () => {
+    const token = await AsyncStorage.getItem('token');
+    if (!token) {
+      props.navigation.navigate('Login');
+    } else {
+      const decoded = jwtDecode(token);
+      setFullName(decoded.fullName);
+      setEmail(decoded.email);
+      console.log(decoded);
+    }
+  };
+
+  const logout = props => {
+    AsyncStorage.removeItem('token')
+      .then(() => {
+        props.navigation.replace('Login');
+      })
+      .catch(err => console.log(err));
+  };
+
+  useEffect(() => {
+    loadProfile();
+  });
 
   return (
     <SafeAreaView style={styles.view}>
       <View style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image style={styles.logoImage} source={logo} />
-          <Text style={styles.title}>DASHBOARD</Text>
-        </View>
+        <Text>Welcome {fullName ? fullName : ''}</Text>
+        <Text>{email ? email : ''}</Text>
+        <Button title="LogOut" onPress={() => logout(props)}></Button>
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -48,43 +79,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 48,
   },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    position: 'absolute',
-    bottom: 0,
-    marginBottom: 20,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  loginButton: {
-    width: 167,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'black',
-    height: 52,
-    marginLeft: 10,
-    borderRadius: 7,
-  },
-  signInButton: {
-    width: 167,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 52,
-    marginLeft: 20,
-    borderRadius: 7,
-    backgroundColor: '#3D3ABf',
-  },
-  registerText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 13,
-  },
-  loginText: {
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: 13,
-  },
 });
+
+export default Dashboard;
