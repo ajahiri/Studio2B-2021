@@ -1,4 +1,4 @@
-# Build artifacts
+# Build artefacts
 node_modules
 client/node_modules
 server/node_modules
