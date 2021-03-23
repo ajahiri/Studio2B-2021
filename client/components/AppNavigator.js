@@ -1,6 +1,7 @@
 import React from 'react';
+import { Button, View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Home from '../screens/Home';
 import Login from '../screens/Login';
@@ -8,38 +9,30 @@ import Register from '../screens/Register';
 import ImageAuthRegistration from '../screens/ImageAuthRegistration';
 import Dashboard from '../screens/Dashboard';
 
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Login"
-          component={Login}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Register"
-          component={Register}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
+      <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Screen name="Home" component={Home} />
+        <Drawer.Screen name="Login" component={Login} options={{}} />
+        <Drawer.Screen name="Register" component={Register} options={{}} />
+        <Drawer.Screen
           name="Dashboard"
           component={Dashboard}
-          options={{ headerLeft: null }}
+          options={{
+            headerShown: true,
+          }}
         />
-        <Stack.Screen
+        <Drawer.Screen
           name="ImageAuthRegistration"
           component={ImageAuthRegistration}
-          options={{ headerShown: false }}
+          options={{
+            headerShown: true,
+          }}
         />
-      </Stack.Navigator>
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 };
