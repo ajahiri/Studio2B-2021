@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   Text,
@@ -6,19 +6,18 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
-} from "react-native";
+} from 'react-native';
 
 export default function ImageAuthRegistration({ navigation }) {
-  const returnImage = require("../../client/assets/Login/Union.png");
-  const imagePlaceholder = require("../../client/assets/Login/profile-placeholder.png");
+  const returnImage = require('../../client/assets/Login/Union.png');
+  const imagePlaceholder = require('../../client/assets/Login/profile-placeholder.png');
 
   return (
     <SafeAreaView>
       <View style={styles.container}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
-          style={styles.returnButton}
-        >
+          onPress={() => navigation.navigate('Home')}
+          style={styles.returnButton}>
           <View style={styles.returnImage}>
             <Image source={returnImage} />
           </View>
@@ -33,6 +32,14 @@ export default function ImageAuthRegistration({ navigation }) {
       </View>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={imagePlaceholder} />
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.photoButton}>
+          <Text style={styles.buttonTextPhoto}>TAKE PHOTO</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.nextButton}>
+          <Text style={styles.buttonText}>NEXT</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -53,12 +60,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    textAlign: "center",
+    textAlign: 'center',
     paddingBottom: 10,
   },
   desc: {
     fontSize: 15,
-    textAlign: "center",
+    textAlign: 'center',
   },
   textContainer: {
     padding: 20,
@@ -68,13 +75,48 @@ const styles = StyleSheet.create({
     height: 160,
     borderRadius: 100,
     borderWidth: 2,
-    borderColor: "#3D3ABF",
-    overflow: "hidden",
+    borderColor: '#3D3ABF',
+    overflow: 'hidden',
   },
   imageContainer: {
     paddingTop: 15,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+
+  nextButton: {
+    height: 52,
+    backgroundColor: '#3D3ABF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    marginTop: 20,
+  },
+  photoButton: {
+    height: 52,
+    backgroundColor: 'white',
+    borderWidth: 2,
+    borderColor: 'black',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    margin: 'auto',
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 60,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  },
+  buttonTextPhoto: {
+    color: 'black',
+    fontWeight: 'bold',
   },
 });
