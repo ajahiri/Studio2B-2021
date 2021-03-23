@@ -2,18 +2,27 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
+import { colours as C } from '../constants';
+
+import Dashboard from '../screens/Dashboard';
 import Home from '../screens/Home';
+import ImageAuthRegistration from '../screens/ImageAuthRegistration';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
-import ImageAuthRegistration from '../screens/ImageAuthRegistration';
-import Dashboard from '../screens/Dashboard';
+import Start from '../screens/Start';
 
 const Stack = createStackNavigator();
 
-const AppNavigator = () => {
+export default function AppNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{ cardStyle: { backgroundColor: C.white } }}>
+        <Stack.Screen
+          name="Start"
+          component={Start}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Home"
           component={Home}
@@ -42,6 +51,4 @@ const AppNavigator = () => {
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
-
-export default AppNavigator;
+}

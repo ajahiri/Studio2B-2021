@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   StyleSheet,
   Text,
   View,
   Image,
-  Button,
   TouchableOpacity,
-  Linking,
   Alert,
 } from 'react-native';
 import {
@@ -19,11 +17,13 @@ import {
   Comfortaa_700Bold,
 } from '@expo-google-fonts/comfortaa';
 import { TextInput } from 'react-native-gesture-handler';
+import { AntDesign } from '@expo/vector-icons';
 
+// Form validation
 import { Formik } from 'formik';
-
 import * as yup from 'yup';
 
+// State management
 import { useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -39,7 +39,7 @@ export default function Login({ navigation }) {
 
   const dispatch = useDispatch();
 
-  let [fontsLoaded] = useFonts({
+  let [_fontsLoaded] = useFonts({
     Comfortaa_300Light,
     Comfortaa_400Regular,
     Comfortaa_500Medium,
@@ -50,12 +50,8 @@ export default function Login({ navigation }) {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Home')}
-          style={styles.returnButton}>
-          <View style={styles.returnImage}>
-            <Image source={returnImage} />
-          </View>
+        <TouchableOpacity onPress={() => navigation.navigate('Start')}>
+          <AntDesign name="back" size={24} color="black" />
         </TouchableOpacity>
 
         <View style={styles.logoContainer}>
@@ -176,8 +172,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginTop: 10,
-  },
-  returnButton: {
-    width: 20,
   },
 });

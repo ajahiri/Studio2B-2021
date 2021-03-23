@@ -9,8 +9,7 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
-// import CheckBox from '@react-native-community/checkbox';
-import Icon from 'react-native-vector-icons/Feather';
+import { AntDesign } from '@expo/vector-icons';
 import { Formik } from 'formik';
 
 import { TextInput } from 'react-native-gesture-handler';
@@ -41,9 +40,7 @@ export default function Register({ navigation }) {
           <TouchableOpacity
             onPress={() => navigation.navigate('Home')}
             style={styles.returnButton}>
-            <View style={styles.returnImage}>
-              <Image source={returnImage} />
-            </View>
+            <AntDesign name="back" size={24} color="black" />
           </TouchableOpacity>
           <View style={styles.logoContainer}>
             <Image source={logo} style={styles.logoImage} />
@@ -199,7 +196,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   returnButton: {
-    width: 20,
+    // width: 20,
   },
   checkBox: {
     backgroundColor: '#C8CCFF',
