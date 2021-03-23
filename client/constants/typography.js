@@ -2,11 +2,12 @@ const fontFamily = 'Roboto';
 
 export default {
   sizes: {
-    caption: 15,
+    caption: 16,
     normal: 18,
     large: 20,
-    subtitle: 30,
-    title: 50,
+    subheading: 30,
+    heading: 50,
+    title: 60,
   },
   fonts: {
     thin: `${fontFamily}_300Thin`,

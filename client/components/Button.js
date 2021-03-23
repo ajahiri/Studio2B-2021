@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 
 import { colours as C, layout as L, typography as T } from '../constants';
 
@@ -42,6 +42,16 @@ const ButtonText = styled.Text`
   color: ${props => (props.secondary ? C.black : C.white)};
   font-size: ${T.sizes.normal}px;
   font-family: ${T.fonts.bold};
+
+  ${({ disabled, secondary }) => {
+    if (disabled && secondary) {
+      return `color: ${C.darkGrey};`;
+    } else if (secondary) {
+      return `color: ${C.black};`;
+    } else {
+      return `color: ${C.white};`;
+    }
+  }}
 `;
 
 export default function Button({

@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Alert,
-  SafeAreaView,
-} from 'react-native';
+import RN, { StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 // Form validation
@@ -19,7 +10,7 @@ import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
-import { Button, FormikField, TextInput } from '../components';
+import { Button, FormikField, Heading } from '../components';
 import { colours as C, layout as L, typography as T } from '../constants';
 
 const formSchema = yup.object({
@@ -67,11 +58,11 @@ export default function Register({ navigation }) {
   };
 
   return (
-    <SafeAreaView>
-      <KeyboardAvoidingView>
-        <ScrollView>
-          <View style={styles.pageContainer}>
-            <TouchableOpacity
+    <RN.SafeAreaView>
+      <RN.KeyboardAvoidingView>
+        <RN.ScrollView>
+          <RN.View style={styles.pageContainer}>
+            <RN.TouchableOpacity
               style={styles.pageBackButton}
               onPress={() => navigation.navigate('Start')}>
               <AntDesign
@@ -79,9 +70,9 @@ export default function Register({ navigation }) {
                 size={L.pageBackButtonSize}
                 color={C.black}
               />
-            </TouchableOpacity>
+            </RN.TouchableOpacity>
 
-            <Text style={styles.registerTitle}>Register</Text>
+            <Heading style={styles.registerTitle}>Register</Heading>
 
             <Formik
               initialValues={{
@@ -94,7 +85,7 @@ export default function Register({ navigation }) {
               onSubmit={onSubmit}
               validationSchema={formSchema}>
               {props => (
-                <View>
+                <RN.View>
                   <FormikField
                     formikProps={props}
                     field="firstName"
@@ -134,13 +125,13 @@ export default function Register({ navigation }) {
                     onPress={props.handleSubmit}
                     style={styles.formSubmitButton}
                   />
-                </View>
+                </RN.View>
               )}
             </Formik>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+          </RN.View>
+        </RN.ScrollView>
+      </RN.KeyboardAvoidingView>
+    </RN.SafeAreaView>
   );
 }
 
@@ -153,10 +144,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   registerTitle: {
-    fontFamily: T.fonts.bold,
-    fontSize: T.sizes.title,
-    marginBottom: L.spacing.xl,
     marginTop: L.spacing.xxl,
+    marginBottom: L.spacing.xl,
   },
   formikField: {
     marginBottom: L.spacing.l,

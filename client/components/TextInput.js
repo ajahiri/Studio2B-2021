@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/native';
 import { StyleSheet, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 

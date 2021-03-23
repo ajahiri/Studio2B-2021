@@ -7,8 +7,8 @@ export default {
   borderWidth: 2,
 
   defaultPadding: 16,
-  defaultPaddingVertical: 20,
-  defaultPaddingHorizontal: 10,
+  defaultPaddingVertical: 16,
+  defaultPaddingHorizontal: 16,
 
   spacing: {
     xxs: 1,

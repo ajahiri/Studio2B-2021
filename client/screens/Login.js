@@ -1,16 +1,9 @@
 import React from 'react';
-import {
-  Alert,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import RN, { StyleSheet } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 // Form validation
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import * as yup from 'yup';
 
 // State management
@@ -18,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Button, FormikField, TextInput } from '../components';
+import { Button, FormikField, Heading } from '../components';
 import { colours as C, layout as L, typography as T } from '../constants';
 
 const formSchema = yup.object({
@@ -33,9 +26,6 @@ const formSchema = yup.object({
 });
 
 export default function Login({ navigation }) {
-  // const returnImage = require('../../client/assets/Login/Union.png');
-  // const logo = require('../../client/assets/Login/Logo.png');
-
   const dispatch = useDispatch();
 
   const onSubmit = values => {
@@ -57,60 +47,62 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <SafeAreaView>
-      <View style={styles.pageContainer}>
-        <TouchableOpacity
-          style={styles.pageBackButton}
-          onPress={() => navigation.navigate('Start')}>
-          <AntDesign
-            name="arrowleft"
-            size={L.pageBackButtonSize}
-            color={C.black}
-          />
-        </TouchableOpacity>
+    <RN.SafeAreaView>
+      <RN.KeyboardAvoidingView>
+        <RN.View style={styles.pageContainer}>
+          <RN.TouchableOpacity
+            style={styles.pageBackButton}
+            onPress={() => navigation.navigate('Start')}>
+            <AntDesign
+              name="arrowleft"
+              size={L.pageBackButtonSize}
+              color={C.black}
+            />
+          </RN.TouchableOpacity>
 
-        <Text style={styles.loginTitle}>Login</Text>
+          <Heading style={styles.loginTitle}>Login</Heading>
 
-        <Formik
-          initialValues={{ email: '', password: '' }}
-          onSubmit={onSubmit}
-          validationSchema={formSchema}>
-          {props => (
-            <View>
-              <FormikField
-                formikProps={props}
-                field="email"
-                placeholder="Email"
-                keyboardType="email-address"
-                style={styles.formikField}
-              />
-              <FormikField
-                secureTextEntry
-                formikProps={props}
-                field="password"
-                placeholder="Password"
-                keyboardType="visible-password"
-                style={styles.formikField}
-              />
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            onSubmit={onSubmit}
+            validationSchema={formSchema}>
+            {props => (
+              <RN.View>
+                <FormikField
+                  formikProps={props}
+                  field="email"
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  style={styles.formikField}
+                />
+                <FormikField
+                  secureTextEntry
+                  formikProps={props}
+                  field="password"
+                  placeholder="Password"
+                  keyboardType="visible-password"
+                  style={styles.formikField}
+                />
 
-              <Button
-                disabled={!props.isValid}
-                text="Login"
-                onPress={props.handleSubmit}
-                style={styles.formSubmitButton}
-              />
-            </View>
-          )}
-        </Formik>
+                <Button
+                  disabled={!props.isValid}
+                  text="Login"
+                  onPress={props.handleSubmit}
+                  style={styles.formSubmitButton}
+                />
+              </RN.View>
+            )}
+          </Formik>
 
-        <TouchableOpacity
-          onPress={() =>
-            Alert.alert('Sorry, this feature is not available at the moment.')
-          }>
-          <Text style={styles.forgotPassword}>Forgot Password?</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+          <RN.TouchableOpacity
+            onPress={() =>
+              Alert.alert('Sorry, this feature is not available at the moment.')
+            }>
+            <RN.Text style={styles.forgotPassword}>Forgot Password?</RN.Text>
+          </RN.TouchableOpacity>
+        </RN.View>
+      </RN.KeyboardAvoidingView>
+    </RN.SafeAreaView>
   );
 }
 
@@ -123,10 +115,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   loginTitle: {
-    fontFamily: T.fonts.bold,
-    fontSize: T.sizes.title,
-    marginBottom: L.spacing.xl,
     marginTop: L.spacing.xxl,
+    marginBottom: L.spacing.xl,
   },
   formikField: {
     marginBottom: L.spacing.l,
@@ -138,6 +128,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: C.darkGrey,
     fontSize: T.sizes.caption,
-    marginTop: L.spacing.m,
+    marginTop: L.spacing.l,
   },
 });

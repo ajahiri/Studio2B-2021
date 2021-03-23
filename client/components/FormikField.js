@@ -33,7 +33,7 @@ export default function FormikField({
 const styles = StyleSheet.create({
   errorMessage: {
     color: C.error,
-    paddingTop: L.spacing.xs,
+    paddingTop: L.spacing.s,
     paddingLeft: L.spacing.s,
   },
 });
