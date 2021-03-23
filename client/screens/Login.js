@@ -7,14 +7,6 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {
-  useFonts,
-  Comfortaa_300Light,
-  Comfortaa_400Regular,
-  Comfortaa_500Medium,
-  Comfortaa_600SemiBold,
-  Comfortaa_700Bold,
-} from '@expo-google-fonts/comfortaa';
 import { AntDesign } from '@expo/vector-icons';
 
 // Form validation
@@ -35,18 +27,10 @@ const formSchema = yup.object({
 });
 
 export default function Login({ navigation }) {
-  const returnImage = require('../../client/assets/Login/Union.png');
-  const logo = require('../../client/assets/Login/Logo.png');
+  // const returnImage = require('../../client/assets/Login/Union.png');
+  // const logo = require('../../client/assets/Login/Logo.png');
 
   const dispatch = useDispatch();
-
-  let [_fontsLoaded] = useFonts({
-    Comfortaa_300Light,
-    Comfortaa_400Regular,
-    Comfortaa_500Medium,
-    Comfortaa_600SemiBold,
-    Comfortaa_700Bold,
-  });
 
   const onSubmit = values => {
     dispatch(authActions.loginUser(values))
@@ -87,6 +71,7 @@ export default function Login({ navigation }) {
           {props => (
             <View>
               <TextInput
+                error={props.touched.email && props.errors.email}
                 style={styles.formTextInput}
                 placeholder="Email"
                 keyboardType="email-address"
@@ -95,6 +80,7 @@ export default function Login({ navigation }) {
                 onBlur={props.handleBlur('email')}
               />
               <TextInput
+                error={props.touched.password && props.errors.password}
                 style={styles.formTextInput}
                 placeholder="Password"
                 secureTextEntry={true}
@@ -105,7 +91,7 @@ export default function Login({ navigation }) {
               />
 
               <Button
-                style={styles.formLoginButton}
+                style={styles.formSubmitButton}
                 text="Login"
                 onPress={props.handleSubmit}
               />
@@ -130,16 +116,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   loginTitle: {
-    color: C.primary,
+    fontFamily: T.fonts.bold,
     fontSize: T.sizes.title,
-    fontWeight: T.weights.heavy,
-    marginTop: L.spacing.xxl,
     marginBottom: L.spacing.xl,
+    marginTop: L.spacing.xxl,
   },
   formTextInput: {
     marginBottom: L.spacing.l,
   },
-  formLoginButton: {
+  formSubmitButton: {
     marginTop: L.spacing.m,
   },
   forgotPassword: {

@@ -5,19 +5,22 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
   KeyboardAvoidingView,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+
+// Form validation
 import { Formik } from 'formik';
-
-import { TextInput } from 'react-native-gesture-handler';
-
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
 
+// State management
+import { useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
+
+import { Button, TextInput } from '../components';
+import { colours as C, layout as L, typography as T } from '../constants';
 
 const formSchema = yup.object({
   firstName: yup.string().required().min(3),
@@ -28,198 +31,131 @@ const formSchema = yup.object({
 });
 
 export default function Register({ navigation }) {
-  const returnImage = require('../../client/assets/Login/Union.png');
-  const logo = require('../../client/assets/Login/Logo.png');
-
   const dispatch = useDispatch();
 
+  const onSubmit = values => {
+    dispatch(authActions.registerUser(values))
+      .then(async result => {
+        if (result.success) {
+          try {
+            await AsyncStorage.setItem('token', result.token);
+            navigation.navigate('Dashboard');
+          } catch (error) {
+            console.error(error);
+          }
+        } else {
+          Alert.alert(result.message);
+        }
+      })
+      .catch(error => console.error(error));
+  };
+
   return (
-    <KeyboardAvoidingView>
-      <ScrollView>
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Start')}
-            style={styles.returnButton}>
-            <AntDesign name="back" size={24} color="black" />
-          </TouchableOpacity>
-          <View style={styles.logoContainer}>
-            <Image source={logo} style={styles.logoImage} />
-            <Text style={styles.title}>Register</Text>
-          </View>
-          <Formik
-            initialValues={{
-              firstName: '',
-              lastName: '',
-              university: '',
-              email: '',
-              password: '',
-            }}
-            onSubmit={values => {
-              dispatch(authActions.registerUser(values))
-                .then(async result => {
-                  if (result.success) {
-                    try {
-                      await AsyncStorage.setItem('token', result.token);
-                      navigation.navigate('Dashboard');
-                    } catch (error) {
-                      console.log(error);
-                    }
-                  } else {
-                    Alert.alert(result.message);
-                  }
-                })
-                .catch(err => console.log(err));
-            }}
-            validationSchema={formSchema}>
-            {props => (
-              <View>
-                <View style={styles.form}>
+    <SafeAreaView>
+      <KeyboardAvoidingView>
+        <ScrollView>
+          <View style={styles.pageContainer}>
+            <TouchableOpacity
+              style={styles.pageBackButton}
+              onPress={() => navigation.navigate('Start')}>
+              <AntDesign
+                name="arrowleft"
+                size={L.pageBackButtonSize}
+                color={C.black}
+              />
+            </TouchableOpacity>
+
+            <Text style={styles.registerTitle}>Register</Text>
+
+            <Formik
+              initialValues={{
+                firstName: '',
+                lastName: '',
+                university: '',
+                email: '',
+                password: '',
+              }}
+              onSubmit={onSubmit}
+              validationSchema={formSchema}>
+              {props => (
+                <View>
                   <TextInput
-                    style={styles.input}
+                    error={props.touched.firstName && props.errors.firstName}
+                    style={styles.formTextInput}
                     placeholder="First Name"
-                    onChangeText={props.handleChange('firstName')}
                     value={props.values.firstName}
-                    onBlur={props.handleBlur('firstName')}></TextInput>
-                  <Text>
-                    {props.touched.firstName && props.errors.firstName}
-                  </Text>
+                    onChangeText={props.handleChange('firstName')}
+                    onBlur={props.handleBlur('firstName')}
+                  />
                   <TextInput
-                    style={styles.input}
+                    error={props.touched.lastName && props.errors.lastName}
+                    style={styles.formTextInput}
                     placeholder="Last Name"
-                    onChangeText={props.handleChange('lastName')}
                     value={props.values.lastName}
-                    onBlur={props.handleBlur('lastName')}></TextInput>
-                  <Text>{props.touched.lastName && props.errors.lastName}</Text>
+                    onChangeText={props.handleChange('lastName')}
+                    onBlur={props.handleBlur('lastName')}
+                  />
                   <TextInput
-                    style={styles.input}
+                    error={props.touched.university && props.errors.university}
+                    style={styles.formTextInput}
                     placeholder="University"
-                    onChangeText={props.handleChange('university')}
                     value={props.values.university}
-                    onBlur={props.handleBlur('university')}></TextInput>
-                  <Text>
-                    {props.touched.university && props.errors.university}
-                  </Text>
+                    onChangeText={props.handleChange('university')}
+                    onBlur={props.handleBlur('university')}
+                  />
                   <TextInput
-                    style={styles.input}
+                    error={props.touched.email && props.errors.email}
+                    style={styles.formTextInput}
                     placeholder="Email"
                     keyboardType="email-address"
-                    onChangeText={props.handleChange('email')}
                     value={props.values.email}
-                    onBlur={props.handleBlur('email')}></TextInput>
-                  <Text>{props.touched.email && props.errors.email}</Text>
+                    onChangeText={props.handleChange('email')}
+                    onBlur={props.handleBlur('email')}
+                  />
                   <TextInput
-                    style={styles.input}
+                    error={props.touched.password && props.errors.password}
+                    style={styles.formTextInput}
                     placeholder="Password"
                     secureTextEntry={true}
-                    onChangeText={props.handleChange('password')}
+                    keyboardType="visible-password"
                     value={props.values.password}
-                    onBlur={props.handleBlur('password')}></TextInput>
-                  <Text>{props.touched.password && props.errors.password}</Text>
-                </View>
-                {/* <View style={styles.checkBoxContainer}>
-                <View style={styles.checkBox}>
-                  <CheckBox style={{ boxType: 'circle', lineWidth: 10 }} />
-                  <Text>Register as Teacher?</Text>
-                </View>
-              </View> */}
-                <View style={styles.loginButtonContainer}>
-                  <TouchableOpacity
-                    // onPress={() => navigation.navigate('ImageAuthRegistration')}
+                    onChangeText={props.handleChange('password')}
+                    onBlur={props.handleBlur('password')}
+                  />
+
+                  <Button
+                    style={styles.formSubmitButton}
+                    text="Register"
                     onPress={props.handleSubmit}
-                    style={styles.loginButton}>
-                    <Text style={styles.buttonText}>NEXT</Text>
-                  </TouchableOpacity>
-                  <Text style={styles.disclaimerText}>
-                    By signing up, you agree to SES2B’s Terms of Service and
-                    Privacy Policy.
-                  </Text>
+                  />
                 </View>
-              </View>
-            )}
-          </Formik>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+              )}
+            </Formik>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-    paddingLeft: 20,
-    paddingRight: 20,
+  pageContainer: {
+    marginHorizontal: L.pageMarginHorizontal,
+    marginVertical: L.pageMarginVertical,
   },
-  form: {
-    paddingTop: 20,
+  pageBackButton: {
+    position: 'absolute',
   },
-  title: {
-    fontSize: 40,
-    fontWeight: '600',
+  registerTitle: {
+    fontFamily: T.fonts.bold,
+    fontSize: T.sizes.title,
+    marginBottom: L.spacing.xl,
+    marginTop: L.spacing.xxl,
   },
-  input: {
-    borderWidth: 2,
-    borderColor: 'black',
-    height: 52,
-    marginBottom: 20,
-    paddingLeft: 20,
+  formTextInput: {
+    marginBottom: L.spacing.l,
   },
-  returnImage: {
-    paddingTop: 20,
-    paddingBottom: 40,
-  },
-  logoImage: {
-    marginTop: 10,
-    marginBottom: 10,
-    marginRight: 10,
-  },
-  logoContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  loginButton: {
-    height: 52,
-    backgroundColor: '#3D3ABF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    margin: 'auto',
-    fontWeight: 'bold',
-  },
-  forgotPassword: {
-    color: '#828489',
-    fontSize: 14,
-    textAlign: 'center',
-    marginTop: 10,
-  },
-  returnButton: {
-    // width: 20,
-  },
-  checkBox: {
-    backgroundColor: '#C8CCFF',
-    width: '50%',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    borderRadius: 7,
-    padding: 7,
-  },
-  checkBoxContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: -10,
-  },
-  loginButtonContainer: {
-    paddingTop: 10,
-  },
-  disclaimerText: {
-    fontSize: 12,
-    paddingTop: 10,
+  formSubmitButton: {
+    marginTop: L.spacing.m,
   },
 });

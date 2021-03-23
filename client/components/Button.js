@@ -8,14 +8,14 @@ const ButtonContainer = styled.TouchableOpacity`
   border-color: ${props => (props.secondary ? C.black : C.primary)};
   border-radius: ${L.borderRadius}px;
   border-width: ${L.borderWidth}px;
-  padding: 15px;
+  padding: ${L.defaultPadding}px;
 `;
 
 const ButtonText = styled.Text`
   align-self: center;
   color: ${props => (props.secondary ? C.black : C.white)};
-  font-size: ${T.sizes.normal};
-  font-weight: ${T.weights.heavy};
+  font-size: ${T.sizes.normal}px;
+  font-family: ${T.fonts.bold};
 `;
 
 export default function Button({

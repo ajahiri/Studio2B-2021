@@ -6,6 +6,10 @@ export default {
   borderRadius: 10,
   borderWidth: 2,
 
+  defaultPadding: 16,
+  defaultPaddingVertical: 20,
+  defaultPaddingHorizontal: 10,
+
   spacing: {
     xxs: 1,
     xs: 4,

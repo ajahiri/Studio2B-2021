@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   buttonGroup: {
     flexDirection: 'row',
-    // alignItems: 'center',
+
     justifyContent: 'space-between',
   },
 });
