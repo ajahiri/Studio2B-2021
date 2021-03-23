@@ -1,13 +1,11 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 
-import { typography as T } from '../constants';
 import { Button } from '../components';
 
 export default function Start({ navigation }) {
   return (
     <SafeAreaView style={styles.pageContainer}>
-      <Text style={styles.headingText}>Welcome</Text>
       <View style={styles.buttonGroup}>
         <Button
           style={{ width: '50%' }}
@@ -29,10 +27,6 @@ const styles = StyleSheet.create({
   pageContainer: {
     marginHorizontal: 22,
     marginVertical: 60,
-  },
-  headingText: {
-    fontSize: T.sizes.title,
-    fontWeight: '700',
   },
   buttonGroup: {
     flexDirection: 'row',

@@ -38,7 +38,7 @@ export default function Register({ navigation }) {
       <ScrollView>
         <View style={styles.container}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => navigation.navigate('Start')}
             style={styles.returnButton}>
             <AntDesign name="back" size={24} color="black" />
           </TouchableOpacity>

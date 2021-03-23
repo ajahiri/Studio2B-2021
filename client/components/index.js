@@ -1,4 +1,5 @@
 import AppNavigator from './AppNavigator';
 import Button from './Button';
+import TextInput from './TextInput';
 
-export { AppNavigator, Button };
+export { AppNavigator, Button, TextInput };
