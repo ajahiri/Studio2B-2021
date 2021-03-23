@@ -1,16 +1,16 @@
 import React from 'react';
 import {
+  Alert,
   SafeAreaView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  Alert,
+  View,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 // Form validation
-import { Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import * as yup from 'yup';
 
 // State management
@@ -18,12 +18,18 @@ import { useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Button, TextInput } from '../components';
+import { Button, FormikField, TextInput } from '../components';
 import { colours as C, layout as L, typography as T } from '../constants';
 
 const formSchema = yup.object({
-  email: yup.string().email().required(),
-  password: yup.string().required().min(6),
+  email: yup
+    .string()
+    .required('Please provide your email address')
+    .email('Please provide a valid email address'),
+  password: yup
+    .string()
+    .required('Please provide your password')
+    .min(8, 'Incomplete password'),
 });
 
 export default function Login({ navigation }) {
@@ -41,6 +47,7 @@ export default function Login({ navigation }) {
             navigation.navigate('Dashboard');
           } catch (error) {
             console.error(error);
+            Alert.alert(error);
           }
         } else {
           Alert.alert(result.message);
@@ -70,36 +77,36 @@ export default function Login({ navigation }) {
           validationSchema={formSchema}>
           {props => (
             <View>
-              <TextInput
-                error={props.touched.email && props.errors.email}
-                style={styles.formTextInput}
+              <FormikField
+                formikProps={props}
+                field="email"
                 placeholder="Email"
                 keyboardType="email-address"
-                value={props.values.email}
-                onChangeText={props.handleChange('email')}
-                onBlur={props.handleBlur('email')}
+                style={styles.formikField}
               />
-              <TextInput
-                error={props.touched.password && props.errors.password}
-                style={styles.formTextInput}
+              <FormikField
+                secureTextEntry
+                formikProps={props}
+                field="password"
                 placeholder="Password"
-                secureTextEntry={true}
                 keyboardType="visible-password"
-                value={props.values.password}
-                onChangeText={props.handleChange('password')}
-                onBlur={props.handleBlur('password')}
+                style={styles.formikField}
               />
 
               <Button
-                style={styles.formSubmitButton}
+                disabled={!props.isValid}
                 text="Login"
                 onPress={props.handleSubmit}
+                style={styles.formSubmitButton}
               />
             </View>
           )}
         </Formik>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            Alert.alert('Sorry, this feature is not available at the moment.')
+          }>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
@@ -121,7 +128,7 @@ const styles = StyleSheet.create({
     marginBottom: L.spacing.xl,
     marginTop: L.spacing.xxl,
   },
-  formTextInput: {
+  formikField: {
     marginBottom: L.spacing.l,
   },
   formSubmitButton: {

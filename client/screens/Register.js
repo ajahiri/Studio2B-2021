@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -19,15 +19,30 @@ import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
-import { Button, TextInput } from '../components';
+import { Button, FormikField, TextInput } from '../components';
 import { colours as C, layout as L, typography as T } from '../constants';
 
 const formSchema = yup.object({
-  firstName: yup.string().required().min(3),
-  lastName: yup.string().required().min(3),
-  university: yup.string().required().min(3),
-  email: yup.string().email().required(),
-  password: yup.string().required().min(6),
+  firstName: yup
+    .string()
+    .required('Please provide your first name')
+    .min(3, 'Your first name should have at least 3 characters'),
+  lastName: yup
+    .string()
+    .required('Please provide your last name')
+    .min(3, 'Your first name should have at least 3 characters'),
+  university: yup
+    .string()
+    .required('Please provide the name of your university')
+    .min(3, 'Your university name should have at least 3 characters'),
+  email: yup
+    .string()
+    .required('Please provide your email')
+    .email('Please input a valid email address'),
+  password: yup
+    .string()
+    .required('Please provide a strong password with at least 8 characters')
+    .min(8, 'Your password should have at least 8 characters'),
 });
 
 export default function Register({ navigation }) {
@@ -42,6 +57,7 @@ export default function Register({ navigation }) {
             navigation.navigate('Dashboard');
           } catch (error) {
             console.error(error);
+            Alert.alert(error);
           }
         } else {
           Alert.alert(result.message);
@@ -79,54 +95,44 @@ export default function Register({ navigation }) {
               validationSchema={formSchema}>
               {props => (
                 <View>
-                  <TextInput
-                    error={props.touched.firstName && props.errors.firstName}
-                    style={styles.formTextInput}
+                  <FormikField
+                    formikProps={props}
+                    field="firstName"
                     placeholder="First Name"
-                    value={props.values.firstName}
-                    onChangeText={props.handleChange('firstName')}
-                    onBlur={props.handleBlur('firstName')}
+                    style={styles.formikField}
                   />
-                  <TextInput
-                    error={props.touched.lastName && props.errors.lastName}
-                    style={styles.formTextInput}
+                  <FormikField
+                    formikProps={props}
+                    field="lastName"
                     placeholder="Last Name"
-                    value={props.values.lastName}
-                    onChangeText={props.handleChange('lastName')}
-                    onBlur={props.handleBlur('lastName')}
+                    style={styles.formikField}
                   />
-                  <TextInput
-                    error={props.touched.university && props.errors.university}
-                    style={styles.formTextInput}
+                  <FormikField
+                    formikProps={props}
+                    field="university"
                     placeholder="University"
-                    value={props.values.university}
-                    onChangeText={props.handleChange('university')}
-                    onBlur={props.handleBlur('university')}
+                    style={styles.formikField}
                   />
-                  <TextInput
-                    error={props.touched.email && props.errors.email}
-                    style={styles.formTextInput}
+                  <FormikField
+                    formikProps={props}
+                    field="email"
                     placeholder="Email"
                     keyboardType="email-address"
-                    value={props.values.email}
-                    onChangeText={props.handleChange('email')}
-                    onBlur={props.handleBlur('email')}
+                    style={styles.formikField}
                   />
-                  <TextInput
-                    error={props.touched.password && props.errors.password}
-                    style={styles.formTextInput}
+                  <FormikField
+                    secureTextEntry
+                    formikProps={props}
+                    field="password"
                     placeholder="Password"
-                    secureTextEntry={true}
-                    keyboardType="visible-password"
-                    value={props.values.password}
-                    onChangeText={props.handleChange('password')}
-                    onBlur={props.handleBlur('password')}
+                    style={styles.formikField}
                   />
 
                   <Button
-                    style={styles.formSubmitButton}
                     text="Register"
+                    disabled={!props.isValid}
                     onPress={props.handleSubmit}
+                    style={styles.formSubmitButton}
                   />
                 </View>
               )}
@@ -152,7 +158,7 @@ const styles = StyleSheet.create({
     marginBottom: L.spacing.xl,
     marginTop: L.spacing.xxl,
   },
-  formTextInput: {
+  formikField: {
     marginBottom: L.spacing.l,
   },
   formSubmitButton: {

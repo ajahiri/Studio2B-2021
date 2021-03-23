@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   errorIcon: {
     position: 'absolute',
     right: 0,
-    marginTop: 16,
-    marginRight: 10,
+    marginTop: 17,
+    marginRight: 12,
   },
 });

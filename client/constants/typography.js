@@ -6,7 +6,7 @@ export default {
     normal: 18,
     large: 20,
     subtitle: 30,
-    title: 55,
+    title: 50,
   },
   fonts: {
     thin: `${fontFamily}_300Thin`,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
 import AppLoading from 'expo-app-loading';
 import { Alert } from 'react-native';
@@ -35,10 +35,9 @@ export default function App() {
   } else {
     return (
       <Provider store={store}>
+        <StatusBar barStyle="dark-content" />
         <AppNavigator />
       </Provider>
     );
   }
 }
-
-const styles = StyleSheet.create({});

@@ -1,5 +1,6 @@
 export default {
-  primary: '#3d3abf',
+  primary: '#1e4ae7',
+  primaryLight: '#a7b4e1',
 
   error: '#c20d0d',
   success: '#52c20d',
