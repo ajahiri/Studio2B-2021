@@ -9,8 +9,6 @@ npm-debug.*
 *.orig.*
 web-build/
 .vscode/
-client/.vscode
-server/.vscode
 
 # macOS
 .DS_Store
