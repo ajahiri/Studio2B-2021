@@ -63,9 +63,10 @@ export default function Register({ navigation }) {
                   if (result.success) {
                     try {
                       await AsyncStorage.setItem('token', result.token);
-                      navigation.navigate('Dashboard');
+                      navigation.navigate('ImageAuthRegistration');
                     } catch (error) {
                       console.log(error);
+                      Alert.alert(message);
                     }
                   } else {
                     Alert.alert(result.message);
@@ -127,7 +128,6 @@ export default function Register({ navigation }) {
               </View> */}
                 <View style={styles.loginButtonContainer}>
                   <TouchableOpacity
-                    // onPress={() => navigation.navigate('ImageAuthRegistration')}
                     onPress={props.handleSubmit}
                     style={styles.loginButton}>
                     <Text style={styles.buttonText}>NEXT</Text>
