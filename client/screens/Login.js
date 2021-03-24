@@ -50,13 +50,13 @@ export default function Login({ navigation }) {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => navigation.navigate('Home')}
           style={styles.returnButton}>
           <View style={styles.returnImage}>
             <Image source={returnImage} />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View style={styles.logoContainer}>
           <Image source={logo} style={styles.logoImage} />
@@ -117,6 +117,16 @@ export default function Login({ navigation }) {
             </View>
           )}
         </Formik>
+        <Text style={styles.forgotPassword}>
+          Don't have an account yet?{' '}
+          <Text
+            onPress={() => {
+              navigation.navigate('Register');
+            }}
+            style={styles.signupText}>
+            Sign Up Here!
+          </Text>
+        </Text>
         <TouchableOpacity>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
@@ -176,6 +186,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginTop: 10,
+  },
+  signupText: {
+    color: '#3D3ABF',
+    fontSize: 16,
   },
   returnButton: {
     width: 20,
