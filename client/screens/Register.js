@@ -48,10 +48,11 @@ export default function Register({ navigation }) {
             navigation.navigate('Dashboard');
           } catch (error) {
             console.error(error);
-            Alert.alert(error);
+            RN.Alert.alert(error);
           }
         } else {
-          Alert.alert(result.message);
+          console.error(result.message);
+          RN.Alert.alert(result.message);
         }
       })
       .catch(error => console.error(error));

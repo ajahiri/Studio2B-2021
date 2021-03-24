@@ -37,10 +37,11 @@ export default function Login({ navigation }) {
             navigation.navigate('Dashboard');
           } catch (error) {
             console.error(error);
-            Alert.alert(error);
+            RN.Alert.alert(error);
           }
         } else {
-          Alert.alert(result.message);
+          console.error(result.message);
+          RN.Alert.alert(result.message);
         }
       })
       .catch(error => console.error(error));
@@ -96,7 +97,9 @@ export default function Login({ navigation }) {
 
           <RN.TouchableOpacity
             onPress={() =>
-              Alert.alert('Sorry, this feature is not available at the moment.')
+              RN.Alert.alert(
+                'Sorry, this feature is not available at the moment.',
+              )
             }>
             <RN.Text style={styles.forgotPassword}>Forgot Password?</RN.Text>
           </RN.TouchableOpacity>
