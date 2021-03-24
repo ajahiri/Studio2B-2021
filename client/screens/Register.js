@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
-import Icon from 'react-native-vector-icons/Feather';
+// import CheckBox from '@react-native-community/checkbox';
+// import Icon from 'react-native-vector-icons/Feather';
 import { Formik } from 'formik';
 
 import { TextInput } from 'react-native-gesture-handler';
@@ -76,13 +76,13 @@ export default function Register({ navigation }) {
               </View>
               <View style={styles.checkBoxContainer}>
                 <View style={styles.checkBox}>
-                  <CheckBox style={{ boxType: 'circle', lineWidth: 10 }} />
+                  {/* <CheckBox style={{ boxType: 'circle', lineWidth: 10 }} /> */}
                   <Text>Register as Teacher?</Text>
                 </View>
               </View>
               <View style={styles.loginButtonContainer}>
                 <TouchableOpacity
-                  // onPress={() => navigation.navigate('ImageAuthRegistration')}
+                  onPress={() => navigation.navigate('ImageAuthRegistration')}
                   onPress={props.handleSubmit}
                   style={styles.loginButton}>
                   <Text style={styles.buttonText}>NEXT</Text>
