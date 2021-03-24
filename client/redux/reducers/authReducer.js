@@ -1,9 +1,12 @@
 import {
-  REGISTER_USER,
-  REGISTER_USER_ERROR,
+  REGISTER_USER_SAGA,
   SET_USER,
+  AUTH_USER_ERROR,
   SET_AUTH_LOADING,
   SET_AUTH_TOKEN,
+  LOG_OUT_USER,
+  LOG_OUT_USER_SAGA,
+  LOGIN_USER_SAGA,
 } from '../types';
 
 const initialState = {
@@ -15,11 +18,11 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case REGISTER_USER:
+    case REGISTER_USER_SAGA:
       return {
         ...state,
       };
-    case REGISTER_USER_ERROR:
+    case AUTH_USER_ERROR:
       return {
         ...state,
         errors: action.payload,
@@ -38,6 +41,18 @@ export default function (state = initialState, action) {
       return {
         ...state,
         authToken: action.payload,
+      };
+    case LOG_OUT_USER_SAGA:
+      return {
+        ...state,
+      };
+    case LOG_OUT_USER:
+      return {
+        ...initialState,
+      };
+    case LOGIN_USER_SAGA:
+      return {
+        ...state,
       };
     default:
       return state;

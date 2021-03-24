@@ -11,3 +11,12 @@ export function requestRegisterUser(user) {
     data: user,
   });
 }
+
+export function requestLoginUser(userLogin) {
+  return axios.request({
+    method: 'post',
+    url: `/api/users/login`,
+    baseURL: BASE_API_URL,
+    data: userLogin,
+  });
+}

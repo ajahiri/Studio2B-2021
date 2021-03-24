@@ -118,9 +118,16 @@ router.post('/login', loginValidation, async (req, res) => {
 
   // create and assign a token to user
   const token = generateToken(user);
-  res
-    .header('auth-token', token)
-    .send({ success: true, message: 'Logged in successfully', token });
+  res.header('auth-token', token).send({
+    success: true,
+    message: 'Logged in successfully',
+    token,
+    data: {
+      id: user._id,
+      fullName: `${user.firstName} ${user.lastName}`,
+      email: user.email,
+    },
+  });
 });
 
 module.exports = router;

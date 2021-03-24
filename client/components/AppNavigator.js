@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import Home from '../screens/Home';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import ImageAuthRegistration from '../screens/ImageAuthRegistration';
@@ -20,29 +19,29 @@ const Drawer = createDrawerNavigator();
 const AppNavigator = props => {
   const [isLoading, setisLoading] = useState(true);
 
-  const userToken = props.authToken;
-
   const dispatch = useDispatch();
 
-  async function checkToken() {
-    const token = await SecureStore.getItemAsync('userToken');
-    console.log('Token from securestore', token);
-    if (token) {
-      const userObj = jwt_decode(token);
-      dispatch(setUser(userObj));
-      console.log('Usrobj from token', userObj);
-    }
-    setisLoading(false);
-    setAuthToken(token);
-  }
-
   useEffect(() => {
+    async function checkToken() {
+      let token = null;
+      token = await SecureStore.getItemAsync('userToken');
+      if (token) {
+        const userObj = jwt_decode(token);
+        dispatch(setUser(userObj));
+      } else {
+        token = null;
+      }
+      setisLoading(false);
+      dispatch(setAuthToken(token));
+    }
     checkToken();
-  }, []);
+  }, [isLoading, setisLoading]);
 
   if (isLoading) {
     return <SplashScreen />;
   }
+
+  const { authToken: userToken } = props.auth;
 
   return (
     <NavigationContainer>
@@ -54,7 +53,6 @@ const AppNavigator = props => {
           </>
         ) : (
           <>
-            <Drawer.Screen name="Home" component={Home} />
             <Drawer.Screen
               name="Dashboard"
               component={Dashboard}
@@ -76,8 +74,6 @@ const AppNavigator = props => {
   );
 };
 
-const mapStateToProps = state => {
-  return { authToken: state.auth.authToken };
-};
+const mapStateToProps = state => ({ auth: state.auth });
 
 export default connect(mapStateToProps)(AppNavigator);

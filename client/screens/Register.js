@@ -59,24 +59,9 @@ const Register = props => {
               password: '',
             }}
             onSubmit={values => {
-              console.log('Dispatching registerUser...');
               // Set loading spinner on, will be shut off by registerUser handler
               dispatch(authActions.setAuthIsLoading(true));
               dispatch(authActions.registerUser(values));
-              // dispatch(authActions.registerUser(values))
-              //   .then(async result => {
-              //     if (result.success) {
-              //       try {
-              //         await AsyncStorage.setItem('token', result.token);
-              //         navigation.navigate('Dashboard');
-              //       } catch (error) {
-              //         console.log(error);
-              //       }
-              //     } else {
-              //       Alert.alert(result.message);
-              //     }
-              //   })
-              //   .catch(err => console.log(err));
             }}
             validationSchema={formSchema}>
             {props => (
