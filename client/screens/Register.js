@@ -16,7 +16,7 @@ import { Formik } from 'formik';
 import { TextInput } from 'react-native-gesture-handler';
 
 import * as yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, connect } from 'react-redux';
 
 import * as authActions from '../redux/actions/authActions';
 
@@ -28,18 +28,19 @@ const formSchema = yup.object({
   password: yup.string().required().min(6),
 });
 
-export default function Register({ navigation }) {
+const Register = props => {
   const returnImage = require('../../client/assets/Login/Union.png');
   const logo = require('../../client/assets/Login/Logo.png');
 
   const dispatch = useDispatch();
+  const { navigation, auth: authInfo } = props;
 
   return (
     <KeyboardAvoidingView>
       <ScrollView>
         <View style={styles.container}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => navigation.goBack()}
             style={styles.returnButton}>
             <View style={styles.returnImage}>
               <Image source={returnImage} />
@@ -58,20 +59,9 @@ export default function Register({ navigation }) {
               password: '',
             }}
             onSubmit={values => {
-              dispatch(authActions.registerUser(values))
-                .then(async result => {
-                  if (result.success) {
-                    try {
-                      await AsyncStorage.setItem('token', result.token);
-                      navigation.navigate('Dashboard');
-                    } catch (error) {
-                      console.log(error);
-                    }
-                  } else {
-                    Alert.alert(result.message);
-                  }
-                })
-                .catch(err => console.log(err));
+              // Set loading spinner on, will be shut off by registerUser handler
+              dispatch(authActions.setAuthIsLoading(true));
+              dispatch(authActions.registerUser(values));
             }}
             validationSchema={formSchema}>
             {props => (
@@ -125,12 +115,17 @@ export default function Register({ navigation }) {
                   <Text>Register as Teacher?</Text>
                 </View>
               </View> */}
+                {authInfo.errors !== '' && (
+                  <Text>Error: {authInfo.errors}</Text>
+                )}
                 <View style={styles.loginButtonContainer}>
                   <TouchableOpacity
                     // onPress={() => navigation.navigate('ImageAuthRegistration')}
                     onPress={props.handleSubmit}
                     style={styles.loginButton}>
-                    <Text style={styles.buttonText}>NEXT</Text>
+                    <Text style={styles.buttonText}>
+                      {authInfo.isLoading ? 'Loading...' : 'NEXT'}
+                    </Text>
                   </TouchableOpacity>
                   <Text style={styles.disclaimerText}>
                     By signing up, you agree to SES2B’s Terms of Service and
@@ -144,7 +139,13 @@ export default function Register({ navigation }) {
       </ScrollView>
     </KeyboardAvoidingView>
   );
-}
+};
+
+const mapStateToProps = state => {
+  return { auth: state.auth };
+};
+
+export default connect(mapStateToProps)(Register);
 
 const styles = StyleSheet.create({
   container: {

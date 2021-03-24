@@ -24,40 +24,33 @@ import { Formik } from 'formik';
 
 import * as yup from 'yup';
 
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const formSchema = yup.object({
   email: yup.string().email().required(),
   password: yup.string().required().min(6),
 });
 
-export default function Login({ navigation }) {
-  const returnImage = require('../../client/assets/Login/Union.png');
+const Login = props => {
   const logo = require('../../client/assets/Login/Logo.png');
+
+  // TODO: THIS IS CAUSING ERRORS
+  // let [fontsLoaded] = useFonts({
+  //   Comfortaa_300Light,
+  //   Comfortaa_400Regular,
+  //   Comfortaa_500Medium,
+  //   Comfortaa_600SemiBold,
+  //   Comfortaa_700Bold,
+  // });
 
   const dispatch = useDispatch();
 
-  let [fontsLoaded] = useFonts({
-    Comfortaa_300Light,
-    Comfortaa_400Regular,
-    Comfortaa_500Medium,
-    Comfortaa_600SemiBold,
-    Comfortaa_700Bold,
-  });
+  const { navigation, auth: authInfo } = props;
 
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Home')}
-          style={styles.returnButton}>
-          <View style={styles.returnImage}>
-            <Image source={returnImage} />
-          </View>
-        </TouchableOpacity>
-
         <View style={styles.logoContainer}>
           <Image source={logo} style={styles.logoImage} />
           <Text style={styles.title}>Login</Text>
@@ -69,20 +62,8 @@ export default function Login({ navigation }) {
             password: '',
           }}
           onSubmit={values => {
-            dispatch(authActions.loginUser(values))
-              .then(async result => {
-                if (result.success) {
-                  try {
-                    await AsyncStorage.setItem('token', result.token);
-                    navigation.navigate('Dashboard');
-                  } catch (error) {
-                    console.log(error);
-                  }
-                } else {
-                  Alert.alert(result.message);
-                }
-              })
-              .catch(err => console.log(err));
+            dispatch(authActions.setAuthIsLoading(true));
+            dispatch(authActions.loginUser(values));
           }}
           validationSchema={formSchema}>
           {props => (
@@ -107,23 +88,42 @@ export default function Login({ navigation }) {
                 />
                 <Text>{props.touched.password && props.errors.password}</Text>
               </View>
+              {authInfo.errors !== '' && <Text>Error: {authInfo.errors}</Text>}
               <View style={styles.loginButtonContainer}>
                 <TouchableOpacity
                   style={styles.loginButton}
                   onPress={props.handleSubmit}>
-                  <Text style={styles.buttonText}>LOG IN</Text>
+                  <Text style={styles.buttonText}>
+                    {authInfo.isLoading ? 'Loading...' : 'Log In'}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
           )}
         </Formik>
+        <Text style={styles.forgotPassword}>
+          Don't have an account yet?{' '}
+          <Text
+            onPress={() => {
+              navigation.navigate('Register');
+            }}
+            style={styles.signupText}>
+            Sign Up Here!
+          </Text>
+        </Text>
         <TouchableOpacity>
           <Text style={styles.forgotPassword}>Forgot Password?</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
-}
+};
+
+const mapStateToProps = state => {
+  return { auth: state.auth };
+};
+
+export default connect(mapStateToProps)(Login);
 
 const styles = StyleSheet.create({
   container: {
@@ -176,6 +176,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
     marginTop: 10,
+  },
+  signupText: {
+    color: '#3D3ABF',
+    fontSize: 16,
   },
   returnButton: {
     width: 20,
