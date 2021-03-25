@@ -48,8 +48,8 @@ const AppNavigator = props => {
       <Drawer.Navigator>
         {userToken == null ? (
           <>
-            <Drawer.Screen name="Register" component={Register} options={{}} />
             <Drawer.Screen name="Login" component={Login} options={{}} />
+            <Drawer.Screen name="Register" component={Register} options={{}} />
           </>
         ) : (
           <>

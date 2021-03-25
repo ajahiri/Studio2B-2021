@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { TextInput } from '../components';
+import TextInput from './TextInput';
 import { colours as C, layout as L } from '../constants';
 
 export default function FormikField({
@@ -25,7 +25,9 @@ export default function FormikField({
       />
       {field && formikProps.touched[field] && formikProps.errors[field] ? (
         <Text style={styles.errorMessage}>{formikProps.errors[field]}</Text>
-      ) : null}
+      ) : (
+        <></>
+      )}
     </View>
   );
 }

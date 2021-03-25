@@ -16,7 +16,10 @@ import * as yup from 'yup';
 import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
-import { Button, FormikField, Heading } from '../components';
+import Heading from '../components/Heading';
+import FormikField from '../components/FormikField';
+import Button from '../components/Button';
+
 import { colours as C, layout as L, typography as T } from '../constants';
 
 const formSchema = yup.object({
@@ -44,16 +47,6 @@ const Login = props => {
     <SafeAreaView>
       <KeyboardAvoidingView>
         <View style={styles.pageContainer}>
-          <TouchableOpacity
-            style={styles.pageBackButton}
-            onPress={() => navigation.back()}>
-            <AntDesign
-              name="arrowleft"
-              size={L.pageBackButtonSize}
-              color={C.black}
-            />
-          </TouchableOpacity>
-
           <Heading style={styles.loginTitle}>Login</Heading>
 
           <Formik
