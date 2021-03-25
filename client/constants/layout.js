@@ -1,5 +1,5 @@
 export default {
-  pageMarginVertical: 22,
+  pageMarginVertical: 52,
   pageMarginHorizontal: 22,
   pageBackButtonSize: 32,
 

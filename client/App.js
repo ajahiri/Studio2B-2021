@@ -1,8 +1,8 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { Provider } from 'react-redux';
 import AppLoading from 'expo-app-loading';
-import { Alert } from 'react-native';
+import { Alert, SafeAreaView } from 'react-native';
 
 import {
   useFonts,
@@ -35,7 +35,7 @@ export default function App() {
   } else {
     return (
       <Provider store={store}>
-        <StatusBar barStyle="dark-content" />
+        <StatusBar style="dark" />
         <AppNavigator />
       </Provider>
     );

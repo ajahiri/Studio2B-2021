@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Text,
   Alert,
+  Image,
 } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -35,6 +36,7 @@ const formSchema = yup.object({
 });
 
 const Login = props => {
+  const welcomeBanner = require('../assets/Start/welcome-banner.jpg');
   const dispatch = useDispatch();
 
   const onSubmit = values => {
@@ -48,7 +50,15 @@ const Login = props => {
     <SafeAreaView>
       <KeyboardAvoidingView>
         <View style={styles.pageContainer}>
-          <Heading style={styles.loginTitle}>Login</Heading>
+          <Image
+            style={styles.welcomeBanner}
+            resizeMode="cover"
+            source={welcomeBanner}
+          />
+          <View style={styles.welcomeContainer}>
+            <Text style={styles.welcomeSubtitle}>Welcome to</Text>
+            <Text style={styles.welcomeTitle}>AuthMe</Text>
+          </View>
 
           <Formik
             initialValues={{ email: '', password: '' }}
@@ -143,5 +153,25 @@ const styles = StyleSheet.create({
   },
   returnButton: {
     width: 20,
+  },
+  welcomeContainer: {
+    paddingBottom: L.spacing.xl,
+    marginHorizontal: L.pageMarginHorizontal,
+  },
+  welcomeBanner: {
+    flex: 1,
+    width: '100%',
+    marginBottom: L.spacing.xxl,
+  },
+  welcomeSubtitle: {
+    fontSize: T.sizes.heading,
+    fontFamily: T.fonts.medium,
+    marginBottom: L.spacing.xs,
+  },
+  welcomeTitle: {
+    color: C.primary,
+    fontSize: T.sizes.title,
+    fontFamily: T.fonts.bold,
+    marginBottom: L.spacing.xl,
   },
 });

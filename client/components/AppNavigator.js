@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 
 import Dashboard from '../screens/Dashboard';
 import ImageAuthRegistration from '../screens/ImageAuthRegistration';
@@ -15,6 +16,7 @@ import { setAuthToken, setUser } from '../redux/actions/authActions';
 import jwt_decode from 'jwt-decode';
 
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 const AppNavigator = props => {
   const [isLoading, setisLoading] = useState(true);
@@ -45,31 +47,37 @@ const AppNavigator = props => {
 
   return (
     <NavigationContainer>
-      <Drawer.Navigator>
-        {userToken == null ? (
-          <>
-            <Drawer.Screen name="Login" component={Login} options={{}} />
-            <Drawer.Screen name="Register" component={Register} options={{}} />
-          </>
-        ) : (
-          <>
-            <Drawer.Screen
-              name="Dashboard"
-              component={Dashboard}
-              options={{
-                headerShown: true,
-              }}
-            />
-            <Drawer.Screen
-              name="ImageAuthRegistration"
-              component={ImageAuthRegistration}
-              options={{
-                headerShown: true,
-              }}
-            />
-          </>
-        )}
-      </Drawer.Navigator>
+      {userToken == null ? (
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      ) : (
+        <Drawer.Navigator>
+          <Drawer.Screen
+            name="Dashboard"
+            component={Dashboard}
+            options={{
+              headerShown: true,
+            }}
+          />
+          <Drawer.Screen
+            name="ImageAuthRegistration"
+            component={ImageAuthRegistration}
+            options={{
+              headerShown: true,
+            }}
+          />
+        </Drawer.Navigator>
+      )}
     </NavigationContainer>
   );
 };
