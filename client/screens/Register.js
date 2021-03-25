@@ -1,143 +1,141 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  ScrollView,
   StyleSheet,
-  Text,
+  SafeAreaView,
+  KeyboardAvoidingView,
   View,
   TouchableOpacity,
-  Image,
-  KeyboardAvoidingView,
-  Alert,
+  Text,
+  ScrollView,
 } from 'react-native';
-// import CheckBox from '@react-native-community/checkbox';
-import Icon from 'react-native-vector-icons/Feather';
+import { AntDesign } from '@expo/vector-icons';
+
+// Form validation
 import { Formik } from 'formik';
-
-import { TextInput } from 'react-native-gesture-handler';
-
 import * as yup from 'yup';
-import { useDispatch, connect } from 'react-redux';
 
+// State management
+import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
+import Heading from '../components/Heading';
+import FormikField from '../components/FormikField';
+import Button from '../components/Button';
+
+import { colours as C, layout as L, typography as T } from '../constants';
+
 const formSchema = yup.object({
-  firstName: yup.string().required().min(3),
-  lastName: yup.string().required().min(3),
-  university: yup.string().required().min(3),
-  email: yup.string().email().required(),
-  password: yup.string().required().min(6),
+  firstName: yup
+    .string()
+    .required('Please provide your first name')
+    .min(3, 'Your first name should have at least 3 characters'),
+  lastName: yup
+    .string()
+    .required('Please provide your last name')
+    .min(3, 'Your first name should have at least 3 characters'),
+  university: yup
+    .string()
+    .required('Please provide the name of your university')
+    .min(3, 'Your university name should have at least 3 characters'),
+  email: yup
+    .string()
+    .required('Please provide your email')
+    .email('Please input a valid email address'),
+  password: yup
+    .string()
+    .required('Please provide a strong password with at least 8 characters')
+    .min(8, 'Your password should have at least 8 characters'),
 });
 
 const Register = props => {
-  const returnImage = require('../../client/assets/Login/Union.png');
-  const logo = require('../../client/assets/Login/Logo.png');
-
   const dispatch = useDispatch();
   const { navigation, auth: authInfo } = props;
 
+  const onSubmit = values => {
+    // Set loading spinner on, will be shut off by registerUser handler
+    dispatch(authActions.setAuthIsLoading(true));
+    dispatch(authActions.registerUser(values));
+  };
+
   return (
-    <KeyboardAvoidingView>
-      <ScrollView>
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.returnButton}>
-            <View style={styles.returnImage}>
-              <Image source={returnImage} />
-            </View>
-          </TouchableOpacity>
-          <View style={styles.logoContainer}>
-            <Image source={logo} style={styles.logoImage} />
-            <Text style={styles.title}>Register</Text>
-          </View>
-          <Formik
-            initialValues={{
-              firstName: '',
-              lastName: '',
-              university: '',
-              email: '',
-              password: '',
-            }}
-            onSubmit={values => {
-              // Set loading spinner on, will be shut off by registerUser handler
-              dispatch(authActions.setAuthIsLoading(true));
-              dispatch(authActions.registerUser(values));
-            }}
-            validationSchema={formSchema}>
-            {props => (
-              <View>
-                <View style={styles.form}>
-                  <TextInput
-                    style={styles.input}
+    <SafeAreaView>
+      <KeyboardAvoidingView>
+        <ScrollView>
+          <View style={styles.pageContainer}>
+            <TouchableOpacity
+              style={styles.pageBackButton}
+              onPress={() => navigation.goBack()}>
+              <AntDesign
+                name="arrowleft"
+                size={L.pageBackButtonSize}
+                color={C.black}
+              />
+            </TouchableOpacity>
+
+            <Heading style={styles.registerTitle}>Register</Heading>
+
+            <Formik
+              initialValues={{
+                firstName: '',
+                lastName: '',
+                university: '',
+                email: '',
+                password: '',
+              }}
+              onSubmit={onSubmit}
+              validationSchema={formSchema}>
+              {props => (
+                <View>
+                  <FormikField
+                    formikProps={props}
+                    field="firstName"
                     placeholder="First Name"
-                    onChangeText={props.handleChange('firstName')}
-                    value={props.values.firstName}
-                    onBlur={props.handleBlur('firstName')}></TextInput>
-                  <Text>
-                    {props.touched.firstName && props.errors.firstName}
-                  </Text>
-                  <TextInput
-                    style={styles.input}
+                    style={styles.formikField}
+                  />
+                  <FormikField
+                    formikProps={props}
+                    field="lastName"
                     placeholder="Last Name"
-                    onChangeText={props.handleChange('lastName')}
-                    value={props.values.lastName}
-                    onBlur={props.handleBlur('lastName')}></TextInput>
-                  <Text>{props.touched.lastName && props.errors.lastName}</Text>
-                  <TextInput
-                    style={styles.input}
+                    style={styles.formikField}
+                  />
+                  <FormikField
+                    formikProps={props}
+                    field="university"
                     placeholder="University"
-                    onChangeText={props.handleChange('university')}
-                    value={props.values.university}
-                    onBlur={props.handleBlur('university')}></TextInput>
-                  <Text>
-                    {props.touched.university && props.errors.university}
-                  </Text>
-                  <TextInput
-                    style={styles.input}
+                    style={styles.formikField}
+                  />
+                  <FormikField
+                    formikProps={props}
+                    field="email"
                     placeholder="Email"
                     keyboardType="email-address"
-                    onChangeText={props.handleChange('email')}
-                    value={props.values.email}
-                    onBlur={props.handleBlur('email')}></TextInput>
-                  <Text>{props.touched.email && props.errors.email}</Text>
-                  <TextInput
-                    style={styles.input}
+                    style={styles.formikField}
+                  />
+                  <FormikField
+                    secureTextEntry
+                    formikProps={props}
+                    field="password"
                     placeholder="Password"
-                    secureTextEntry={true}
-                    onChangeText={props.handleChange('password')}
-                    value={props.values.password}
-                    onBlur={props.handleBlur('password')}></TextInput>
-                  <Text>{props.touched.password && props.errors.password}</Text>
-                </View>
-                {/* <View style={styles.checkBoxContainer}>
-                <View style={styles.checkBox}>
-                  <CheckBox style={{ boxType: 'circle', lineWidth: 10 }} />
-                  <Text>Register as Teacher?</Text>
-                </View>
-              </View> */}
-                {authInfo.errors !== '' && (
-                  <Text>Error: {authInfo.errors}</Text>
-                )}
-                <View style={styles.loginButtonContainer}>
-                  <TouchableOpacity
-                    // onPress={() => navigation.navigate('ImageAuthRegistration')}
+                    style={styles.formikField}
+                  />
+
+                  {authInfo.errors !== '' && (
+                    <Text>Error: {authInfo.errors}</Text>
+                  )}
+
+                  <Button
+                    text={authInfo.isLoading ? 'Loading...' : 'Register'}
+                    disabled={!props.isValid}
                     onPress={props.handleSubmit}
-                    style={styles.loginButton}>
-                    <Text style={styles.buttonText}>
-                      {authInfo.isLoading ? 'Loading...' : 'NEXT'}
-                    </Text>
-                  </TouchableOpacity>
-                  <Text style={styles.disclaimerText}>
-                    By signing up, you agree to SES2B’s Terms of Service and
-                    Privacy Policy.
-                  </Text>
+                    style={styles.formSubmitButton}
+                  />
                 </View>
-              </View>
-            )}
-          </Formik>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+              )}
+            </Formik>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
@@ -148,82 +146,21 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps)(Register);
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-    paddingLeft: 20,
-    paddingRight: 20,
+  pageContainer: {
+    marginHorizontal: L.pageMarginHorizontal,
+    marginVertical: L.pageMarginVertical,
   },
-  form: {
-    paddingTop: 20,
+  pageBackButton: {
+    position: 'absolute',
   },
-  title: {
-    fontSize: 40,
-    fontWeight: '600',
+  registerTitle: {
+    marginTop: L.spacing.xxl,
+    marginBottom: L.spacing.xl,
   },
-  input: {
-    borderWidth: 2,
-    borderColor: 'black',
-    height: 52,
-    marginBottom: 20,
-    paddingLeft: 20,
+  formikField: {
+    marginBottom: L.spacing.l,
   },
-  returnImage: {
-    paddingTop: 20,
-    paddingBottom: 40,
-  },
-  logoImage: {
-    marginTop: 10,
-    marginBottom: 10,
-    marginRight: 10,
-  },
-  logoContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  loginButton: {
-    height: 52,
-    backgroundColor: '#3D3ABF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    margin: 'auto',
-    fontWeight: 'bold',
-  },
-  forgotPassword: {
-    color: '#828489',
-    fontSize: 14,
-    textAlign: 'center',
-    marginTop: 10,
-  },
-  returnButton: {
-    width: 20,
-  },
-  checkBox: {
-    backgroundColor: '#C8CCFF',
-    width: '50%',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'center',
-    justifyContent: 'center',
-    borderRadius: 7,
-    padding: 7,
-  },
-  checkBoxContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: -10,
-  },
-  loginButtonContainer: {
-    paddingTop: 10,
-  },
-  disclaimerText: {
-    fontSize: 12,
-    paddingTop: 10,
+  formSubmitButton: {
+    marginTop: L.spacing.m,
   },
 });

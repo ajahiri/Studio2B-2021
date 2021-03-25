@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
+import Dashboard from '../screens/Dashboard';
+import ImageAuthRegistration from '../screens/ImageAuthRegistration';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
-import ImageAuthRegistration from '../screens/ImageAuthRegistration';
-import Dashboard from '../screens/Dashboard';
 import SplashScreen from '../screens/SplashScreen';
 import { connect, useDispatch } from 'react-redux';
 

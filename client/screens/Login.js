@@ -1,120 +1,108 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
   StyleSheet,
-  Text,
+  SafeAreaView,
+  KeyboardAvoidingView,
   View,
-  Image,
-  Button,
   TouchableOpacity,
-  Linking,
+  Text,
   Alert,
 } from 'react-native';
-import {
-  useFonts,
-  Comfortaa_300Light,
-  Comfortaa_400Regular,
-  Comfortaa_500Medium,
-  Comfortaa_600SemiBold,
-  Comfortaa_700Bold,
-} from '@expo-google-fonts/comfortaa';
-import { TextInput } from 'react-native-gesture-handler';
+import { AntDesign } from '@expo/vector-icons';
 
+// Form validation
 import { Formik } from 'formik';
-
 import * as yup from 'yup';
 
 import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
+import Heading from '../components/Heading';
+import FormikField from '../components/FormikField';
+import Button from '../components/Button';
+
+import { colours as C, layout as L, typography as T } from '../constants';
+
 const formSchema = yup.object({
-  email: yup.string().email().required(),
-  password: yup.string().required().min(6),
+  email: yup
+    .string()
+    .required('Please provide your email address')
+    .email('Please provide a valid email address'),
+  password: yup
+    .string()
+    .required('Please provide your password')
+    .min(8, 'Incomplete password'),
 });
 
 const Login = props => {
-  const logo = require('../../client/assets/Login/Logo.png');
-
-  // TODO: THIS IS CAUSING ERRORS
-  // let [fontsLoaded] = useFonts({
-  //   Comfortaa_300Light,
-  //   Comfortaa_400Regular,
-  //   Comfortaa_500Medium,
-  //   Comfortaa_600SemiBold,
-  //   Comfortaa_700Bold,
-  // });
-
   const dispatch = useDispatch();
+
+  const onSubmit = values => {
+    dispatch(authActions.setAuthIsLoading(true));
+    dispatch(authActions.loginUser(values));
+  };
 
   const { navigation, auth: authInfo } = props;
 
   return (
     <SafeAreaView>
-      <View style={styles.container}>
-        <View style={styles.logoContainer}>
-          <Image source={logo} style={styles.logoImage} />
-          <Text style={styles.title}>Login</Text>
-        </View>
+      <KeyboardAvoidingView>
+        <View style={styles.pageContainer}>
+          <Heading style={styles.loginTitle}>Login</Heading>
 
-        <Formik
-          initialValues={{
-            email: '',
-            password: '',
-          }}
-          onSubmit={values => {
-            dispatch(authActions.setAuthIsLoading(true));
-            dispatch(authActions.loginUser(values));
-          }}
-          validationSchema={formSchema}>
-          {props => (
-            <View>
-              <View style={styles.form}>
-                <TextInput
-                  style={styles.input}
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            onSubmit={() => onSubmit()}
+            validationSchema={formSchema}>
+            {props => (
+              <View>
+                <FormikField
+                  formikProps={props}
+                  field="email"
                   placeholder="Email"
                   keyboardType="email-address"
-                  onChangeText={props.handleChange('email')}
-                  value={props.values.email}
-                  onBlur={props.handleBlur('email')}
+                  style={styles.formikField}
                 />
-                <Text>{props.touched.email && props.errors.email}</Text>
-                <TextInput
-                  style={styles.input}
+                <FormikField
+                  secureTextEntry
+                  formikProps={props}
+                  field="password"
                   placeholder="Password"
-                  secureTextEntry={true}
-                  onChangeText={props.handleChange('password')}
-                  value={props.values.password}
-                  onBlur={props.handleBlur('password')}
+                  keyboardType="visible-password"
+                  style={styles.formikField}
                 />
-                <Text>{props.touched.password && props.errors.password}</Text>
+                {authInfo.errors !== '' && (
+                  <Text>Error: {authInfo.errors}</Text>
+                )}
+                <Button
+                  disabled={!props.isValid}
+                  text={authInfo.isLoading ? 'Loading...' : 'Log In'}
+                  onPress={props.handleSubmit}
+                  style={styles.formSubmitButton}
+                />
               </View>
-              {authInfo.errors !== '' && <Text>Error: {authInfo.errors}</Text>}
-              <View style={styles.loginButtonContainer}>
-                <TouchableOpacity
-                  style={styles.loginButton}
-                  onPress={props.handleSubmit}>
-                  <Text style={styles.buttonText}>
-                    {authInfo.isLoading ? 'Loading...' : 'Log In'}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        </Formik>
-        <Text style={styles.forgotPassword}>
-          Don't have an account yet?{' '}
-          <Text
-            onPress={() => {
-              navigation.navigate('Register');
-            }}
-            style={styles.signupText}>
-            Sign Up Here!
+            )}
+          </Formik>
+
+          <Text style={styles.forgotPassword}>
+            Don't have an account yet?{' '}
+            <Text
+              onPress={() => {
+                navigation.navigate('Register');
+              }}
+              style={styles.signupText}>
+              Sign Up Here!
+            </Text>
           </Text>
-        </Text>
-        <TouchableOpacity>
-          <Text style={styles.forgotPassword}>Forgot Password?</Text>
-        </TouchableOpacity>
-      </View>
+
+          <TouchableOpacity
+            onPress={() =>
+              Alert.alert('Sorry, this feature is not available at the moment.')
+            }>
+            <Text style={styles.forgotPassword}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -126,50 +114,22 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps)(Login);
 
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-    paddingLeft: 20,
-    paddingRight: 20,
+  pageContainer: {
+    marginHorizontal: L.pageMarginHorizontal,
+    marginVertical: L.pageMarginVertical,
   },
-  form: {
-    paddingTop: 20,
+  pageBackButton: {
+    position: 'absolute',
   },
-  title: {
-    fontSize: 40,
-    fontWeight: '600',
+  loginTitle: {
+    marginTop: L.spacing.xxl,
+    marginBottom: L.spacing.xl,
   },
-  input: {
-    borderWidth: 2,
-    borderColor: 'black',
-    height: 52,
-    marginBottom: 20,
-    paddingLeft: 20,
+  formikField: {
+    marginBottom: L.spacing.l,
   },
-  returnImage: {
-    paddingTop: 20,
-    paddingBottom: 40,
-  },
-  logoImage: {
-    marginTop: 10,
-    marginBottom: 10,
-    marginRight: 10,
-  },
-  logoContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  loginButton: {
-    height: 52,
-    backgroundColor: '#3D3ABF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    margin: 'auto',
-    fontWeight: 'bold',
+  formSubmitButton: {
+    marginTop: L.spacing.m,
   },
   forgotPassword: {
     color: '#828489',
