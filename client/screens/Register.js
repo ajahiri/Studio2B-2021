@@ -1,5 +1,13 @@
 import React from 'react';
-import RN, { StyleSheet } from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  View,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 // Form validation
@@ -7,7 +15,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 
 // State management
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
 import { Button, FormikField, Heading } from '../components';
@@ -36,34 +44,22 @@ const formSchema = yup.object({
     .min(8, 'Your password should have at least 8 characters'),
 });
 
-export default function Register({ navigation }) {
+const Register = props => {
   const dispatch = useDispatch();
+  const { navigation, auth: authInfo } = props;
 
   const onSubmit = values => {
-    dispatch(authActions.registerUser(values))
-      .then(async result => {
-        if (result.success) {
-          try {
-            await AsyncStorage.setItem('token', result.token);
-            navigation.navigate('Dashboard');
-          } catch (error) {
-            console.error(error);
-            RN.Alert.alert(error);
-          }
-        } else {
-          console.error(result.message);
-          RN.Alert.alert(result.message);
-        }
-      })
-      .catch(error => console.error(error));
+    // Set loading spinner on, will be shut off by registerUser handler
+    dispatch(authActions.setAuthIsLoading(true));
+    dispatch(authActions.registerUser(values));
   };
 
   return (
-    <RN.SafeAreaView>
-      <RN.KeyboardAvoidingView>
-        <RN.ScrollView>
-          <RN.View style={styles.pageContainer}>
-            <RN.TouchableOpacity
+    <SafeAreaView>
+      <KeyboardAvoidingView>
+        <ScrollView>
+          <View style={styles.pageContainer}>
+            <TouchableOpacity
               style={styles.pageBackButton}
               onPress={() => navigation.navigate('Start')}>
               <AntDesign
@@ -71,7 +67,7 @@ export default function Register({ navigation }) {
                 size={L.pageBackButtonSize}
                 color={C.black}
               />
-            </RN.TouchableOpacity>
+            </TouchableOpacity>
 
             <Heading style={styles.registerTitle}>Register</Heading>
 
@@ -86,7 +82,7 @@ export default function Register({ navigation }) {
               onSubmit={onSubmit}
               validationSchema={formSchema}>
               {props => (
-                <RN.View>
+                <View>
                   <FormikField
                     formikProps={props}
                     field="firstName"
@@ -120,21 +116,31 @@ export default function Register({ navigation }) {
                     style={styles.formikField}
                   />
 
+                  {authInfo.errors !== '' && (
+                    <Text>Error: {authInfo.errors}</Text>
+                  )}
+
                   <Button
-                    text="Register"
+                    text={authInfo.isLoading ? 'Loading...' : 'Register'}
                     disabled={!props.isValid}
                     onPress={props.handleSubmit}
                     style={styles.formSubmitButton}
                   />
-                </RN.View>
+                </View>
               )}
             </Formik>
-          </RN.View>
-        </RN.ScrollView>
-      </RN.KeyboardAvoidingView>
-    </RN.SafeAreaView>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
-}
+};
+
+const mapStateToProps = state => {
+  return { auth: state.auth };
+};
+
+export default connect(mapStateToProps)(Register);
 
 const styles = StyleSheet.create({
   pageContainer: {

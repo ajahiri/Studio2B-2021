@@ -1,15 +1,20 @@
 import React from 'react';
-import RN, { StyleSheet } from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  KeyboardAvoidingView,
+  View,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 // Form validation
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-// State management
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Button, FormikField, Heading } from '../components';
 import { colours as C, layout as L, typography as T } from '../constants';
@@ -25,50 +30,38 @@ const formSchema = yup.object({
     .min(8, 'Incomplete password'),
 });
 
-export default function Login({ navigation }) {
+const Login = props => {
   const dispatch = useDispatch();
 
   const onSubmit = values => {
-    dispatch(authActions.loginUser(values))
-      .then(async result => {
-        if (result.success) {
-          try {
-            await AsyncStorage.setItem('token', result.token);
-            navigation.navigate('Dashboard');
-          } catch (error) {
-            console.error(error);
-            RN.Alert.alert(error);
-          }
-        } else {
-          console.error(result.message);
-          RN.Alert.alert(result.message);
-        }
-      })
-      .catch(error => console.error(error));
+    dispatch(authActions.setAuthIsLoading(true));
+    dispatch(authActions.loginUser(values));
   };
 
+  const { navigation, auth: authInfo } = props;
+
   return (
-    <RN.SafeAreaView>
-      <RN.KeyboardAvoidingView>
-        <RN.View style={styles.pageContainer}>
-          <RN.TouchableOpacity
+    <SafeAreaView>
+      <KeyboardAvoidingView>
+        <View style={styles.pageContainer}>
+          <TouchableOpacity
             style={styles.pageBackButton}
-            onPress={() => navigation.navigate('Start')}>
+            onPress={() => navigation.back()}>
             <AntDesign
               name="arrowleft"
               size={L.pageBackButtonSize}
               color={C.black}
             />
-          </RN.TouchableOpacity>
+          </TouchableOpacity>
 
           <Heading style={styles.loginTitle}>Login</Heading>
 
           <Formik
             initialValues={{ email: '', password: '' }}
-            onSubmit={onSubmit}
+            onSubmit={() => onSubmit()}
             validationSchema={formSchema}>
             {props => (
-              <RN.View>
+              <View>
                 <FormikField
                   formikProps={props}
                   field="email"
@@ -84,30 +77,47 @@ export default function Login({ navigation }) {
                   keyboardType="visible-password"
                   style={styles.formikField}
                 />
-
+                {authInfo.errors !== '' && (
+                  <Text>Error: {authInfo.errors}</Text>
+                )}
                 <Button
                   disabled={!props.isValid}
-                  text="Login"
+                  text={authInfo.isLoading ? 'Loading...' : 'Log In'}
                   onPress={props.handleSubmit}
                   style={styles.formSubmitButton}
                 />
-              </RN.View>
+              </View>
             )}
           </Formik>
 
-          <RN.TouchableOpacity
+          <Text style={styles.forgotPassword}>
+            Don't have an account yet?{' '}
+            <Text
+              onPress={() => {
+                navigation.navigate('Register');
+              }}
+              style={styles.signupText}>
+              Sign Up Here!
+            </Text>
+          </Text>
+
+          <TouchableOpacity
             onPress={() =>
-              RN.Alert.alert(
-                'Sorry, this feature is not available at the moment.',
-              )
+              Alert.alert('Sorry, this feature is not available at the moment.')
             }>
-            <RN.Text style={styles.forgotPassword}>Forgot Password?</RN.Text>
-          </RN.TouchableOpacity>
-        </RN.View>
-      </RN.KeyboardAvoidingView>
-    </RN.SafeAreaView>
+            <Text style={styles.forgotPassword}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
-}
+};
+
+const mapStateToProps = state => {
+  return { auth: state.auth };
+};
+
+export default connect(mapStateToProps)(Login);
 
 const styles = StyleSheet.create({
   pageContainer: {
@@ -128,9 +138,16 @@ const styles = StyleSheet.create({
     marginTop: L.spacing.m,
   },
   forgotPassword: {
-    alignSelf: 'center',
-    color: C.darkGrey,
-    fontSize: T.sizes.caption,
-    marginTop: L.spacing.l,
+    color: '#828489',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  signupText: {
+    color: '#3D3ABF',
+    fontSize: 16,
+  },
+  returnButton: {
+    width: 20,
   },
 });

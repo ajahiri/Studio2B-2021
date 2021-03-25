@@ -23,9 +23,9 @@ export default function FormikField({
         onChangeText={formikProps.handleChange(field)}
         onBlur={formikProps.handleBlur(field)}
       />
-      {field && formikProps.touched[field] && formikProps.errors[field] && (
+      {field && formikProps.touched[field] && formikProps.errors[field] ? (
         <Text style={styles.errorMessage}>{formikProps.errors[field]}</Text>
-      )}
+      ) : null}
     </View>
   );
 }

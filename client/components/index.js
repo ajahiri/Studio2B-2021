@@ -4,4 +4,4 @@ import FormikField from './FormikField';
 import Heading from './Heading';
 import TextInput from './TextInput';
 
-export { AppNavigator, Button, FormikField, Heading, TextInput };
+export default { AppNavigator, Button, FormikField, Heading, TextInput };
