@@ -11,32 +11,27 @@ import {
 
 const jwtDecode = require('jwt-decode');
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
+import { useDispatch } from 'react-redux';
+import { logoutUserSaga } from '../redux/actions/authActions';
 
 const Dashboard = props => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
 
+  const dispatch = useDispatch();
+
   const logo = require('../../client/assets/Login/Logo.png');
 
   const loadProfile = async () => {
-    const token = await AsyncStorage.getItem('token');
-    if (!token) {
-      props.navigation.navigate('Login');
+    const token = await SecureStore.getItemAsync('userToken');
+    if (!token || token === '') {
+      // props.navigation.navigate('Login');
     } else {
       const decoded = jwtDecode(token);
       setFullName(decoded.fullName);
       setEmail(decoded.email);
-      console.log(decoded);
     }
-  };
-
-  const logout = props => {
-    AsyncStorage.removeItem('token')
-      .then(() => {
-        props.navigation.replace('Login');
-      })
-      .catch(err => console.log(err));
   };
 
   useEffect(() => {
@@ -48,7 +43,9 @@ const Dashboard = props => {
       <View style={styles.container}>
         <Text>Welcome {fullName ? fullName : ''}</Text>
         <Text>{email ? email : ''}</Text>
-        <Button title="LogOut" onPress={() => logout(props)}></Button>
+        <Button
+          title="LogOut"
+          onPress={() => dispatch(logoutUserSaga())}></Button>
       </View>
     </SafeAreaView>
   );

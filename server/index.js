@@ -1,37 +1,37 @@
-const express = require("express");
-const mongoose = require("mongoose");
+const express = require('express');
+const mongoose = require('mongoose');
 
 const app = express();
 
-require("dotenv").config();
+require('dotenv').config();
 
 app.use(express.json());
 
 // Middleware
-const authRoutes = require("./routes/auth");
-const verifyToken = require("./routes/verifyToken");
+const authRoutes = require('./routes/auth');
+const verifyToken = require('./routes/verifyToken');
 
-app.get("/", (req, res) => {
-  res.send("Welcome to Studio 2B 2021 Group 1 project");
+app.get('/', (req, res) => {
+  res.send('Welcome to Studio 2B 2021 Group 1 project');
 });
 
-app.get("/api/user/profile", verifyToken, (req, res) => {
+app.get('/api/user/profile', verifyToken, (req, res) => {
   console.log(req.user);
   res.send({ success: true, data: req.user });
 });
 
-app.use("/api/users", authRoutes);
+app.use('/api/users', authRoutes);
 
 // Server port, default to 3000
 const port = process.env.PORT || 3000;
-const mongo_url = process.env.MONGO_URL || "";
+const mongo_url = process.env.MONGO_URL || '';
 
 // Check important env variables
 if (!process.env.JWT_SECRET)
-  console.error("!!!!ERROR!!!! PLEASE SET A JWT_SECRET IN .env.");
+  console.error('!!!!ERROR!!!! PLEASE SET A JWT_SECRET IN .env.');
 
 if (!process.env.MONGO_URL)
-  console.error("NO MONGO DATABASE SET, PLEASE SET MONGO_URL IN .ENV FILE");
+  console.error('NO MONGO DATABASE SET, PLEASE SET MONGO_URL IN .ENV FILE');
 
 mongoose
   .connect(mongo_url, { useNewUrlParser: true, useUnifiedTopology: true })
