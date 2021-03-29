@@ -14,7 +14,7 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+        {/* <Stack.Screen
           name="Home"
           component={Home}
           options={{ headerShown: false }}
@@ -33,7 +33,7 @@ const AppNavigator = () => {
           name="Dashboard"
           component={Dashboard}
           options={{ headerLeft: null }}
-        />
+        /> */}
         <Stack.Screen
           name="ImageAuthRegistration"
           component={ImageAuthRegistration}
