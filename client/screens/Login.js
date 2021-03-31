@@ -62,7 +62,7 @@ const Login = props => {
 
           <Formik
             initialValues={{ email: '', password: '' }}
-            onSubmit={() => onSubmit()}
+            onSubmit={onSubmit}
             validationSchema={formSchema}>
             {props => (
               <View>

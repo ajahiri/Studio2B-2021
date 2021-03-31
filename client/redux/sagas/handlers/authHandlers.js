@@ -42,6 +42,7 @@ export function* handleRegisterUser(action) {
 
 export function* handleLoginUser(action) {
   try {
+    if (!action.payload) throw Error('No login object, cannot login.');
     const response = yield call(requestLoginUser, action.payload);
 
     const { data: responseData } = response;

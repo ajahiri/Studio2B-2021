@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { BASE_API_URL } from '../../../globals/globals';
+import { resolveBaseURL } from '../../../globals/globals';
+
+const BASE_API_URL = resolveBaseURL();
 
 // This file contains functions pertaining to API requests that have to do with auth
 
