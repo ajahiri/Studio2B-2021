@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   imageContainer: {
-    marginTop: 10,
+    marginTop: 20,
     alignItems: "center",
   },
   image: {
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     width: "85%",
   },
   detailContainer: {
-    marginTop: 10,
+    marginTop: 25,
     padding: 10,
     marginLeft: "auto",
     marginRight: "auto",
