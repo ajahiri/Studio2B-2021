@@ -42,7 +42,9 @@ export function* handleRegisterUser(action) {
 
 export function* handleLoginUser(action) {
   try {
+    console.log('about to make login request: ', action);
     const response = yield call(requestLoginUser, action.payload);
+    console.log(response);
 
     const { data: responseData } = response;
     // Weird setup on my end making the post response send a {data} meaning

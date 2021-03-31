@@ -40,6 +40,7 @@ const Login = props => {
   const dispatch = useDispatch();
 
   const onSubmit = values => {
+    console.log('using values:', values);
     dispatch(authActions.setAuthIsLoading(true));
     dispatch(authActions.loginUser(values));
   };
@@ -62,7 +63,7 @@ const Login = props => {
 
           <Formik
             initialValues={{ email: '', password: '' }}
-            onSubmit={() => onSubmit()}
+            onSubmit={onSubmit}
             validationSchema={formSchema}>
             {props => (
               <View>
