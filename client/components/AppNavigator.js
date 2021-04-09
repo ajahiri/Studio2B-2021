@@ -7,6 +7,7 @@ import Login from '../screens/Login';
 import Register from '../screens/Register';
 import ImageAuthRegistration from '../screens/ImageAuthRegistration';
 import Dashboard from '../screens/Dashboard';
+import TeacherDashboard from '../screens/TeacherDashboard';
 
 const Stack = createStackNavigator();
 
@@ -14,7 +15,7 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
+      <Stack.Screen
           name="Home"
           component={Home}
           options={{ headerShown: false }}
@@ -37,6 +38,12 @@ const AppNavigator = () => {
         <Stack.Screen
           name="ImageAuthRegistration"
           component={ImageAuthRegistration}
+          options={{ headerShown: false }}
+          
+        />
+        <Stack.Screen
+          name="TeacherDashboard"
+          component={TeacherDashboard}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
