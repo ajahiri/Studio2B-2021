@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  StyleSheet,
-  SafeAreaView,
+  Alert,
   KeyboardAvoidingView,
-  View,
-  TouchableOpacity,
+  SafeAreaView,
+  StyleSheet,
   Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
 
 // Form validation
 import { Formik } from 'formik';
