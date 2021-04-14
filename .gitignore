@@ -103,6 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-.vscode/*
-client/.vscode/*
-server/.vscode/*
+# .vscode/*
+# client/.vscode/*
+# server/.vscode/*
