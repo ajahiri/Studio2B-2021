@@ -20,11 +20,14 @@ export function* handleRegisterUser(action) {
   try {
     const response = yield call(requestRegisterUser, action.payload);
     // Data object is the POST response, look into data of response
+    if (!response?.data) {
+      console.log('Error getting data', response)
+    }
     const { data: responseData } = response;
     // Weird setup on my end making the post response send a {data} meaning
     // I have to use data.data cause of axios
     // TODO: fix this as axios doesn't need a "success" boolean
-    if (responseData.success) {
+    if (responseData?.success) {
       yield put(setUser(responseData.data));
       yield SecureStore.setItemAsync('userToken', responseData.token);
       yield put(setAuthToken(responseData.token));
