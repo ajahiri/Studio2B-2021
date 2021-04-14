@@ -48,6 +48,7 @@ const generateToken = user => {
     JWT_SECRET,
   );
 };
+
 router.post('/register', registerValidation, async (req, res) => {
   // Validation check
   const errors = validationResult(req);
@@ -67,12 +68,14 @@ router.post('/register', registerValidation, async (req, res) => {
   const salt = await bcrypt.genSalt();
   const hashPassword = await bcrypt.hash(req.body.password, salt);
 
+  // Default to 'student' permission level
   const user = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     university: req.body.university,
     email: req.body.email,
     password: hashPassword,
+    permissionLevel: 'student',
   });
 
   try {
