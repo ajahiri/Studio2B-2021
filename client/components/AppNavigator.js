@@ -1,79 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
 
-import Dashboard from '../screens/Dashboard';
-import ImageAuthRegistration from '../screens/ImageAuthRegistration';
+import Home from '../screens/Home';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
-import SplashScreen from '../screens/SplashScreen';
-import { connect, useDispatch } from 'react-redux';
+import ImageAuthRegistration from '../screens/ImageAuthRegistration';
+import Dashboard from '../screens/Dashboard';
+import TeacherDashboard from '../screens/TeacherDashboard';
 
-import * as SecureStore from 'expo-secure-store';
-import { setAuthToken, setUser } from '../redux/actions/authActions';
+const Stack = createStackNavigator();
 
-import jwt_decode from 'jwt-decode';
-
-const Drawer = createDrawerNavigator();
-
-const AppNavigator = props => {
-  const [isLoading, setisLoading] = useState(true);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    async function checkToken() {
-      let token = null;
-      token = await SecureStore.getItemAsync('userToken');
-      if (token) {
-        const userObj = jwt_decode(token);
-        dispatch(setUser(userObj));
-      } else {
-        token = null;
-      }
-      setisLoading(false);
-      dispatch(setAuthToken(token));
-    }
-    checkToken();
-  }, [isLoading, setisLoading]);
-
-  if (isLoading) {
-    return <SplashScreen />;
-  }
-
-  const { authToken: userToken } = props.auth;
-
+const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator>
-        {userToken == null ? (
-          <>
-            <Drawer.Screen name="Login" component={Login} options={{}} />
-            <Drawer.Screen name="Register" component={Register} options={{}} />
-          </>
-        ) : (
-          <>
-            <Drawer.Screen
-              name="Dashboard"
-              component={Dashboard}
-              options={{
-                headerShown: true,
-              }}
-            />
-            <Drawer.Screen
-              name="ImageAuthRegistration"
-              component={ImageAuthRegistration}
-              options={{
-                headerShown: true,
-              }}
-            />
-          </>
-        )}
-      </Drawer.Navigator>
+      <Stack.Navigator>
+      <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={Register}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{ headerLeft: null }}
+        />
+        <Stack.Screen
+          name="ImageAuthRegistration"
+          component={ImageAuthRegistration}
+          options={{ headerShown: false }}
+
+        />
+        <Stack.Screen
+          name="TeacherDashboard"
+          component={TeacherDashboard}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
-const mapStateToProps = state => ({ auth: state.auth });
-
-export default connect(mapStateToProps)(AppNavigator);
+export default AppNavigator;
