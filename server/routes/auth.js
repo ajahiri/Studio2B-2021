@@ -9,6 +9,8 @@ const router = express.Router();
 const User = require('../models/User');
 const { Mongoose } = require('mongoose');
 
+const verifyToken = require('../routes/verifyToken');
+
 const JWT_SECRET = process.env.JWT_SECRET || 'some_secret';
 if (JWT_SECRET === 'some_secret')
   console.log(
@@ -128,6 +130,70 @@ router.post('/login', loginValidation, async (req, res) => {
       email: user.email,
     },
   });
+});
+
+const passwordUpdateValidation = [
+  check('password')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters.'),
+];
+
+//Profile editing function
+router.put('/updateprofile', verifyToken, (req, res) => {
+
+  User.updateOne({_id: req.user._id}, {"$set": req.body})
+    .then(result => {
+      res.send(result);
+    })
+    .catch(err => console.log(req.user))
+    res.send({ success: true, data: req.user });
+});
+
+//Password editing function
+router.put('/updatepassword', verifyToken, passwordUpdateValidation, async (req, res) => {
+
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()) {
+    return res.status(422).send({errors: errors.array()})
+  }
+
+  const salt = await bcrypt.genSalt();
+  const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+  User.updateOne({_id: req.user._id}, {$set: {"password": hashPassword}})
+    .then(result => {
+      res.send(result);
+    })
+    .catch(err => console.log(req.user))
+    res.send({ success: true, data: req.user });
+});
+
+const emailUpdateValidation = [
+  check('email').isEmail().withMessage('Please provide a valid email.'),
+];
+
+router.put('/updateemail', verifyToken, emailUpdateValidation, async (req, res) => {
+
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()) {
+    return res.status(422).send({errors: errors.array()})
+  }
+
+  const user = await User.findOne({ email: req.body.email });
+  if (user)
+    return res.status(400).send({
+      success: false,
+      message: 'User with that email is registered.',
+    });
+
+  User.updateOne({_id: req.user._id}, {$set: {"email": req.body.email}})
+    .then(result => {
+      res.send(result);
+    })
+    .catch(err => console.log(req.user))
+    res.send({ success: true, data: req.user });
 });
 
 module.exports = router;
