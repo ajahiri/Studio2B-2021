@@ -49,7 +49,7 @@ const formSchema = yup.object({
 
 const Register = props => {
   // const dispatch = useDispatch();
-  // const { navigation, auth: authInfo } = props;
+  const { navigation, auth: authInfo } = props;
 
   // const onSubmit = values => {
   //   // Set loading spinner on, will be shut off by registerUser handler

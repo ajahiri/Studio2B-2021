@@ -4,9 +4,9 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Dashboard from '../screens/Dashboard';
-import ImageAuthRegistration from '../screens/ImageAuthRegistration';
+//import ImageAuthRegistration from '../screens/ImageAuthRegistration';
 import Login from '../screens/Login';
-import Register from '../screens/Register';
+import reg_index from '../screens/registration/reg_index';
 import SplashScreen from '../screens/SplashScreen';
 import { connect, useDispatch } from 'react-redux';
 
@@ -56,7 +56,7 @@ const AppNavigator = props => {
           />
           <Stack.Screen
             name="Register"
-            component={Register}
+            component={reg_index}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
@@ -69,13 +69,13 @@ const AppNavigator = props => {
               headerShown: true,
             }}
           />
-          <Drawer.Screen
+          {/* <Drawer.Screen
             name="ImageAuthRegistration"
             component={ImageAuthRegistration}
             options={{
               headerShown: true,
             }}
-          />
+          /> */}
         </Drawer.Navigator>
       )}
     </NavigationContainer>

@@ -11,12 +11,12 @@ import {
 import {ImageUpload} from '../../components/index';
 
 export default function ImageAuthRegistration({ navigation }) {
-  const returnImage = require('../../client/assets/Login/Union.png');
-  const imagePlaceholder = require('../../client/assets/Login/profile-placeholder.png');
+  const returnImage = require('../../assets/Login/Union.png');
+  const imagePlaceholder = require('../../assets/Login/profile-placeholder.png');
 
   return (
     <SafeAreaView>
-      <View style={styles.container}>
+      {/* <View style={styles.container}>
         <TouchableOpacity
           onPress={() => navigation.navigate('Home')}
           style={styles.returnButton}>
@@ -24,8 +24,15 @@ export default function ImageAuthRegistration({ navigation }) {
             <Image source={returnImage} />
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <View style={styles.textContainer}>
+      <TouchableOpacity
+          onPress={() => navigation.navigate('Home')}
+          style={styles.returnButton}>
+          {/* <View style={styles.returnImage}> */}
+            <Image source={returnImage} />
+          {/* </View> */}
+        </TouchableOpacity>
         <Text style={styles.title}>Image Authentication</Text>
         <Text style={styles.desc}>
           In order to register your account, you’re required to upload a facial
@@ -46,12 +53,15 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
+  //returnImage not used
   returnImage: {
-    paddingTop: 20,
-    paddingBottom: 40,
+    paddingTop: 40,
+    paddingBottom: 20
   },
   returnButton: {
     width: 20,
+    paddingTop: 40,
+    paddingBottom: 10,
   },
   title: {
     fontSize: 30,
@@ -63,7 +73,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textContainer: {
-    padding: 20,
+    paddingTop: 0,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   image: {
     width: 160,
