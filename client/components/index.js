@@ -3,6 +3,6 @@ import Button from './Button';
 import FormikField from './FormikField';
 import Heading from './Heading';
 import TextInput from './TextInput';
-import ImageUpload from './ImageUpload';
+import ImageCapture from './ImageCapture';
 
-export { AppNavigator, Button, FormikField, Heading, TextInput, ImageUpload, };
+export { AppNavigator, Button, FormikField, Heading, TextInput, ImageCapture, };

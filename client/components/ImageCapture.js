@@ -2,23 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Camera } from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
+import Button from './Button';
+import { colours as C, layout as L, typography as T } from '../constants';
 
-export default function ImageUpload() {
+export default function ImageCapture(props) {
+
+  // put the take photo btn in here and call the onSubmit function in reg_index inside of the updatePhoto function. 
 
   const [hasPermission, setHasPermission] = useState(null);
-  const [hasCamera, setHasCamera] = useState(null);
+  const [camera, setCamera] = useState({});
+  const [cameraReady, setCameraReady] = useState(false);
+  const [savedImage, setSavedImage] = useState({});
   const [faceDetected, setFaceDetected] = useState(false);
-  const [faceText, setFaceText] = useState('Waiting for Face Detection...');
 
   useEffect(() => {
     (async () => {
-      // check camera exists
-      try {
-        const { avaialbaleCamera } = async () => await Camera.isAvailableAsync();
-        setHasCamera(avaialbaleCamera);
-      }
-      catch { err => console.log(err) }
-
       // request camera permission
       try {
         const { status } = await Camera.requestPermissionsAsync();
@@ -29,52 +27,69 @@ export default function ImageUpload() {
   }, []);
 
   // check permissions
-  if (hasPermission === null || hasCamera === null) {
+  if (hasPermission === null) {
     return <View><Text>Loading...</Text></View>;
   }
   if (hasPermission === false) {
     return <Text>No access to camera.</Text>;
   }
-  if (hasCamera === false) {
-    return <Text>No camera has been detected.</Text>
+
+  FacesDetected = ({ faces }) => {
+    const face = faces[0];
+    if (!face) {  // if face is undefined
+      setFaceDetected(false);
+    } else {
+      setFaceDetected(true);
+    }
   }
 
-  onFacesDetected2 = ( {faces} ) => {
-    const face = faces[0];
-    console.log(face);
-    if (faces.length !== 0) {
-      //console.log(faces)
-      setFaceText('TAKE PHOTO');
-    } else {
-      setFaceText('Waiting for Face Detection...')
-    }
-    // if (face.faceID > 1) {
-    //   setFaceText('Too many faces in frame...');
-    // }
+  CameraReady = () => {
+    setCameraReady(true);
   }
+
+  takePhoto = async () => {
+    try {
+      if (camera && cameraReady) {
+        let photo = await camera.takePictureAsync();
+        setSavedImage(photo.uri);
+        props.submitAll(photo.uri);
+      }
+    }
+    catch { err => console.log(err) }
+  }
+
   return (
     <View>
       <View style={styles.imageContainer}>
         <Camera
+          ref={ref => setCamera(ref)}
+          onCameraReady={CameraReady}
           style={styles.camera}
           type={Camera.Constants.Type.front}
           autoFocus={true}
-          onFacesDetected={onFacesDetected2}
+          onFacesDetected={FacesDetected}
           onFaceDetectionError={state => console.warn('Faces detection error:', state)}
           faceDetectorSettings={{
             mode: FaceDetector.Constants.Mode.accurate,
-            detectLandmarks: true,
+            detectLandmarks: FaceDetector.Constants.Landmarks.all,
             tracking: true
           }}
+          onMountError={err => console.log(err)}
         // useCamera2Api={true}
         >
         </Camera>
       </View>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.photoButton}> 
-          <Text style={styles.buttonTextPhoto}>{faceText}</Text>
+      {/* <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.photoButton} disabled={!faceDetected} onPress={takePhoto}> 
+          <Text style={styles.buttonTextPhoto}>{faceDetected ? 'TAKE PHOTO' : 'Waiting for Face Detection...'}</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
+      <Button
+        text={faceDetected ? 'TAKE PHOTO' : 'Waiting for Face Detection...'}
+        disabled={!faceDetected}
+        onPress={takePhoto}
+        style={styles.formSubmitButton}
+      />
     </View>
   );
 }
@@ -132,5 +147,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+  },
+  formSubmitButton: {
+    marginTop: L.spacing.m,
   },
 });

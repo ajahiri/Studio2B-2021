@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,41 +8,22 @@ import {
   Image,
 } from 'react-native';
 
-import {ImageUpload} from '../../components/index';
+import { ImageCapture } from '../../components/index';
 
-export default function ImageAuthRegistration({ navigation }) {
+export default function ImageAuthRegistration(props) {
   const returnImage = require('../../assets/Login/Union.png');
   const imagePlaceholder = require('../../assets/Login/profile-placeholder.png');
 
   return (
     <SafeAreaView>
-      {/* <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('Home')}
-          style={styles.returnButton}>
-          <View style={styles.returnImage}>
-            <Image source={returnImage} />
-          </View>
-        </TouchableOpacity>
-      </View> */}
       <View style={styles.textContainer}>
-      <TouchableOpacity
-          onPress={() => navigation.navigate('Home')}
-          style={styles.returnButton}>
-          {/* <View style={styles.returnImage}> */}
-            <Image source={returnImage} />
-          {/* </View> */}
-        </TouchableOpacity>
         <Text style={styles.title}>Image Authentication</Text>
         <Text style={styles.desc}>
           In order to register your account, you’re required to upload a facial
           image. This image will be used for future authentication.
         </Text>
       </View>
-      {/* <View style={styles.imageContainer}>
-        <Image style={styles.image} source={imagePlaceholder} />
-      </View> */}
-      <ImageUpload/>
+      <ImageCapture submitAll={props.submitAll} />
     </SafeAreaView>
   );
 }
@@ -86,6 +67,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   imageContainer: {
+    height: 300,
+    paddingLeft: 30,
+    paddingRight: 30,
     paddingTop: 15,
     display: 'flex',
     flexDirection: 'row',
