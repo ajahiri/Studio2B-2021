@@ -40,6 +40,18 @@ const loginValidation = [
     .withMessage('Password must be at least 6 characters.'),
 ];
 
+const updateValidation = [
+  check('firstName')
+    .isLength({ min: 3 })
+    .withMessage('Your first name is required.'),
+  check('lastName')
+    .isLength({ min: 3 })
+    .withMessage('Your last name is required.'),
+  check('university')
+    .isLength({ min: 3 })
+    .withMessage('Your university name is required.')
+];
+
 const generateToken = user => {
   return jwt.sign(
     {
@@ -138,8 +150,8 @@ const passwordUpdateValidation = [
     .withMessage('Password must be at least 6 characters.'),
 ];
 
-//Profile editing function
-router.put('/updateprofile', verifyToken, (req, res) => {
+//Profile editing function - Enter a value for 'firstName', 'lastName' and 'univeristy'
+router.put('/updateprofile', verifyToken, updateValidation, (req, res) => {
 
   User.updateOne({_id: req.user._id}, {"$set": req.body})
     .then(result => {
