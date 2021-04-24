@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native';
+import ClassRoom from '../components/ClassRoom';
 
 const jwtDecode = require('jwt-decode');
 
@@ -39,13 +40,25 @@ const Dashboard = props => {
   });
 
   return (
-    <SafeAreaView style={styles.view}>
+    <SafeAreaView>
       <View style={styles.container}>
-        <Text>Welcome {fullName ? fullName : ''}</Text>
-        <Text>{email ? email : ''}</Text>
+        <View style={styles.info}>
+          <Text>Welcome {fullName ? fullName : ''}</Text>
+          <Text>{email ? email : ''}</Text>
+        </View>
+      </View>
+      <Button
+        title="Create Session"
+        onPress={() => console.log("create class")}
+      />
+      <TouchableOpacity onPress={() => navigation.navigate('ViewClass')}>
+        <ClassRoom/>
+      </TouchableOpacity>
+      <View>
         <Button
           title="LogOut"
-          onPress={() => dispatch(logoutUserSaga())}></Button>
+          onPress={() => dispatch(logoutUserSaga())}
+        />
       </View>
     </SafeAreaView>
   );
@@ -53,25 +66,14 @@ const Dashboard = props => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingTop: 10,
+    display: "flex",
   },
-  view: {
-    flexDirection: 'column',
-    flex: 1,
-  },
-  logoContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 300,
-  },
-  logoImage: {
-    height: 38,
-    width: 38,
-    marginRight: 20,
+  info: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginLeft: 10,
+    marginRight: 10,
   },
   title: {
     fontSize: 48,

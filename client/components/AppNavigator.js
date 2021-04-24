@@ -8,6 +8,7 @@ import ImageAuthRegistration from '../screens/ImageAuthRegistration';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import Profile from '../screens/Profile';
+import ViewClass from '../screens/ViewClass';
 import SplashScreen from '../screens/SplashScreen';
 import { connect, useDispatch } from 'react-redux';
 
@@ -15,6 +16,7 @@ import * as SecureStore from 'expo-secure-store';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
 
 import jwt_decode from 'jwt-decode';
+import ClassRoom from './ClassRoom';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -84,7 +86,16 @@ const AppNavigator = props => {
               headerShown: true,
             }}
           />
-        </Drawer.Navigator>
+        </Drawer.Navigator>,
+        <Stack.Navigator>
+          <Stack.Screen
+            name="ViewClass"
+            component={ViewClass}
+            options={{
+              headerShown: true,
+            }}
+          />
+        </Stack.Navigator>
       )}
     </NavigationContainer>
   );
