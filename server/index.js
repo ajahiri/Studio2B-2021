@@ -10,6 +10,7 @@ app.use(express.json());
 // Middleware
 const authRoutes = require('./routes/auth');
 const verifyToken = require('./routes/verifyToken');
+const sessionRoutes = require('./routes/sessions');
 
 app.get('/', (req, res) => {
   res.send('Welcome to Studio 2B 2021 Group 1 project');
@@ -21,6 +22,9 @@ app.get('/api/user/profile', verifyToken, (req, res) => {
 });
 
 app.use('/api/users', authRoutes);
+
+// Routes for sessions/classes
+app.use('/api/sessions', sessionRoutes);
 
 // Server port, default to 3000
 const port = process.env.PORT || 3000;
