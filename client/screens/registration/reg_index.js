@@ -37,7 +37,6 @@ export default function reg_index() {
         catch { err => console.log(err) }
     }
 
-    // First render Register form, then render ImageAuthRegister when Next btn is clicked.
     return (
         regPage === REG_DETAILS_PAGE ?
             <Register updateData={updateRegData} />
