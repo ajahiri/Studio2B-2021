@@ -74,11 +74,10 @@ const Login = props => {
                   style={styles.formikField}
                 />
                 <FormikField
-                  secureTextEntry
                   formikProps={props}
+                  secureTextEntry={true}
                   field="password"
                   placeholder="Password"
-                  keyboardType="visible-password"
                   style={styles.formikField}
                 />
                 {authInfo.errors !== '' && (

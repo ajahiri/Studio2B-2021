@@ -8,6 +8,10 @@ import ImageAuthRegistration from '../screens/ImageAuthRegistration';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import SplashScreen from '../screens/SplashScreen';
+import Classroom from '../screens/Classroom';
+import CreateClassroom from '../screens/CreateClassroom';
+import StartClassroom from '../screens/StartClassroom';
+
 import { connect, useDispatch } from 'react-redux';
 
 import * as SecureStore from 'expo-secure-store';
@@ -72,6 +76,27 @@ const AppNavigator = props => {
           <Drawer.Screen
             name="ImageAuthRegistration"
             component={ImageAuthRegistration}
+            options={{
+              headerShown: true,
+            }}
+          />
+          <Drawer.Screen
+            name="Classroom"
+            component={Classroom}
+            options={{
+              headerShown: true,
+            }}
+          />
+          <Drawer.Screen
+            name="CreateClassroom"
+            component={CreateClassroom}
+            options={{
+              headerShown: true,
+            }}
+          />
+          <Drawer.Screen
+            name="StartClassroom"
+            component={StartClassroom}
             options={{
               headerShown: true,
             }}
