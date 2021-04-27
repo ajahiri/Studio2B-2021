@@ -26,7 +26,7 @@ const defaultTextStyles = {
 export const title = {
   ...defaultTextStyles,
   fontSize: size.title,
-  fontFamily: fontFamily.bold,
+  fontFamily: fontFamily.medium,
 };
 
 export const h1 = {

@@ -50,6 +50,6 @@ export default function Start({ navigation }) {
 
 const startScreenStyles = StyleSheet.create({
   button: {
-    marginBottom: layout.spacing.xl,
+    marginBottom: layout.spacing.lg,
   },
 });
