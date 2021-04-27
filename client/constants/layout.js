@@ -13,10 +13,16 @@ export const radius = {
   lg: 15,
   md: 10,
   sm: 5,
+  zero: 0,
 };
 
 export const border = {
-  zero: 0,
-  thin: 1,
   thick: 2,
+  thin: 1,
+  zero: 0,
+};
+
+export const defaultScreenMargins = {
+  horizontal: spacing.lg,
+  vertical: spacing.huge,
 };

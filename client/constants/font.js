@@ -1,7 +1,8 @@
 import * as color from './color';
 
 export const size = {
-  h1: 60,
+  title: 60,
+  h1: 50,
   h2: 30,
   h3: 25,
   h4: 20,
@@ -22,16 +23,22 @@ const defaultTextStyles = {
   color: color.black,
 };
 
+export const title = {
+  ...defaultTextStyles,
+  fontSize: size.title,
+  fontFamily: fontFamily.bold,
+};
+
 export const h1 = {
   ...defaultTextStyles,
   fontSize: size.h1,
-  fontFamily: fontFamily.bold,
+  fontFamily: fontFamily.medium,
 };
 
 export const h2 = {
   ...defaultTextStyles,
   fontSize: size.h2,
-  fontFamily: fontFamily.bold,
+  fontFamily: fontFamily.medium,
 };
 
 export const h3 = {
@@ -43,6 +50,11 @@ export const h3 = {
 export const h4 = {
   ...defaultTextStyles,
   fontSize: size.h4,
+};
+
+export const caption = {
+  ...h4,
+  color: color.gray,
 };
 
 export const body = {

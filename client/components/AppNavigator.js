@@ -6,7 +6,7 @@ import { connect, useDispatch } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
 
-import { GroundZero, Start } from '../screens';
+import { GroundZero, Login, Register, Start } from '../screens';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
 
 const Stack = createStackNavigator();
@@ -40,6 +40,16 @@ function AppNavigator(props) {
           <Stack.Screen
             name="Start"
             component={Start}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Register}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

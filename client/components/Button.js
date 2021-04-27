@@ -15,7 +15,7 @@ export default function Button({
 }) {
   const stateStyle = primary ? primaryStyle : secondaryStyle;
   const currentStyle = disabled ? stateStyle.disabled : stateStyle.default;
-  const sizeStyle = small ? bigStyle : smallStyle;
+  const sizeStyle = small ? smallStyle : bigStyle;
 
   return (
     <TouchableHighlight
@@ -23,7 +23,7 @@ export default function Button({
       onPress={onPress}
       underlayColor={primary ? color.accentFocused : color.lightGray}
       style={[currentStyle, sizeStyle, props.style]}>
-      <Text style={small ? stateStyle.text : stateStyle.textSmall}>
+      <Text style={small ? stateStyle.textSmall : stateStyle.text}>
         {title.toLocaleUpperCase()}
       </Text>
     </TouchableHighlight>
@@ -52,7 +52,7 @@ export const smallStyle = {
 
 export const bigStyle = {
   height: 52,
-  borderRadius: layout.radius.sm,
+  borderRadius: layout.radius.md,
   padding: layout.spacing.md,
 };
 

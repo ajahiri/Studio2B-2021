@@ -1,35 +1,55 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
+import {
+  useWindowDimensions,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import { Button } from '../components';
+import { color, font, layout } from '../constants';
 
-export default function Start({ navigation: _ }) {
+const welcomeBanner = require('../assets/Start/welcome-banner.jpg');
+
+export default function Start({ navigation }) {
+  const screenHeight = useWindowDimensions().height;
   return (
-    <SafeAreaView style={{ margin: 20, marginTop: 60 }}>
-      <Button style={{ marginBottom: 20 }} primary title="#@$" />
-      <Button style={{ marginBottom: 20 }} primary disabled title="AuthMe" />
-      <Button style={{ marginBottom: 20 }} title="Secondary" />
-      <Button
-        style={{ marginBottom: 20 }}
-        disabled
-        title="Secondary Disabled"
+    <View style={{ flex: 1 }}>
+      <Image
+        style={{ maxHeight: screenHeight / 2.25, width: '100%' }}
+        source={welcomeBanner}
       />
-
-      <Button style={{ marginBottom: 20 }} small primary title="Primary" />
-      <Button
-        style={{ marginBottom: 20 }}
-        small
-        primary
-        disabled
-        title="Primary Disabled"
-      />
-      <Button style={{ marginBottom: 20 }} small title="Secondary" />
-      <Button
-        style={{ marginBottom: 20 }}
-        small
-        disabled
-        title="Secondary Disabled"
-      />
-    </SafeAreaView>
+      <View
+        style={{
+          flex: 1,
+          margin: layout.spacing.lg,
+          justifyContent: 'center',
+        }}>
+        <View style={{ marginTop: layout.spacing.lg }}>
+          <Text style={{ ...font.h2 }}>Welcome to</Text>
+          <Text style={{ ...font.title, color: color.accent }}>AuthMe</Text>
+        </View>
+        <View style={{ marginVertical: layout.spacing.xl }}>
+          <Button
+            style={startScreenStyles.button}
+            primary
+            title="Login"
+            onPress={() => navigation.navigate('Login')}
+          />
+          <Button
+            style={startScreenStyles.button}
+            title="Create Account"
+            onPress={() => navigation.navigate('Register')}
+          />
+        </View>
+      </View>
+    </View>
   );
 }
+
+const startScreenStyles = StyleSheet.create({
+  button: {
+    marginBottom: layout.spacing.xl,
+  },
+});
