@@ -1,13 +1,25 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
-import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import authReducer from './reducers/authReducer';
+import sessionReducer from './reducers/sessionReducer';
+
+import rootSaga from './sagas/rootSaga';
+
+const sagaMiddleware = createSagaMiddleware();
+
+const middlewares = [sagaMiddleware];
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  session: sessionReducer,
 });
 
-const middleware = composeWithDevTools(applyMiddleware(thunk));
+const middleware = composeWithDevTools(applyMiddleware(...middlewares));
 
-export default createStore(rootReducer, middleware);
+const store = createStore(rootReducer, middleware);
+
+sagaMiddleware.run(rootSaga);
+
+export default store;
