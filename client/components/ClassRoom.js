@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, Button } from "react-native";
-import { withSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet, Text, View, Button } from "react-native";
 
 export default function ClassRoom() {
+  
   return (
     <View style={styles.container}>
       <View style={styles.detailContainer}>

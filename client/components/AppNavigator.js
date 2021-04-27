@@ -12,11 +12,12 @@ import ViewClass from '../screens/ViewClass';
 import SplashScreen from '../screens/SplashScreen';
 import { connect, useDispatch } from 'react-redux';
 
+import StackNav from './StackNav';
+
 import * as SecureStore from 'expo-secure-store';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
 
 import jwt_decode from 'jwt-decode';
-import ClassRoom from './ClassRoom';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -67,7 +68,7 @@ const AppNavigator = props => {
         <Drawer.Navigator>
           <Drawer.Screen
             name="Dashboard"
-            component={Dashboard}
+            component={StackNav}
             options={{
               headerShown: true,
             }}
@@ -86,16 +87,16 @@ const AppNavigator = props => {
               headerShown: true,
             }}
           />
-        </Drawer.Navigator>,
-        <Stack.Navigator>
-          <Stack.Screen
-            name="ViewClass"
-            component={ViewClass}
-            options={{
-              headerShown: true,
-            }}
-          />
-        </Stack.Navigator>
+        </Drawer.Navigator>
+        // <Stack.Navigator>
+        //   <Stack.Screen
+        //     name="ViewClass"
+        //     component={ViewClass}
+        //     options={{
+        //       headerShown: true,
+        //     }}
+        //   />
+        // </Stack.Navigator>
       )}
     </NavigationContainer>
   );

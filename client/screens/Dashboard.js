@@ -17,6 +17,8 @@ import { useDispatch } from 'react-redux';
 import { logoutUserSaga } from '../redux/actions/authActions';
 
 const Dashboard = props => {
+
+  console.log(props);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
 

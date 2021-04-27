@@ -1,13 +1,14 @@
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 
-const ViewClass = ({ navigation }) => {
+const ViewClass = (props) => {
 
     return (
         <View style={styles.container}>
             <Button
                 title={"Back"}
-                onPress={() => navigation.goBack() }
+                onPress={() => props.navigation.goBack() }
+                // onPress={ () => console.log(props) }
             />
             <Text style={styles.text}>ViewClass</Text>
         </View>
