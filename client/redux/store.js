@@ -3,6 +3,8 @@ import createSagaMiddleware from 'redux-saga';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import authReducer from './reducers/authReducer';
+import sessionReducer from './reducers/sessionReducer';
+
 import rootSaga from './sagas/rootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -11,6 +13,7 @@ const middlewares = [sagaMiddleware];
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  session: sessionReducer,
 });
 
 const middleware = composeWithDevTools(applyMiddleware(...middlewares));

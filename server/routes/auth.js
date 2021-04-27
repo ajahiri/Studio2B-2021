@@ -9,6 +9,8 @@ const router = express.Router();
 const User = require('../models/User');
 const { Mongoose } = require('mongoose');
 
+const verifyToken = require('./verifyToken');
+
 const JWT_SECRET = process.env.JWT_SECRET || 'some_secret';
 if (JWT_SECRET === 'some_secret')
   console.log(
@@ -25,13 +27,6 @@ const registerValidation = [
   check('university')
     .isLength({ min: 3 })
     .withMessage('Your university name is required.'),
-  check('email').isEmail().withMessage('Please provide a valid email.'),
-  check('password')
-    .isLength({ min: 6 })
-    .withMessage('Password must be at least 6 characters.'),
-];
-
-const loginValidation = [
   check('email').isEmail().withMessage('Please provide a valid email.'),
   check('password')
     .isLength({ min: 6 })
@@ -96,6 +91,13 @@ router.post('/register', registerValidation, async (req, res) => {
   }
 });
 
+const loginValidation = [
+  check('email').isEmail().withMessage('Please provide a valid email.'),
+  check('password')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters.'),
+];
+
 router.post('/login', loginValidation, async (req, res) => {
   // Validation check
   const errors = validationResult(req);
@@ -129,8 +131,59 @@ router.post('/login', loginValidation, async (req, res) => {
       id: user._id,
       fullName: `${user.firstName} ${user.lastName}`,
       email: user.email,
+      permissionLevel: user.permissionLevel,
     },
   });
+});
+
+const getUserValidation = [
+  check('userID')
+    .isString()
+    .optional(true)
+    .withMessage('Please provide a valid user ID.'),
+];
+
+router.post('/getUser', verifyToken, getUserValidation, async (req, res) => {
+  // With verifyToken middleware, we have access to user ID from token
+  // Validation check
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
+  // console.log('about to get a user of ID:', req.body.userID);
+
+  // Get user object for checking perms
+  const userObject = await User.findOne({ _id: req.user._id });
+
+  try {
+    if (userObject.permissionLevel !== 'admin') {
+      if (!req.body.userID || req.body.userID === req.user._id) {
+        return res
+          .status(200)
+          .send({ message: 'Found user.', data: userObject });
+      } else {
+        return res
+          .status(401)
+          .send(
+            'No permission to get user data other than your own, must be administrator.',
+          );
+      }
+    } else {
+      if (!req.body.userID)
+        return res
+          .status(200)
+          .send({ message: 'Found user.', data: userObject });
+      // Get user OBJ
+      const targetUser = await User.findOne({ _id: req.body.userID });
+      if (!targetUser) {
+        return res.status(404).send('No user of that ID could be found.');
+      }
+      return res.status(200).send({ message: 'Found user.', data: targetUser });
+    }
+  } catch (error) {
+    res.status(400).send({ message: 'Error while finding user.', error });
+  }
 });
 
 module.exports = router;

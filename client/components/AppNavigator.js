@@ -8,9 +8,8 @@ import ImageAuthRegistration from '../screens/ImageAuthRegistration';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import SplashScreen from '../screens/SplashScreen';
-import Classroom from '../screens/Classroom';
+import TeacherViewSession from '../screens/TeacherViewSession';
 import CreateClassroom from '../screens/CreateClassroom';
-import StartClassroom from '../screens/StartClassroom';
 
 import { connect, useDispatch } from 'react-redux';
 
@@ -81,23 +80,18 @@ const AppNavigator = props => {
             }}
           />
           <Drawer.Screen
-            name="Classroom"
-            component={Classroom}
+            name="ViewSession"
+            component={TeacherViewSession}
             options={{
+              title: 'View Session',
               headerShown: true,
             }}
           />
           <Drawer.Screen
-            name="CreateClassroom"
+            name="CreateClass"
             component={CreateClassroom}
             options={{
-              headerShown: true,
-            }}
-          />
-          <Drawer.Screen
-            name="StartClassroom"
-            component={StartClassroom}
-            options={{
+              title: 'Create Class Session',
               headerShown: true,
             }}
           />

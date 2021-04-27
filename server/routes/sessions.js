@@ -21,6 +21,9 @@ const sessionValidation = [
   check('description')
     .isLength({ min: 3 })
     .withMessage('Must provide a valid class description.'),
+  check('maxStudents')
+    .isNumeric({ min: 1 })
+    .withMessage('Must provide a valid class student maximum.'),
   check('questions')
     .isArray({ min: 1 })
     .withMessage(
@@ -51,11 +54,14 @@ router.post(
         .send('No permission to create a new class/session!');
     }
 
+    console.log('creating a new session', req.body);
+
     // Create the new session associated with this teacher user
     const newClass = new Session({
       shortID: nanoid(10),
       name: req.body.name,
       description: req.body.description || 'test',
+      maxStudents: req.body.maxStudents,
       owner: userObject._id,
       participants: [],
       questions: req.body.questions,

@@ -14,6 +14,7 @@ const sessionSchema = new mongoose.Schema(
     shortID: { type: String, required: true },
     name: { type: String, required: true },
     description: { type: String, required: true },
+    maxStudents: { type: Number, required: true },
     owner: { type: String, required: true }, // ID of teacher(owner) user obj
     participants: [String], // Array of student user IDs
     questions: [questionSchema],

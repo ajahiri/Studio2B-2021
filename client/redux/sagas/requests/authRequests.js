@@ -22,3 +22,15 @@ export function requestLoginUser(userLogin) {
     data: userLogin,
   });
 }
+
+export function requestGetUser(userID, authToken) {
+  return axios.request({
+    method: 'post',
+    url: `/api/users/getUser`,
+    baseURL: BASE_API_URL,
+    data: userID,
+    headers: {
+      'auth-token': authToken,
+    },
+  });
+}
