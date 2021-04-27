@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textContainer: {
-    paddingTop: 0,
+    paddingTop: 40,
     paddingLeft: 20,
     paddingRight: 20,
   },

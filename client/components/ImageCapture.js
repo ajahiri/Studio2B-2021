@@ -84,12 +84,14 @@ const ImageCapture = props => {
         >
         </Camera>
       </View>
-      <Button
-        text={faceDetected ? 'TAKE PHOTO' : 'Waiting for Face Detection...'}
-        disabled={!faceDetected}
-        onPress={takePhoto}
-        style={styles.formSubmitButton}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          text={faceDetected ? 'TAKE PHOTO' : 'Waiting for Face Detection...'}
+          disabled={!faceDetected}
+          onPress={takePhoto}
+          style={styles.formSubmitButton}
+        />
+      </View>
     </View>
   );
 }

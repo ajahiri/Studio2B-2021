@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textContainer: {
-    paddingTop: 0,
+    paddingTop: 60,
     paddingLeft: 20,
     paddingRight: 20,
   },
