@@ -15,6 +15,7 @@ import {
 
 import AppNavigator from './components/AppNavigator';
 import store from './redux/store';
+import ImageAuth from './screens/ImageAuth';
 
 export default function App() {
   const [fontsLoaded, fontsError] = useFonts({
@@ -36,7 +37,8 @@ export default function App() {
     return (
       <Provider store={store}>
         <StatusBar style="dark" />
-        <AppNavigator />
+        {/* <AppNavigator /> */}
+        <ImageAuth />
       </Provider>
     );
   }

@@ -11,11 +11,16 @@ import { colours as C, layout as L, typography as T } from '../constants';
 import * as cameraActions from '../redux/actions/cameraActions';
 import * as authActions from '../redux/actions/authActions';
 
+import { RNS3 } from 'react-native-upload-aws-s3';
+import TextInput from './TextInput';
+
 const ImageCapture = props => {
+  const [name, onChangeName] = useState('Test');
+
   const dispatch = useDispatch();
   const { cameraReady } = props;
 
-  // put the take photo btn in here and call the onSubmit function in reg_index inside of the updatePhoto function. 
+  // put the take photo btn in here and call the onSubmit function in reg_index inside of the updatePhoto function.
 
   const [hasPermission, setHasPermission] = useState(null);
   const [faceDetected, setFaceDetected] = useState(false);
@@ -27,14 +32,19 @@ const ImageCapture = props => {
       try {
         const { status } = await Camera.requestPermissionsAsync();
         setHasPermission(status === 'granted');
+      } catch {
+        err => console.log(err);
       }
-      catch { err => console.log(err) }
     })();
   }, []);
 
   // check permissions
   if (hasPermission === null) {
-    return <View><Text>Loading...</Text></View>;
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
   if (hasPermission === false) {
     return <Text>No access to camera.</Text>;
@@ -42,24 +52,54 @@ const ImageCapture = props => {
 
   const FacesDetected = ({ faces }) => {
     const face = faces[0];
-    if (!face) {  // if face is undefined
+    if (!face) {
+      // if face is undefined
       setFaceDetected(false);
     } else {
       setFaceDetected(true);
     }
-  }
+  };
 
   const takePhoto = () => {
     if (cameraInstance && cameraReady) {
       dispatch(authActions.setAuthIsLoading(true));
       //dispatch(cameraActions.imgURI(cameraInstance.takePictureAsync()));
-      cameraInstance.takePictureAsync()
-        .then((img) => {
+      cameraInstance
+        .takePictureAsync()
+        .then(img => {
           dispatch(cameraActions.imgURI(img.uri));
+          uploadToS3(img.uri);
           dispatch(cameraActions.capturedImage(true));
           props.submitAll();
         })
         .catch(err => console.log(err));
+    }
+  };
+
+  async function uploadToS3(uri) {
+    const file = {
+      uri,
+      name,
+      type: 'image/png',
+    };
+
+    const options = {
+      bucket: 'faceindexrico',
+      region: 'us-east-2',
+      accessKey: 'AKIAQQ4SGZXPNCHN4JVO',
+      secretKey: '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',
+      successActionStatus: 201,
+    };
+
+    try {
+      const response = await RNS3.put(file, options);
+      if (response.status === 201) {
+        console.log('Successfully uploaded: ', response.body);
+      } else {
+        console.log('Failed to upload image to S3: ', response);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -74,19 +114,32 @@ const ImageCapture = props => {
           type={Camera.Constants.Type.front}
           autoFocus={true}
           onFacesDetected={FacesDetected}
-          onFaceDetectionError={state => console.warn('Faces detection error:', state)}
+          onFaceDetectionError={state =>
+            console.warn('Faces detection error:', state)
+          }
           faceDetectorSettings={{
             mode: FaceDetector.Constants.Mode.accurate,
             detectLandmarks: FaceDetector.Constants.Landmarks.all,
-            tracking: true
+            tracking: true,
           }}
-          onMountError={err => console.log(err)}
-        >
-        </Camera>
+          onMountError={err => console.log(err)}></Camera>
       </View>
+      <TextInput
+        onChangeText={onChangeName}
+        value={name}
+        style={{
+          borderColor: 'blue',
+          borderWidth: 1,
+          margin: 10,
+          padding: 20,
+        }}></TextInput>
       <View style={styles.buttonContainer}>
         <Button
-          text={faceDetected ? 'TAKE PHOTO' : 'Waiting for Face Detection...'}
+          text={
+            faceDetected && name
+              ? 'TAKE PHOTO'
+              : 'Waiting for Face Detection...'
+          }
           disabled={!faceDetected}
           onPress={takePhoto}
           style={styles.formSubmitButton}
@@ -94,13 +147,13 @@ const ImageCapture = props => {
       </View>
     </View>
   );
-}
+};
 
 const mapStateToProps = state => {
   return {
     cameraReady: state.camera.cameraReady,
   };
-}
+};
 
 export default connect(mapStateToProps)(ImageCapture);
 

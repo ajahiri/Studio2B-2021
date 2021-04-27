@@ -11,5 +11,8 @@
   },
   "devDependencies": {
     "prettier": "2.2.1"
+  },
+  "dependencies": {
+    "react-native-upload-aws-s3": "^0.8.1"
   }
 }

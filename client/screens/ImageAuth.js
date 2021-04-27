@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import { ImageCapture } from '../components';
 
-export default function ImageAuth({ navigation }) {
+export default function ImageAuth({ submitAll, navigation }) {
   const returnImage = require('../../client/assets/Login/Union.png');
   const imagePlaceholder = require('../../client/assets/Login/profile-placeholder.png');
 
@@ -22,7 +23,11 @@ export default function ImageAuth({ navigation }) {
           image. This image will be used for future authentication.
         </Text>
       </View>
-      <ImageCapture submitAll={props.submitAll} />
+      <ImageCapture
+        submitAll={() => {
+          console.log('Uploading...');
+        }}
+      />
     </SafeAreaView>
   );
 }
@@ -36,7 +41,7 @@ const styles = StyleSheet.create({
   //returnImage not used
   returnImage: {
     paddingTop: 40,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   returnButton: {
     width: 20,
