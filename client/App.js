@@ -6,21 +6,21 @@ import { Alert } from 'react-native';
 
 import {
   useFonts,
-  Roboto_300Light,
-  Roboto_400Regular,
-  Roboto_500Medium,
-  Roboto_700Bold,
-} from '@expo-google-fonts/roboto';
+  Inter_300Light,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_700Bold,
+} from '@expo-google-fonts/inter';
 
 import AppNavigator from './components/AppNavigator';
 import store from './redux/store';
 
 export default function App() {
   const [fontsLoaded, fontsError] = useFonts({
-    Roboto_300Light,
-    Roboto_400Regular,
-    Roboto_500Medium,
-    Roboto_700Bold,
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_700Bold,
   });
 
   if (!fontsLoaded) {

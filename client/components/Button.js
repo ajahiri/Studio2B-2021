@@ -9,15 +9,13 @@ export default function Button({
   title,
   primary = false,
   disabled = false,
-  size = 'big',
+  small = false,
   onPress = () => {},
   ...props
 }) {
   const stateStyle = primary ? primaryStyle : secondaryStyle;
   const currentStyle = disabled ? stateStyle.disabled : stateStyle.default;
-
-  const isBig = size === 'big';
-  const sizeStyle = isBig ? bigStyle : smallStyle;
+  const sizeStyle = small ? bigStyle : smallStyle;
 
   return (
     <TouchableHighlight
@@ -25,8 +23,8 @@ export default function Button({
       onPress={onPress}
       underlayColor={primary ? color.accentFocused : color.lightGray}
       style={[currentStyle, sizeStyle, props.style]}>
-      <Text style={isBig ? stateStyle.text : stateStyle.textSmall}>
-        {title}
+      <Text style={small ? stateStyle.text : stateStyle.textSmall}>
+        {title.toLocaleUpperCase()}
       </Text>
     </TouchableHighlight>
   );
@@ -35,36 +33,36 @@ export default function Button({
 Button.propTypes = {
   title: PropTypes.string.isRequired,
   primary: PropTypes.bool,
-  size: PropTypes.oneOf(['big', 'small']),
   disabled: PropTypes.bool,
+  small: PropTypes.bool,
   onPress: PropTypes.func,
 };
 
 export const buttonStyles = {
   alignItems: 'center',
-  borderWidth: layout.border.thin,
+  borderWidth: layout.border.thick,
   justifyContent: 'center',
 };
 
 export const smallStyle = {
-  height: 28,
-  borderRadius: layout.radius.md,
+  height: 35,
+  borderRadius: layout.radius.sm,
   padding: layout.spacing.sm,
 };
 
 export const bigStyle = {
-  height: 50,
-  borderRadius: layout.radius.lg,
+  height: 52,
+  borderRadius: layout.radius.sm,
   padding: layout.spacing.md,
 };
 
 export const textStyle = {
-  fontWeight: '700',
+  fontFamily: font.fontFamily.bold,
 };
 
 export const bigTextStyle = {
   ...textStyle,
-  fontSize: font.size.lg,
+  fontSize: font.size.md,
 };
 
 export const smallTextStyle = {
@@ -96,16 +94,16 @@ export const primaryStyle = StyleSheet.create({
 export const secondaryStyle = StyleSheet.create({
   text: {
     ...bigTextStyle,
-    color: color.gray,
+    color: color.black,
   },
   textSmall: {
     ...smallTextStyle,
-    color: color.gray,
+    color: color.black,
   },
   default: {
     ...buttonStyles,
     backgroundColor: color.white,
-    borderColor: color.gray,
+    borderColor: color.black,
   },
   disabled: {
     ...buttonStyles,

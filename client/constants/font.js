@@ -11,6 +11,13 @@ export const size = {
   xs: 12,
 };
 
+export const fontFamily = {
+  light: 'Inter_300Light',
+  regular: 'Inter_400Regular',
+  medium: 'Inter_500Medium',
+  bold: 'Inter_700Bold',
+};
+
 const defaultTextStyles = {
   color: color.black,
 };
@@ -18,19 +25,19 @@ const defaultTextStyles = {
 export const h1 = {
   ...defaultTextStyles,
   fontSize: size.h1,
-  fontWeight: '700',
+  fontFamily: fontFamily.bold,
 };
 
 export const h2 = {
   ...defaultTextStyles,
   fontSize: size.h2,
-  fontWeight: '700',
+  fontFamily: fontFamily.bold,
 };
 
 export const h3 = {
   ...defaultTextStyles,
   fontSize: size.h3,
-  fontWeight: '300',
+  fontFamily: fontFamily.light,
 };
 
 export const h4 = {
