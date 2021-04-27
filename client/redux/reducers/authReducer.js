@@ -7,6 +7,7 @@ import {
   LOG_OUT_USER,
   LOG_OUT_USER_SAGA,
   LOGIN_USER_SAGA,
+  GET_THIS_USER_SAGA,
 } from '../types';
 
 const initialState = {
@@ -54,6 +55,8 @@ export default function (state = initialState, action) {
       return {
         ...state,
       };
+    case GET_THIS_USER_SAGA:
+      return { ...state };
     default:
       return state;
   }

@@ -4,10 +4,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Dashboard from '../screens/Dashboard';
-//import ImageAuthRegistration from '../screens/ImageAuthRegistration';
+import ImageAuth from '../screens/ImageAuth';
 import Login from '../screens/Login';
 import reg_index from '../screens/registration/reg_index';
 import SplashScreen from '../screens/SplashScreen';
+import TeacherViewSession from '../screens/TeacherViewSession';
+import CreateClassroom from '../screens/CreateClassroom';
+
 import { connect, useDispatch } from 'react-redux';
 
 import * as SecureStore from 'expo-secure-store';
@@ -69,13 +72,29 @@ const AppNavigator = props => {
               headerShown: true,
             }}
           />
-          {/* <Drawer.Screen
-            name="ImageAuthRegistration"
-            component={ImageAuthRegistration}
+          <Drawer.Screen
+            name="ImageAuth"
+            component={ImageAuth}
             options={{
               headerShown: true,
             }}
-          /> */}
+          />
+          <Drawer.Screen
+            name="ViewSession"
+            component={TeacherViewSession}
+            options={{
+              title: 'View Session',
+              headerShown: true,
+            }}
+          />
+          <Drawer.Screen
+            name="CreateClass"
+            component={CreateClassroom}
+            options={{
+              title: 'Create Class Session',
+              headerShown: true,
+            }}
+          /> 
         </Drawer.Navigator>
       )}
     </NavigationContainer>

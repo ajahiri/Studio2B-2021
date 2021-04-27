@@ -14,12 +14,13 @@ import { AntDesign } from '@expo/vector-icons';
 // Form validation
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import FormikField from '../components/FormikField';
 
 import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
 import Heading from '../components/Heading';
-import FormikField from '../components/FormikField';
+
 import Button from '../components/Button';
 
 import { colours as C, layout as L, typography as T } from '../constants';
@@ -74,11 +75,10 @@ const Login = props => {
                   style={styles.formikField}
                 />
                 <FormikField
-                  secureTextEntry
                   formikProps={props}
+                  secureTextEntry={true}
                   field="password"
                   placeholder="Password"
-                  keyboardType="visible-password"
                   style={styles.formikField}
                 />
                 {authInfo.errors !== '' && (
