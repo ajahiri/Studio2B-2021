@@ -1,3 +1,4 @@
+import { useLinkProps } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   View,

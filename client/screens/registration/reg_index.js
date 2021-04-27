@@ -1,6 +1,7 @@
 import Register from './Register';
 import ImageAuthRegistration from './ImageAuthRegistration';
 import React, { useState } from 'react';
+import { connect, useDispatch } from 'react-redux';
 import {
     StyleSheet,
     View,
@@ -8,33 +9,41 @@ import {
     TouchableOpacity,
     Image,
 } from 'react-native';
+import * as cameraActions from '../../redux/actions/cameraActions';
+import * as authActions from '../../redux/actions/authActions';
 
 
-export default function reg_index() {
+const reg_index = props => {
+    const dispatch = useDispatch();
+    const { img_uri, capturedImage } = props;
+
 
     const REG_DETAILS_PAGE = 'REG_DETAILS_PAGE';
     const REG_PHOTO_PAGE = 'REG_PHOTO_PAGE';
+    const PREVIEW = 'PREVIEW';
 
     const [regData, setRegData] = useState({});
-    const [regPhotoURI, setRegPhotoURI] = useState('');
+    //const [regPhotoURI, setRegPhotoURI] = useState('');
     const [regPage, setRegPage] = useState(REG_DETAILS_PAGE);
 
-    const updateRegData = async (inputData) => {
-        try {
-            await setRegData(inputData);
-            await setRegPage(REG_PHOTO_PAGE);
-            console.log(inputData);
-        }
-        catch{ err => console.log(err) }
+    const updateRegData = (inputData) => {
+        setRegData(inputData);
+        setRegPage(REG_PHOTO_PAGE);
     }
 
-    const submitAll = async (imgURI) => {
-        try {
-            await setRegPhotoURI(imgURI);
-            console.log(imgURI);
-            //submit regData and regPhotoURI to backend
+    const submitAll = () => {
+
+        let user = {
+            firstName: regData.firstName,
+            lastName: regData.lastName,
+            university: regData.university,
+            email: regData.email,
+            password: regData.password,
+            img_uri: img_uri,
         }
-        catch { err => console.log(err) }
+
+        // submit user data to backend
+        dispatch(authActions.registerUser(user)); 
     }
 
     return (
@@ -44,6 +53,15 @@ export default function reg_index() {
             <ImageAuthRegistration submitAll={submitAll} />
     );
 }
+
+const mapStateToProps = state => {
+    return {
+        img_uri: state.camera.img_uri,
+        capturedImage: state.camera.capturedImage,
+    }; 
+}
+
+export default connect(mapStateToProps)(reg_index);
 
 const styles = StyleSheet.create({
     buttonContainer: {

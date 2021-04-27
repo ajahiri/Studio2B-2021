@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { connect, useDispatch } from 'react-redux';
+
 import { Camera } from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
+
 import Button from './Button';
 import { colours as C, layout as L, typography as T } from '../constants';
 
-export default function ImageCapture(props) {
+import * as cameraActions from '../redux/actions/cameraActions';
+import * as authActions from '../redux/actions/authActions';
+
+const ImageCapture = props => {
+  const dispatch = useDispatch();
+  const { cameraReady } = props;
 
   // put the take photo btn in here and call the onSubmit function in reg_index inside of the updatePhoto function. 
 
   const [hasPermission, setHasPermission] = useState(null);
-  const [camera, setCamera] = useState({});
-  const [cameraReady, setCameraReady] = useState(false);
-  const [savedImage, setSavedImage] = useState({});
   const [faceDetected, setFaceDetected] = useState(false);
+  const [cameraInstance, setCameraInstance] = useState({});
 
   useEffect(() => {
     (async () => {
@@ -34,7 +40,7 @@ export default function ImageCapture(props) {
     return <Text>No access to camera.</Text>;
   }
 
-  FacesDetected = ({ faces }) => {
+  const FacesDetected = ({ faces }) => {
     const face = faces[0];
     if (!face) {  // if face is undefined
       setFaceDetected(false);
@@ -43,27 +49,27 @@ export default function ImageCapture(props) {
     }
   }
 
-  CameraReady = () => {
-    setCameraReady(true);
-  }
-
-  takePhoto = async () => {
-    try {
-      if (camera && cameraReady) {
-        let photo = await camera.takePictureAsync();
-        setSavedImage(photo.uri);
-        props.submitAll(photo.uri);
-      }
+  const takePhoto = () => {
+    if (cameraInstance && cameraReady) {
+      dispatch(authActions.setAuthIsLoading(true));
+      //dispatch(cameraActions.imgURI(cameraInstance.takePictureAsync()));
+      cameraInstance.takePictureAsync()
+        .then((img) => {
+          dispatch(cameraActions.imgURI(img.uri));
+          dispatch(cameraActions.capturedImage(true));
+          props.submitAll();
+        })
+        .catch(err => console.log(err));
     }
-    catch { err => console.log(err) }
   }
 
   return (
     <View>
       <View style={styles.imageContainer}>
         <Camera
-          ref={ref => setCamera(ref)}
-          onCameraReady={CameraReady}
+          //ref={ref => setCameraInstance(ref)}
+          ref={ref => setCameraInstance(ref)}
+          onCameraReady={() => dispatch(cameraActions.cameraReady(true))}
           style={styles.camera}
           type={Camera.Constants.Type.front}
           autoFocus={true}
@@ -75,15 +81,9 @@ export default function ImageCapture(props) {
             tracking: true
           }}
           onMountError={err => console.log(err)}
-        // useCamera2Api={true}
         >
         </Camera>
       </View>
-      {/* <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.photoButton} disabled={!faceDetected} onPress={takePhoto}> 
-          <Text style={styles.buttonTextPhoto}>{faceDetected ? 'TAKE PHOTO' : 'Waiting for Face Detection...'}</Text>
-        </TouchableOpacity>
-      </View> */}
       <Button
         text={faceDetected ? 'TAKE PHOTO' : 'Waiting for Face Detection...'}
         disabled={!faceDetected}
@@ -93,6 +93,14 @@ export default function ImageCapture(props) {
     </View>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    cameraReady: state.camera.cameraReady,
+  };
+}
+
+export default connect(mapStateToProps)(ImageCapture);
 
 const styles = StyleSheet.create({
   container: {
