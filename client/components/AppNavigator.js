@@ -4,7 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import Dashboard from '../screens/Dashboard';
-import ImageAuthRegistration from '../screens/ImageAuthRegistration';
+import ImageAuth from '../screens/ImageAuth';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import SplashScreen from '../screens/SplashScreen';
@@ -73,8 +73,8 @@ const AppNavigator = props => {
             }}
           />
           <Drawer.Screen
-            name="ImageAuthRegistration"
-            component={ImageAuthRegistration}
+            name="ImageAuth"
+            component={ImageAuth}
             options={{
               headerShown: true,
             }}

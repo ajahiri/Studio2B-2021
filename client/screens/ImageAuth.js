@@ -8,7 +8,7 @@ import {
   Image,
 } from 'react-native';
 
-export default function ImageAuthRegistration({ navigation }) {
+export default function ImageAuth({ navigation }) {
   const returnImage = require('../../client/assets/Login/Union.png');
   const imagePlaceholder = require('../../client/assets/Login/profile-placeholder.png');
 
