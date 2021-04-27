@@ -1,5 +1,5 @@
-import colours from './colours';
-import layout from './layout';
-import typography from './typography';
+import * as color from './color';
+import * as font from './font';
+import * as layout from './layout';
 
-export { colours, layout, typography };
+export { color, font, layout };

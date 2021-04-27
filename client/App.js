@@ -2,14 +2,13 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Provider } from 'react-redux';
 import AppLoading from 'expo-app-loading';
-import { Alert, SafeAreaView } from 'react-native';
+import { Alert } from 'react-native';
 
 import {
   useFonts,
   Roboto_300Light,
   Roboto_400Regular,
   Roboto_500Medium,
-  // Roboto_600SemiBold,
   Roboto_700Bold,
 } from '@expo-google-fonts/roboto';
 
@@ -21,7 +20,6 @@ export default function App() {
     Roboto_300Light,
     Roboto_400Regular,
     Roboto_500Medium,
-    // Roboto_600SemiBold,
     Roboto_700Bold,
   });
 

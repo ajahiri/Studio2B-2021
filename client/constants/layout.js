@@ -1,22 +1,22 @@
-export default {
-  pageMarginVertical: 52,
-  pageMarginHorizontal: 22,
-  pageBackButtonSize: 32,
+export const spacing = {
+  huge: 64,
+  xxl: 32,
+  xl: 24,
+  lg: 16,
+  md: 8,
+  sm: 4,
+  xs: 2,
+  zero: 0,
+};
 
-  borderRadius: 10,
-  borderWidth: 2,
+export const radius = {
+  lg: 15,
+  md: 10,
+  sm: 5,
+};
 
-  defaultPadding: 16,
-  defaultPaddingVertical: 16,
-  defaultPaddingHorizontal: 16,
-
-  spacing: {
-    xxs: 1,
-    xs: 4,
-    s: 8,
-    m: 16,
-    l: 24,
-    xl: 32,
-    xxl: 64,
-  },
+export const border = {
+  zero: 0,
+  thin: 1,
+  thick: 2,
 };

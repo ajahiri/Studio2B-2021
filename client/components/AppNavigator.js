@@ -1,105 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Dashboard from '../screens/Dashboard';
-import ImageAuth from '../screens/ImageAuth';
-import Login from '../screens/Login';
-import Register from '../screens/Register';
-import SplashScreen from '../screens/SplashScreen';
-import TeacherViewSession from '../screens/TeacherViewSession';
-import CreateClassroom from '../screens/CreateClassroom';
-
 import { connect, useDispatch } from 'react-redux';
-
 import * as SecureStore from 'expo-secure-store';
+import jwtDecode from 'jwt-decode';
+
+import { GroundZero, Start } from '../screens';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
 
-import jwt_decode from 'jwt-decode';
-
-const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-const AppNavigator = props => {
-  const [isLoading, setisLoading] = useState(true);
-
+function AppNavigator(props) {
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
     async function checkToken() {
-      let token = null;
-      token = await SecureStore.getItemAsync('userToken');
+      const token = await SecureStore.getItemAsync('userToken');
+
       if (token) {
-        const userObj = jwt_decode(token);
-        dispatch(setUser(userObj));
-      } else {
-        token = null;
+        const userObject = jwtDecode(token);
+        dispatch(setUser(userObject));
       }
-      setisLoading(false);
+
+      setIsLoading(false);
       dispatch(setAuthToken(token));
     }
+
     checkToken();
-  }, [isLoading, setisLoading]);
+  }, [isLoading, setIsLoading]);
 
-  if (isLoading) {
-    return <SplashScreen />;
-  }
-
-  const { authToken: userToken } = props.auth;
+  const { authToken } = props.auth;
 
   return (
     <NavigationContainer>
-      {userToken == null ? (
+      {authToken == null ? (
         <Stack.Navigator>
           <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Register"
-            component={Register}
+            name="Start"
+            component={Start}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
       ) : (
-        <Drawer.Navigator>
-          <Drawer.Screen
-            name="Dashboard"
-            component={Dashboard}
-            options={{
-              headerShown: true,
-            }}
-          />
-          <Drawer.Screen
-            name="ImageAuth"
-            component={ImageAuth}
-            options={{
-              headerShown: true,
-            }}
-          />
-          <Drawer.Screen
-            name="ViewSession"
-            component={TeacherViewSession}
-            options={{
-              title: 'View Session',
-              headerShown: true,
-            }}
-          />
-          <Drawer.Screen
-            name="CreateClass"
-            component={CreateClassroom}
-            options={{
-              title: 'Create Class Session',
-              headerShown: true,
-            }}
-          />
-        </Drawer.Navigator>
+        <Stack.Navigator>
+          <Stack.Screen name="GroundZero" component={GroundZero} />
+        </Stack.Navigator>
       )}
     </NavigationContainer>
   );
-};
+}
 
 const mapStateToProps = state => ({ auth: state.auth });
 
