@@ -1,24 +1,24 @@
 import React from 'react';
 import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
   Text,
   TouchableHighlight,
   TouchableOpacity,
-  SafeAreaView,
+  TouchableWithoutFeedback,
   View,
-  StyleSheet,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Button, TextInput } from '../components';
 import { color, font, layout } from '../constants';
 
-export default function Login({ navigation }) {
+function LoginHeader({ navigation }) {
   return (
-    <SafeAreaView
-      style={{
-        marginTop: layout.defaultScreenMargins.vertical,
-        marginHorizontal: layout.defaultScreenMargins.horizontal,
-      }}>
+    <>
       <TouchableHighlight
         style={{ width: 90 }}
         underlayColor={color.lightGray}
@@ -34,6 +34,13 @@ export default function Login({ navigation }) {
       <Text style={[font.caption, { marginTop: layout.spacing.md }]}>
         Enter your details below to log in.
       </Text>
+    </>
+  );
+}
+
+function LoginBody({ navigation }) {
+  return (
+    <>
       <View style={{ marginTop: layout.spacing.xxl }}>
         <TextInput placeholder="Email" style={loginScreenStyles.textInput} />
         <TextInput
@@ -50,7 +57,26 @@ export default function Login({ navigation }) {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </>
+  );
+}
+
+export default function Login({ navigation }) {
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+      keyboardVerticalOffset={layout.spacing.lg}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView
+          style={{
+            marginTop: layout.defaultScreenMargins.vertical,
+            marginHorizontal: layout.defaultScreenMargins.horizontal,
+          }}>
+          <LoginHeader navigation={navigation} />
+          <LoginBody navigation={navigation} />
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 

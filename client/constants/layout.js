@@ -23,6 +23,6 @@ export const border = {
 };
 
 export const defaultScreenMargins = {
-  horizontal: spacing.lg,
+  horizontal: spacing.xl,
   vertical: spacing.huge,
 };
