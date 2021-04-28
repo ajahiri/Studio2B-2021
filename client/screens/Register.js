@@ -50,7 +50,7 @@ function RegisterHeader({ navigation }) {
   return (
     <>
       <TouchableHighlight
-        style={{ width: 90 }}
+        style={{ width: 90, borderRadius: layout.radius.md }}
         underlayColor={color.lightGray}
         onPress={() => navigation.goBack()}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -120,11 +120,9 @@ function RegisterForm({ navigation, auth }) {
               field="password"
               placeholder="Password"
             />
-            {/* {auth.errors && auth.errors.length !== 0 && (
-              <Text style={{ color: color.error }}>
-                ERROR: {JSON.stringify(auth.errors)}
-              </Text>
-            )} */}
+            {auth.errors && auth.errors !== '' ? (
+              <Text style={{ color: color.error }}>ERROR: {auth.errors}</Text>
+            ) : null}
             <RegisterFooter
               navigation={navigation}
               disabled={

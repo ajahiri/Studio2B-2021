@@ -4,6 +4,7 @@ import Login from './Login';
 import Register from './Register';
 
 import GroundZero from './GroundZero';
+import Dashboard from './Dashboard';
 
 export {
   // Onboarding
@@ -13,4 +14,5 @@ export {
   Register,
   // Main screens
   GroundZero,
+  Dashboard,
 };

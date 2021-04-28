@@ -56,7 +56,6 @@ function LoginHeader({ navigation }) {
 }
 
 function LoginForm({ navigation, auth }) {
-  console.log({ auth });
   const dispatch = useDispatch();
 
   const onSubmit = values => {
@@ -84,9 +83,9 @@ function LoginForm({ navigation, auth }) {
               field="password"
               placeholder="Password"
             />
-            {auth.errors && auth.errors.length !== 0 && (
+            {auth.errors && auth.errors !== '' ? (
               <Text style={{ color: color.error }}>ERROR: {auth.errors}</Text>
-            )}
+            ) : null}
             <LoginFooter
               navigation={navigation}
               disabled={
