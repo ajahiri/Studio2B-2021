@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
 import { Formik } from 'formik';
@@ -37,7 +37,7 @@ function LoginHeader({ navigation }) {
   return (
     <>
       <TouchableHighlight
-        style={{ width: 90 }}
+        style={{ width: 90, borderRadius: layout.radius.md }}
         underlayColor={color.lightGray}
         onPress={() => navigation.goBack()}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -55,12 +55,13 @@ function LoginHeader({ navigation }) {
   );
 }
 
-function LoginForm({ navigation }) {
+function LoginForm({ navigation, auth }) {
+  console.log({ auth });
   const dispatch = useDispatch();
 
   const onSubmit = values => {
     dispatch(authActions.setAuthIsLoading(true));
-    dispatch(authActions.authActions.loginUser(values));
+    dispatch(authActions.loginUser(values));
   };
 
   return (
@@ -83,11 +84,15 @@ function LoginForm({ navigation }) {
               field="password"
               placeholder="Password"
             />
+            {auth.errors && auth.errors.length !== 0 && (
+              <Text style={{ color: color.error }}>ERROR: {auth.errors}</Text>
+            )}
             <LoginFooter
               navigation={navigation}
               disabled={
                 props.touched.email && props.touched.password && !props.isValid
               }
+              isLoading={auth.isLoading ?? false}
               onSubmit={props.handleSubmit}
             />
           </>
@@ -97,10 +102,16 @@ function LoginForm({ navigation }) {
   );
 }
 
-function LoginFooter({ navigation, disabled, onSubmit }) {
+function LoginFooter({ navigation, disabled, isLoading, onSubmit }) {
   return (
     <View style={{ marginTop: layout.spacing.lg }}>
-      <Button primary disabled={disabled} title="Login" onPress={onSubmit} />
+      <Button
+        primary
+        disabled={disabled}
+        isLoading={isLoading}
+        title="Login"
+        onPress={onSubmit}
+      />
       <TouchableOpacity onPress={() => navigation.navigate('Register')}>
         <Text style={[font.body, loginScreenStyles.noAccountText]}>
           I don't have an account
@@ -110,7 +121,7 @@ function LoginFooter({ navigation, disabled, onSubmit }) {
   );
 }
 
-export default function Login({ navigation }) {
+function Login({ navigation, auth }) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'position' : 'height'}
@@ -122,7 +133,7 @@ export default function Login({ navigation }) {
             marginHorizontal: layout.defaultScreenMargins.horizontal,
           }}>
           <LoginHeader navigation={navigation} />
-          <LoginForm navigation={navigation} />
+          <LoginForm auth={auth} navigation={navigation} />
         </SafeAreaView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -151,3 +162,9 @@ const loginScreenStyles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const mapStateToProps = state => {
+  return { auth: state.auth };
+};
+
+export default connect(mapStateToProps)(Login);

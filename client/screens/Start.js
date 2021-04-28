@@ -17,13 +17,17 @@ export default function Start({ navigation }) {
   return (
     <View style={{ flex: 1 }}>
       <Image
-        style={{ maxHeight: screenHeight / 2.25, width: '100%' }}
+        style={{
+          maxHeight: screenHeight / 2.25,
+          width: '100%',
+          borderRadius: layout.radius.lg,
+        }}
         source={welcomeBanner}
       />
       <View
         style={{
           flex: 1,
-          margin: layout.spacing.lg,
+          marginHorizontal: layout.defaultScreenMargins.horizontal,
           justifyContent: 'center',
         }}>
         <View style={{ marginTop: layout.spacing.lg }}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { TextInput } from '../components';
+import TextInput from './TextInput';
 import { color, font, layout } from '../constants';
 
 export default function FormikInput({
@@ -10,6 +10,7 @@ export default function FormikInput({
   placeholder = '',
   keyboardType = 'default',
   secureTextEntry = false,
+  autoComplete = 'off',
   ...props
 }) {
   return (
@@ -18,6 +19,8 @@ export default function FormikInput({
         placeholder={placeholder}
         keyboardType={keyboardType}
         secureTextEntry={secureTextEntry}
+        autoComplete={autoComplete}
+        autoCorrect={false}
         error={formikProps.touched[field] && formikProps.errors[field]}
         value={formikProps.values[field]}
         onChangeText={formikProps.handleChange(field)}

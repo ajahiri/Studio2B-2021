@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
 import { Formik } from 'formik';
@@ -24,21 +24,26 @@ import { Button, FormikInput } from '../components';
 import { color, font, layout } from '../constants';
 
 const formSchema = yup.object({
-  name: yup
+  firstName: yup
     .string()
     .required('Please provide your first name')
-    .min(3, 'Your first name should have at least 3 characters'),
+    .min(2, 'Your first name should have at least 2 characters'),
+  lastName: yup
+    .string()
+    .required('Please provide your first name')
+    .min(2, 'Your first name should have at least 2 characters'),
   email: yup
     .string()
     .required('Please provide your email')
     .email('Please input a valid email address'),
+  university: yup
+    .string()
+    .required('Please provide the name of your university')
+    .min(3, 'Your university name should have at least 3 characters'),
   password: yup
     .string()
     .required('Please provide a strong password with at least 8 characters')
     .min(8, 'Your password should have at least 8 characters'),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref('password'), null], `Passwords don't match`),
 });
 
 function RegisterHeader({ navigation }) {
@@ -55,17 +60,22 @@ function RegisterHeader({ navigation }) {
           </Text>
         </View>
       </TouchableHighlight>
-      <Text style={[font.h1, { marginTop: layout.spacing.xxl }]}>Hello 👋</Text>
+      <Text style={[font.h1, { marginTop: layout.spacing.xxl }]}>
+        Hi there 👋
+      </Text>
       <Text style={[font.caption, { marginTop: layout.spacing.md }]}>
-        To register an account with AuthMe, fill in the details below with.
+        To register an account with AuthMe, please fill in your details below.
       </Text>
     </>
   );
 }
 
-function RegisterForm({ navigation }) {
+function RegisterForm({ navigation, auth }) {
+  const dispatch = useDispatch();
+
   const onSubmit = values => {
-    console.log('WILL SUBMIT');
+    dispatch(authActions.setAuthIsLoading(true));
+    dispatch(authActions.registerUser(values));
   };
 
   return (
@@ -73,9 +83,10 @@ function RegisterForm({ navigation }) {
       <Formik
         initialValues={{
           firstName: '',
+          lastName: '',
           email: '',
+          university: '',
           password: '',
-          confirmPassword: '',
         }}
         validationSchema={formSchema}
         onSubmit={onSubmit}>
@@ -96,6 +107,12 @@ function RegisterForm({ navigation }) {
               field="email"
               placeholder="Email"
               keyboardType="email-address"
+              autoComplete="off"
+            />
+            <FormikInput
+              formikProps={props}
+              field="university"
+              placeholder="University"
             />
             <FormikInput
               secureTextEntry
@@ -103,21 +120,21 @@ function RegisterForm({ navigation }) {
               field="password"
               placeholder="Password"
             />
-            <FormikInput
-              secureTextEntry
-              formikProps={props}
-              field="confirmPassword"
-              placeholder="Confirm Password"
-            />
+            {/* {auth.errors && auth.errors.length !== 0 && (
+              <Text style={{ color: color.error }}>
+                ERROR: {JSON.stringify(auth.errors)}
+              </Text>
+            )} */}
             <RegisterFooter
               navigation={navigation}
               disabled={
                 props.touched.name &&
                 props.touched.email &&
+                props.touched.university &&
                 props.touched.password &&
-                props.touched.confirmPassword &&
                 !props.isValid
               }
+              isLoading={auth.isLoading ?? false}
               onSubmit={props.handleSubmit}
             />
           </>
@@ -127,10 +144,16 @@ function RegisterForm({ navigation }) {
   );
 }
 
-function RegisterFooter({ navigation, disabled, onSubmit }) {
+function RegisterFooter({ navigation, disabled, isLoading, onSubmit }) {
   return (
     <View style={{ marginTop: layout.spacing.lg }}>
-      <Button primary disabled={disabled} title="Next" onPress={onSubmit} />
+      <Button
+        primary
+        disabled={disabled}
+        isLoading={isLoading}
+        title="Create Account"
+        onPress={onSubmit}
+      />
       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={[font.body, registerScreenStyles.noAccountText]}>
           I already have an account
@@ -140,7 +163,7 @@ function RegisterFooter({ navigation, disabled, onSubmit }) {
   );
 }
 
-export default function Register({ navigation }) {
+function Register({ navigation, auth }) {
   return (
     <KeyboardAvoidingView
       enabled
@@ -154,7 +177,7 @@ export default function Register({ navigation }) {
           }}>
           <ScrollView>
             <RegisterHeader navigation={navigation} />
-            <RegisterForm navigation={navigation} />
+            <RegisterForm auth={auth} navigation={navigation} />
           </ScrollView>
         </SafeAreaView>
       </TouchableWithoutFeedback>
@@ -176,3 +199,9 @@ const registerScreenStyles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const mapStateToProps = state => {
+  return { auth: state.auth };
+};
+
+export default connect(mapStateToProps)(Register);

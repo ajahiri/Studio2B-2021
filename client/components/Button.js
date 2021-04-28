@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 import { Text, TouchableHighlight } from 'react-native';
 
 import { color, font, layout } from '../constants';
@@ -10,6 +10,7 @@ export default function Button({
   primary = false,
   disabled = false,
   small = false,
+  isLoading = false,
   onPress = () => {},
   ...props
 }) {
@@ -23,9 +24,13 @@ export default function Button({
       onPress={onPress}
       underlayColor={primary ? color.accentFocused : color.lightGray}
       style={[currentStyle, sizeStyle, props.style]}>
-      <Text style={small ? stateStyle.textSmall : stateStyle.text}>
-        {title.toLocaleUpperCase()}
-      </Text>
+      {isLoading ? (
+        <ActivityIndicator color={color.white} />
+      ) : (
+        <Text style={small ? stateStyle.textSmall : stateStyle.text}>
+          {title.toLocaleUpperCase()}
+        </Text>
+      )}
     </TouchableHighlight>
   );
 }
@@ -102,12 +107,12 @@ export const secondaryStyle = StyleSheet.create({
   },
   default: {
     ...buttonStyles,
-    backgroundColor: color.white,
+    backgroundColor: 'transparent',
     borderColor: color.black,
   },
   disabled: {
     ...buttonStyles,
-    backgroundColor: color.white,
+    backgroundColor: 'transparent',
     borderColor: color.lightGray,
   },
 });
