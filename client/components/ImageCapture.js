@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Modal, Pressable } from 'react-native';
 import { connect, useDispatch } from 'react-redux';
 
 import { Camera } from 'expo-camera';
@@ -15,7 +15,9 @@ import TextInput from './TextInput';
 import handleFaceAuth from '../helpers/handleFaceAuth';
 
 const ImageCapture = props => {
-  const [name, onChangeName] = useState('Test');
+  const [name, onChangeName] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('Running facial auth...');
 
   const dispatch = useDispatch();
   const { cameraReady } = props;
@@ -60,15 +62,27 @@ const ImageCapture = props => {
     }
   };
 
+  const setPopupText = text => {
+    setModalMessage(text);
+  };
+
   const takePhoto = authType => {
+    setModalVisible(true);
     if (cameraInstance && cameraReady) {
       dispatch(authActions.setAuthIsLoading(true));
       //dispatch(cameraActions.imgURI(cameraInstance.takePictureAsync()));
       cameraInstance
         .takePictureAsync()
-        .then(img => {
+        .then(async img => {
           dispatch(cameraActions.imgURI(img.uri));
-          handleFaceAuth(authType, img.uri, authType === 'register' && name);
+
+          handleFaceAuth(
+            authType,
+            img.uri,
+            authType === 'register' && name,
+            setPopupText,
+          );
+
           dispatch(cameraActions.capturedImage(true));
           props.submitAll();
         })
@@ -100,6 +114,7 @@ const ImageCapture = props => {
       <TextInput
         onChangeText={onChangeName}
         value={name}
+        placeholder="Username"
         style={{
           borderColor: 'blue',
           borderWidth: 1,
@@ -111,7 +126,7 @@ const ImageCapture = props => {
           text={
             faceDetected && name ? 'REGISTER' : 'Waiting for Face Detection...'
           }
-          disabled={!faceDetected}
+          disabled={!(faceDetected && name)}
           onPress={() => takePhoto('register')}
           style={styles.formSubmitButton}
         />
@@ -122,6 +137,24 @@ const ImageCapture = props => {
           style={styles.formSubmitButton}
         />
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>{modalMessage}</Text>
+            <Pressable
+              style={[styles.modalButton, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}>
+              <Text style={styles.textStyle}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -190,5 +223,46 @@ const styles = StyleSheet.create({
   },
   formSubmitButton: {
     marginTop: L.spacing.m,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalButton: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
   },
 });
