@@ -8,6 +8,7 @@ import { color, font, layout } from '../constants';
 export default function Button({
   title,
   primary = false,
+  kind = 'secondary',
   disabled = false,
   small = false,
   isLoading = false,
@@ -38,6 +39,7 @@ export default function Button({
 Button.propTypes = {
   title: PropTypes.string.isRequired,
   primary: PropTypes.bool,
+  kind: PropTypes.oneOf(['primary', 'secondary', 'danger']),
   disabled: PropTypes.bool,
   small: PropTypes.bool,
   onPress: PropTypes.func,

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -10,27 +10,27 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
-import { connect, useDispatch } from 'react-redux';
-import * as authActions from '../redux/actions/authActions';
+import { connect, useDispatch } from "react-redux";
+import * as authActions from "../redux/actions/authActions";
 
-import { Formik } from 'formik';
-import * as yup from 'yup';
+import { Formik } from "formik";
+import * as yup from "yup";
 
-import { Button, FormikInput } from '../components';
-import { color, font, layout } from '../constants';
+import { Button, FormikInput } from "../components";
+import { color, font, layout } from "../constants";
 
 const formSchema = yup.object({
   email: yup
     .string()
-    .required('Please provide your email address')
-    .email('Please provide a valid email address'),
+    .required("Please provide your email address")
+    .email("Please provide a valid email address"),
   password: yup
     .string()
-    .required('Please provide your password')
-    .min(8, 'Incomplete password'),
+    .required("Please provide your password")
+    .min(8, "Incomplete password"),
 });
 
 function LoginHeader({ navigation }) {
@@ -39,8 +39,9 @@ function LoginHeader({ navigation }) {
       <TouchableHighlight
         style={{ width: 90, borderRadius: layout.radius.md }}
         underlayColor={color.lightGray}
-        onPress={() => navigation.goBack()}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        onPress={() => navigation.goBack()}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Ionicons name="arrow-back" size={30} color={color.darkGray} />
           <Text style={[font.caption, loginScreenStyles.backArrowText]}>
             Back
@@ -58,7 +59,7 @@ function LoginHeader({ navigation }) {
 function LoginForm({ navigation, auth }) {
   const dispatch = useDispatch();
 
-  const onSubmit = values => {
+  const onSubmit = (values) => {
     dispatch(authActions.setAuthIsLoading(true));
     dispatch(authActions.loginUser(values));
   };
@@ -66,10 +67,11 @@ function LoginForm({ navigation, auth }) {
   return (
     <View style={{ marginTop: layout.spacing.xxl }}>
       <Formik
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ email: "", password: "" }}
         validationSchema={formSchema}
-        onSubmit={onSubmit}>
-        {props => (
+        onSubmit={onSubmit}
+      >
+        {(props) => (
           <>
             <FormikInput
               formikProps={props}
@@ -83,7 +85,7 @@ function LoginForm({ navigation, auth }) {
               field="password"
               placeholder="Password"
             />
-            {auth.errors && auth.errors !== '' ? (
+            {auth.errors && auth.errors !== "" ? (
               <Text style={{ color: color.error }}>ERROR: {auth.errors}</Text>
             ) : null}
             <LoginFooter
@@ -111,7 +113,7 @@ function LoginFooter({ navigation, disabled, isLoading, onSubmit }) {
         title="Login"
         onPress={onSubmit}
       />
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
         <Text style={[font.body, loginScreenStyles.noAccountText]}>
           I don't have an account
         </Text>
@@ -123,14 +125,16 @@ function LoginFooter({ navigation, disabled, isLoading, onSubmit }) {
 function Login({ navigation, auth }) {
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-      keyboardVerticalOffset={layout.spacing.lg}>
+      behavior={Platform.OS === "ios" ? "position" : "height"}
+      keyboardVerticalOffset={layout.spacing.lg}
+    >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView
           style={{
             marginTop: layout.defaultScreenMargins.vertical,
             marginHorizontal: layout.defaultScreenMargins.horizontal,
-          }}>
+          }}
+        >
           <LoginHeader navigation={navigation} />
           <LoginForm auth={auth} navigation={navigation} />
         </SafeAreaView>
@@ -158,11 +162,11 @@ const loginScreenStyles = StyleSheet.create({
   },
   noAccountText: {
     marginTop: layout.spacing.lg,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return { auth: state.auth };
 };
 

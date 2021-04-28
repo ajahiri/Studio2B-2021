@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React, { useEffect, useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
-import { connect, useDispatch } from 'react-redux';
-import * as SecureStore from 'expo-secure-store';
-import jwtDecode from 'jwt-decode';
+import { connect, useDispatch } from "react-redux";
+import * as SecureStore from "expo-secure-store";
+import jwtDecode from "jwt-decode";
 
-import { GroundZero, Login, Register, Start, Dashboard } from '../screens';
-import { setAuthToken, setUser } from '../redux/actions/authActions';
+import { GroundZero, Login, Register, Start, Dashboard } from "../screens";
+import { setAuthToken, setUser } from "../redux/actions/authActions";
 
 const Stack = createStackNavigator();
 
@@ -17,7 +17,7 @@ function AppNavigator(props) {
 
   useEffect(() => {
     async function checkToken() {
-      const token = await SecureStore.getItemAsync('userToken');
+      const token = await SecureStore.getItemAsync("userToken");
 
       if (token) {
         const userObject = jwtDecode(token);
@@ -35,7 +35,7 @@ function AppNavigator(props) {
 
   return (
     <NavigationContainer>
-      {/* {authToken === null ? (
+      {authToken === null ? (
         <Stack.Navigator>
           <Stack.Screen
             name="Start"
@@ -57,14 +57,18 @@ function AppNavigator(props) {
         <Stack.Navigator>
           <Stack.Screen name="My Dashboard" component={Dashboard} />
         </Stack.Navigator>
-      )} */}
-      <Stack.Navigator>
-        <Stack.Screen name="My Dashboard" component={Dashboard} />
-      </Stack.Navigator>
+      )}
+      {/* <Stack.Navigator>
+        <Stack.Screen
+          name="My Dashboard"
+          component={Dashboard}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator> */}
     </NavigationContainer>
   );
 }
 
-const mapStateToProps = state => ({ auth: state.auth });
+const mapStateToProps = (state) => ({ auth: state.auth });
 
 export default connect(mapStateToProps)(AppNavigator);
