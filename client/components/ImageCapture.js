@@ -11,8 +11,8 @@ import { colours as C, layout as L, typography as T } from '../constants';
 import * as cameraActions from '../redux/actions/cameraActions';
 import * as authActions from '../redux/actions/authActions';
 
-import { RNS3 } from 'react-native-upload-aws-s3';
 import TextInput from './TextInput';
+import handleFaceAuth from '../helpers/handleFaceAuth';
 
 const ImageCapture = props => {
   const [name, onChangeName] = useState('Test');
@@ -60,7 +60,7 @@ const ImageCapture = props => {
     }
   };
 
-  const takePhoto = () => {
+  const takePhoto = authType => {
     if (cameraInstance && cameraReady) {
       dispatch(authActions.setAuthIsLoading(true));
       //dispatch(cameraActions.imgURI(cameraInstance.takePictureAsync()));
@@ -68,40 +68,13 @@ const ImageCapture = props => {
         .takePictureAsync()
         .then(img => {
           dispatch(cameraActions.imgURI(img.uri));
-          uploadToS3(img.uri);
+          handleFaceAuth(authType, img.uri, authType === 'register' && name);
           dispatch(cameraActions.capturedImage(true));
           props.submitAll();
         })
         .catch(err => console.log(err));
     }
   };
-
-  async function uploadToS3(uri) {
-    const file = {
-      uri,
-      name,
-      type: 'image/png',
-    };
-
-    const options = {
-      bucket: 'faceindexrico',
-      region: 'us-east-2',
-      accessKey: 'AKIAQQ4SGZXPNCHN4JVO',
-      secretKey: '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',
-      successActionStatus: 201,
-    };
-
-    try {
-      const response = await RNS3.put(file, options);
-      if (response.status === 201) {
-        console.log('Successfully uploaded: ', response.body);
-      } else {
-        console.log('Failed to upload image to S3: ', response);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   return (
     <View>
@@ -136,12 +109,16 @@ const ImageCapture = props => {
       <View style={styles.buttonContainer}>
         <Button
           text={
-            faceDetected && name
-              ? 'TAKE PHOTO'
-              : 'Waiting for Face Detection...'
+            faceDetected && name ? 'REGISTER' : 'Waiting for Face Detection...'
           }
           disabled={!faceDetected}
-          onPress={takePhoto}
+          onPress={() => takePhoto('register')}
+          style={styles.formSubmitButton}
+        />
+        <Button
+          text={faceDetected ? 'LOGIN' : 'Waiting for Face Detection...'}
+          disabled={!faceDetected}
+          onPress={() => takePhoto('login')}
           style={styles.formSubmitButton}
         />
       </View>
@@ -193,7 +170,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 60,
+    paddingTop: 10,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around',
