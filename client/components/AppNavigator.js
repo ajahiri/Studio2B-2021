@@ -9,6 +9,7 @@ import Login from '../screens/Login';
 import Register from '../screens/Register';
 import SplashScreen from '../screens/SplashScreen';
 import TeacherViewSession from '../screens/TeacherViewSession';
+import StudentJoinSession from '../screens/StudentJoinSession';
 import CreateClassroom from '../screens/CreateClassroom';
 
 import { connect, useDispatch } from 'react-redux';
@@ -84,6 +85,14 @@ const AppNavigator = props => {
             component={TeacherViewSession}
             options={{
               title: 'View Session',
+              headerShown: true,
+            }}
+          />
+          <Drawer.Screen
+            name="JoinSession"
+            component={StudentJoinSession}
+            options={{
+              title: 'Join Session',
               headerShown: true,
             }}
           />

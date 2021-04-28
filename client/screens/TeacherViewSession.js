@@ -1,6 +1,5 @@
 import React /*, { useEffect, useState }*/ from 'react'; /* HN */
 import {
-  Text,
   View,
   StyleSheet,
   TouchableOpacity,
@@ -8,7 +7,12 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from 'react-native';
+
+import { Container, Header, Content, Spinner, Text } from 'native-base';
+
 import { AntDesign } from '@expo/vector-icons';
+
+import QRCode from 'react-native-qrcode-generator';
 
 import { connect } from 'react-redux';
 
@@ -23,9 +27,11 @@ const TeacherViewSession = props => {
       <KeyboardAvoidingView>
         <ScrollView>
           {props.isLoading ? (
-            <>
-              <Text>Loading...</Text>
-            </>
+            <Container>
+              <Content>
+                <Spinner color="blue" />
+              </Content>
+            </Container>
           ) : (
             <>
               <View /* Title */ style={styles.container}>
@@ -34,6 +40,13 @@ const TeacherViewSession = props => {
                 <Text>Max Students: {maxStudents}</Text>
                 <Text>JOIN CODE: {shortID}</Text>
                 <Text>Created At: {createdAt}</Text>
+                <Text>QR Join Code:</Text>
+                <QRCode
+                  value={shortID || ''}
+                  size={200}
+                  bgColor="black"
+                  fgColor="white"
+                />
               </View>
 
               <View style={styles.studentcontainer}>
@@ -94,6 +107,6 @@ const styles = StyleSheet.create({
     height: 40,
     textAlign: 'center',
     paddingVertical: 7,
-    marginTop: 400,
+    marginTop: 100,
   },
 });
