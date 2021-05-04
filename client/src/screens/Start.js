@@ -10,7 +10,7 @@ import {
 import { Button } from '../components';
 import { color, font, layout } from '../constants';
 
-const welcomeBanner = require('../assets/Start/welcome-banner.jpg');
+const welcomeBanner = require('../../assets/Start/welcome-banner.jpg');
 
 export default function Start({ navigation }) {
   const screenHeight = useWindowDimensions().height;

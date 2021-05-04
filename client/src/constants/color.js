@@ -4,10 +4,10 @@ export const gray = '#8F8F8F';
 export const lightGray = '#EAEAEA';
 export const white = '#FAFAFA';
 
-export const accent = '#E6AA10';
+export const accent = '#FFBD12';
 export const accentFocused = '#E6AA10';
 export const accentDisabled = '#FFDE89';
 
-export const error = '#D83232';
-export const errorFocused = '#972323';
-export const errorDisabled = '#E47070';
+export const danger = '#D83232';
+export const dangerFocused = '#972323';
+export const dangerDisabled = '#E47070';
