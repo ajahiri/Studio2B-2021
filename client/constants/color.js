@@ -1,11 +1,13 @@
 export const black = '#141414';
-export const gray = '#505050';
-export const lightGray = '#e1e1e1';
-export const darkGray = '#191919';
-export const white = '#fafafa';
+export const darkGray = '#4E4E4E';
+export const gray = '#8F8F8F';
+export const lightGray = '#EAEAEA';
+export const white = '#FAFAFA';
 
-export const accent = '#3d3abf';
-export const accentFocused = '#312e99';
-export const accentDisabled = '#6461cc';
+export const accent = '#E6AA10';
+export const accentFocused = '#E6AA10';
+export const accentDisabled = '#FFDE89';
 
-export const error = 'red';
+export const error = '#D83232';
+export const errorFocused = '#972323';
+export const errorDisabled = '#E47070';

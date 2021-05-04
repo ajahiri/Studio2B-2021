@@ -8,7 +8,7 @@ import { color, font, layout } from '../constants';
 export default function Button({
   title,
   primary = false,
-  kind = 'secondary',
+  type = 'secondary',
   disabled = false,
   small = false,
   isLoading = false,
@@ -26,7 +26,7 @@ export default function Button({
       underlayColor={primary ? color.accentFocused : color.lightGray}
       style={[currentStyle, sizeStyle, props.style]}>
       {isLoading ? (
-        <ActivityIndicator color={color.white} />
+        <ActivityIndicator color={primary ? color.white : color.black} />
       ) : (
         <Text style={small ? stateStyle.textSmall : stateStyle.text}>
           {title.toLocaleUpperCase()}
@@ -39,7 +39,7 @@ export default function Button({
 Button.propTypes = {
   title: PropTypes.string.isRequired,
   primary: PropTypes.bool,
-  kind: PropTypes.oneOf(['primary', 'secondary', 'danger']),
+  type: PropTypes.oneOf(['primary', 'secondary', 'danger']),
   disabled: PropTypes.bool,
   small: PropTypes.bool,
   onPress: PropTypes.func,
@@ -63,27 +63,13 @@ export const bigStyle = {
   padding: layout.spacing.md,
 };
 
-export const textStyle = {
-  fontFamily: font.fontFamily.bold,
-};
-
-export const bigTextStyle = {
-  ...textStyle,
-  fontSize: font.size.md,
-};
-
-export const smallTextStyle = {
-  ...textStyle,
-  fontSize: font.size.sm,
-};
-
 export const primaryStyle = StyleSheet.create({
   text: {
-    ...bigTextStyle,
+    ...font.h3,
     color: color.white,
   },
   textSmall: {
-    ...smallTextStyle,
+    ...font.large,
     color: color.white,
   },
   default: {
@@ -100,11 +86,32 @@ export const primaryStyle = StyleSheet.create({
 
 export const secondaryStyle = StyleSheet.create({
   text: {
-    ...bigTextStyle,
+    ...font.h3,
     color: color.black,
   },
   textSmall: {
-    ...smallTextStyle,
+    ...font.large,
+    color: color.black,
+  },
+  default: {
+    ...buttonStyles,
+    backgroundColor: 'transparent',
+    borderColor: color.black,
+  },
+  disabled: {
+    ...buttonStyles,
+    backgroundColor: 'transparent',
+    borderColor: color.lightGray,
+  },
+});
+
+export const dangerStyle = StyleSheet.create({
+  text: {
+    ...font.h3,
+    color: color.black,
+  },
+  textSmall: {
+    ...font.large,
     color: color.black,
   },
   default: {

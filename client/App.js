@@ -6,28 +6,24 @@ import { Alert } from 'react-native';
 
 import {
   useFonts,
-  Inter_300Light,
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_700Bold,
-} from '@expo-google-fonts/inter';
+  Montserrat_400Regular,
+  Montserrat_700Bold,
+} from '@expo-google-fonts/montserrat';
 
 import AppNavigator from './components/AppNavigator';
 import store from './redux/store';
 
 export default function App() {
   const [fontsLoaded, fontsError] = useFonts({
-    Inter_300Light,
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_700Bold,
+    Montserrat_400Regular,
+    Montserrat_700Bold,
   });
 
   if (!fontsLoaded) {
     console.log('Loading fonts...');
     return <AppLoading />;
   } else if (fontsError) {
-    console.error(fontsError.message);
+    console.error(`Failed to load fonts: ${fontsError.message}`);
     Alert.alert(fontsError.message);
     return null;
   } else {
