@@ -37,8 +37,8 @@ export default function App() {
     return (
       <Provider store={store}>
         <StatusBar style="dark" />
-        {/* <AppNavigator /> */}
-        <ImageAuth />
+        <AppNavigator />
+        {/* <ImageAuth /> */}
       </Provider>
     );
   }
