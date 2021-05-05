@@ -19,6 +19,7 @@ import FormikField from '../components/FormikField';
 import { colours as C, layout as L, typography as T } from '../constants';
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 
+import ImageAuth from '../screens/ImageAuth';
 import Button from '../components/Button';
 import Heading from '../components/Heading';
 import { useDispatch, connect } from 'react-redux';
@@ -85,7 +86,7 @@ const CreateClassroom = props => {
   const onCreateClassroomSubmit = values => {
     console.log(values);
     setclassDetails(values);
-    setcreateClassIndex(1);
+    setcreateClassIndex(2);
   };
 
   const goBackStep = () => {
@@ -133,11 +134,21 @@ const CreateClassroom = props => {
     // console.log(classDetails, sessionQuestions);
   };
 
+  const btnSubmitHandler = () => {
+    setcreateClassIndex(1);
+  }
+
   return (
     <SafeAreaView>
       <KeyboardAvoidingView>
         <ScrollView>
           {createClassIndex === 0 && (
+            <View style={styles.pageContainer}>
+              <ImageAuth msg="this is the message"/>
+
+            </View>
+          )}
+          {createClassIndex === 1 && (
             <View style={styles.pageContainer}>
               <Formik
                 initialValues={{
@@ -179,7 +190,7 @@ const CreateClassroom = props => {
               </Formik>
             </View>
           )}
-          {createClassIndex === 1 && (
+          {createClassIndex === 2 && (
             <View style={styles.pageContainer}>
               <Heading>Questions</Heading>
               <Text>

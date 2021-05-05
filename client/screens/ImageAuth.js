@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { ImageCapture } from '../components';
 
-export default function ImageAuth({ submitAll, navigation }) {
+export default function ImageAuth(props, { submitAll, navigation }) {
   const returnImage = require('../../client/assets/Login/Union.png');
   const imagePlaceholder = require('../../client/assets/Login/profile-placeholder.png');
 
@@ -19,8 +19,7 @@ export default function ImageAuth({ submitAll, navigation }) {
       <View style={styles.textContainer}>
         <Text style={styles.title}>Image Authentication</Text>
         <Text style={styles.desc}>
-          In order to register your account, you’re required to upload a facial
-          image. This image will be used for future authentication.
+          {props.msg}
         </Text>
       </View>
       <ImageCapture

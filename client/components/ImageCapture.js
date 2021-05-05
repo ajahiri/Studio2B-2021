@@ -16,7 +16,7 @@ import handleFaceAuth from '../helpers/handleFaceAuth';
 
 const ImageCapture = props => {
   const [name, onChangeName] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);  //keep this to use for error display
   const [modalMessage, setModalMessage] = useState('Running facial auth...');
 
   const dispatch = useDispatch();
@@ -70,7 +70,6 @@ const ImageCapture = props => {
     setModalVisible(true);
     if (cameraInstance && cameraReady) {
       dispatch(authActions.setAuthIsLoading(true));
-      //dispatch(cameraActions.imgURI(cameraInstance.takePictureAsync()));
       cameraInstance
         .takePictureAsync()
         .then(async img => {
@@ -120,7 +119,8 @@ const ImageCapture = props => {
           borderWidth: 1,
           margin: 10,
           padding: 20,
-        }}></TextInput>
+        }}>
+      </TextInput>
       <View style={styles.buttonContainer}>
         <Button
           text={
