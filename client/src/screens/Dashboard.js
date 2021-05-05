@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 
-import { useDispatch } from "react-redux";
-import * as authActions from "../redux/actions/authActions";
+import { useDispatch } from 'react-redux';
+import * as authActions from '../redux/actions/authActions';
 
-import StudentDashboard from "./dashboards/StudentDashboard";
-import TeacherDashboard from "./dashboards/TeacherDashboard";
-import { layout } from "../constants";
+import { AddSubjectCard, SubjectCard } from '../components/cards';
+import { font, layout } from '../constants';
 
-const Tabs = createBottomTabNavigator();
-
-export default function Dashboard({ navigation: _, ...props }) {
+export default function Dashboard({ ...props }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,33 +18,41 @@ export default function Dashboard({ navigation: _, ...props }) {
     loadUser();
   }, []);
 
-  const handleLogout = () => {
-    dispatch(authActions.logoutUserSaga());
-  };
-
   const {
-    userFullName = "NULL",
-    userUniversity = "NULL",
-    permissionLevel = "student",
-    userEmail = "NULL",
+    userFullName = 'NULL',
+    userUniversity = 'NULL',
+    permissionLevel = 'student',
+    userEmail = 'NULL',
   } = props;
 
+  const subjects = [
+    { subjectName: 'Software Engineering Studio 2B' },
+    { subjectName: 'Fundamentals of C Programming' },
+    { subjectName: 'System Security' },
+  ];
+
   return (
-    <SafeAreaView
+    <View
       style={{
         marginTop: layout.defaultScreenMargins.vertical,
         marginHorizontal: layout.defaultScreenMargins.horizontal,
-      }}
-    >
-      {(() => {
-        switch (permissionLevel) {
-          case "teacher":
-            return <TeacherDashboard />;
-          case "student": // fallthrough
-          default:
-            return <StudentDashboard />;
-        }
-      })()}
-    </SafeAreaView>
+      }}>
+      <Text style={[font.h3]}>My Classrooms</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          marginTop: layout.spacing.lg,
+        }}>
+        {subjects.map(subject => (
+          <SubjectCard
+            style={{ marginBottom: layout.spacing.lg }}
+            subjectName={subject.subjectName}
+          />
+        ))}
+        <AddSubjectCard />
+      </View>
+    </View>
   );
 }
