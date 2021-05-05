@@ -4,21 +4,22 @@ import { StyleSheet, Text, View, Button } from "react-native";
 const ViewClass = (props) => {
 
     return (
-        <View style={styles.container}>
-            <Button
-                title={"Back"}
-                onPress={() => props.navigation.goBack() }
-                // onPress={ () => console.log(props) }
-            />
-            <Text style={styles.text}>ViewClass</Text>
-        </View>
+      <View style={styles.container}>
+          <Text style={styles.text}>ViewClass</Text>
+      </View>
+
     );
 }
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "center",
-    marginTop: 25,
+    backgroundColor:"grey",
+    textAlign: "center",
+    width: "90%",
+    height: "15%",
+    marginTop: 15,
+    marginLeft: 19,
+    borderRadius: 15,
   }
 });
 

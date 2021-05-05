@@ -8,7 +8,6 @@ import ImageAuthRegistration from '../screens/ImageAuthRegistration';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import Profile from '../screens/Profile';
-import ViewClass from '../screens/ViewClass';
 import SplashScreen from '../screens/SplashScreen';
 import { connect, useDispatch } from 'react-redux';
 
@@ -70,7 +69,7 @@ const AppNavigator = props => {
             name="Dashboard"
             component={StackNav}
             options={{
-              headerShown: true,
+              headerShown: false,
             }}
           />
           <Drawer.Screen

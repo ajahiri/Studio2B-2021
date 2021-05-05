@@ -53,7 +53,7 @@ const Dashboard = props => {
         title="Create Session"
         onPress={() => console.log("create class")}
       />
-      <TouchableOpacity onPress={() => navigation.navigate('ViewClass')}>
+      <TouchableOpacity onPress={() => props.navigation.navigate('ViewClass')}>
         <ClassRoom/>
       </TouchableOpacity>
       <View>

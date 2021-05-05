@@ -9,7 +9,7 @@ const Stack = createStackNavigator();
 
 const StackNav = props => {
     return(
-        <NavigationContainer>
+        <>
             <Stack.Navigator>
                 <Stack.Screen
                     name="Dashboard"
@@ -26,7 +26,7 @@ const StackNav = props => {
                     }}
                 />
             </Stack.Navigator>
-        </NavigationContainer>
+        </>
     )
 }
 
