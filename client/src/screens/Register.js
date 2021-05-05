@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -12,10 +12,12 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
-// import { useDispatch } from 'react-redux';
-// import * as authActions from '../redux/actions/authActions';
+import { connect, useDispatch } from 'react-redux';
+import * as authActions from '../redux/actions/authActions';
 
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -23,18 +25,15 @@ import * as yup from 'yup';
 import { Button, FormikInput } from '../components';
 import { color, font, layout } from '../constants';
 
-const formSchemaStep0 = yup.object({
+const formSchema = yup.object({
   firstName: yup
     .string()
     .required('Please provide your first name')
     .min(2, 'Your first name should have at least 2 characters'),
   lastName: yup
     .string()
-    .required('Please provide your last name')
-    .min(2, 'Your last name should have at least 2 characters'),
-});
-
-const formSchemaStep1 = yup.object({
+    .required('Please provide your first name')
+    .min(2, 'Your first name should have at least 2 characters'),
   email: yup
     .string()
     .required('Please provide your email')
@@ -43,83 +42,57 @@ const formSchemaStep1 = yup.object({
     .string()
     .required('Please provide the name of your university')
     .min(3, 'Your university name should have at least 3 characters'),
-});
-
-const formSchemaStep2 = yup.object({
   password: yup
     .string()
     .required('Please provide a strong password with at least 8 characters')
     .min(8, 'Your password should have at least 8 characters'),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref('password'), null], `Passwords don't match`),
 });
 
-function RegisterHeader({ title, caption }) {
+function RegisterHeader({}) {
+  const navigation = useNavigation();
+
   return (
     <>
-      <Text style={[font.h1, { marginTop: layout.spacing.xxl }]}>{title}</Text>
-      <Text
-        style={[
-          font.caption,
-          { marginTop: layout.spacing.md, marginBottom: layout.spacing.xxl },
-        ]}>
-        {caption}
+      <TouchableHighlight
+        style={{ width: 90, borderRadius: layout.radius.md }}
+        underlayColor={color.lightGray}
+        onPress={() => navigation.goBack()}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Ionicons name="chevron-back" size={30} color={color.darkGray} />
+          <Text style={[font.mediumBold, registerScreenStyles.backArrowText]}>
+            Back
+          </Text>
+        </View>
+      </TouchableHighlight>
+      <Text style={[font.h1, { marginTop: layout.spacing.xxl }]}>
+        Hi there 👋
+      </Text>
+      <Text style={[font.medium, { marginTop: layout.spacing.md }]}>
+        To register an account with AuthMe, please fill in your details below.
       </Text>
     </>
   );
 }
 
-function RegisterFooter({
-  disabled,
-  showBackButton = true,
-  isLastStep = false,
-  onBack = () => {},
-  onSubmit = () => {},
-}) {
-  return (
-    <View style={{ marginTop: layout.spacing.lg, flexDirection: 'row' }}>
-      {showBackButton && (
-        <Button
-          style={{ flex: 1, marginRight: layout.spacing.sm }}
-          title="Back"
-          onPress={onBack}
-        />
-      )}
-      <Button
-        style={{ flex: 1, marginLeft: showBackButton ? layout.spacing.sm : 0 }}
-        primary
-        disabled={disabled}
-        title={isLastStep ? 'Finish' : 'Next'}
-        onPress={onSubmit}
-      />
-    </View>
-  );
-}
-
-function RegisterForm({}) {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [form, setForm] = useState({});
-
-  const onBack = () => {
-    setCurrentStep(Math.max(0, currentStep - 1));
-  };
+function RegisterForm({ auth }) {
+  const dispatch = useDispatch();
 
   const onSubmit = values => {
-    setForm({ ...form, ...values });
-    if (currentStep === 2) {
-      console.log({ __DONE__: form });
-    } else {
-      setCurrentStep(currentStep + 1);
-    }
+    dispatch(authActions.setAuthIsLoading(true));
+    dispatch(authActions.registerUser(values));
   };
 
-  const Step0 = () => (
-    <>
-      <RegisterHeader title="Hi there 👋" caption="How should we call you?" />
+  return (
+    <View style={{ marginTop: layout.spacing.xxl }}>
       <Formik
-        initialValues={{ firstName: '', lastName: '' }}
-        validationSchema={formSchemaStep0}
+        initialValues={{
+          firstName: '',
+          lastName: '',
+          email: '',
+          university: '',
+          password: '',
+        }}
+        validationSchema={formSchema}
         onSubmit={onSubmit}>
         {props => (
           <>
@@ -133,94 +106,67 @@ function RegisterForm({}) {
               field="lastName"
               placeholder="Last Name"
             />
-            <RegisterFooter
-              showBackButton={false}
-              onSubmit={props.handleSubmit}
+            <FormikInput
+              formikProps={props}
+              field="email"
+              placeholder="Email"
+              keyboardType="email-address"
+              autoComplete="off"
             />
-          </>
-        )}
-      </Formik>
-    </>
-  );
-
-  const Step1 = () => (
-    <>
-      <RegisterHeader
-        title={`Hi, ${form.firstName}`}
-        caption="Where do you study?"
-      />
-      <Formik
-        initialValues={{ university: '', email: '' }}
-        validationSchema={formSchemaStep1}
-        onSubmit={onSubmit}>
-        {props => (
-          <>
             <FormikInput
               formikProps={props}
               field="university"
               placeholder="University"
             />
             <FormikInput
-              formikProps={props}
-              field="email"
-              placeholder="Email"
-              keyboardType="email-address"
-            />
-            <RegisterFooter onBack={onBack} onSubmit={props.handleSubmit} />
-          </>
-        )}
-      </Formik>
-    </>
-  );
-
-  const Step2 = () => (
-    <>
-      <RegisterHeader
-        title="Almost done"
-        caption="Set a strong password to secure your account."
-      />
-      <Formik
-        initialValues={{ password: '', confirmPassword: '' }}
-        validationSchema={formSchemaStep2}
-        onSubmit={onSubmit}>
-        {props => (
-          <>
-            <FormikInput
               secureTextEntry
               formikProps={props}
               field="password"
               placeholder="Password"
             />
-            <FormikInput
-              secureTextEntry
-              formikProps={props}
-              field="confirmPassword"
-              placeholder="Confirm Password"
-            />
+            {auth.errors && auth.errors !== '' ? (
+              <Text style={{ color: color.error }}>ERROR: {auth.errors}</Text>
+            ) : null}
             <RegisterFooter
-              isLastStep
-              onBack={onBack}
+              disabled={
+                props.touched.name &&
+                props.touched.email &&
+                props.touched.university &&
+                props.touched.password &&
+                !props.isValid
+              }
+              isLoading={auth.isLoading ?? false}
               onSubmit={props.handleSubmit}
             />
           </>
         )}
       </Formik>
-    </>
+    </View>
   );
-
-  switch (currentStep) {
-    case 0:
-      return <Step0 />;
-    case 1:
-      return <Step1 />;
-    case 2:
-      return <Step2 />;
-    default:
-      return <Step0 />;
-  }
 }
 
-export default function Register({ navigation }) {
+function RegisterFooter({ disabled, isLoading, onSubmit }) {
+  const navigation = useNavigation();
+
+  return (
+    <View style={{ marginTop: layout.spacing.lg }}>
+      <Button
+        title="Create Account"
+        type="primary"
+        disabled={disabled}
+        isLoading={isLoading}
+        onPress={onSubmit}
+      />
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <Text style={[font.medium, registerScreenStyles.noAccountText]}>
+          I already have an account
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function Register({ auth }) {
   return (
     <KeyboardAvoidingView
       enabled
@@ -233,26 +179,8 @@ export default function Register({ navigation }) {
             marginHorizontal: layout.defaultScreenMargins.horizontal,
           }}>
           <ScrollView>
-            <TouchableHighlight
-              style={{ width: 90, borderRadius: layout.radius.md }}
-              underlayColor={color.lightGray}
-              onPress={() => navigation.goBack()}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name="arrow-back" size={30} color={color.darkGray} />
-                <Text
-                  style={[font.caption, registerScreenStyles.backArrowText]}>
-                  Back
-                </Text>
-              </View>
-            </TouchableHighlight>
-
-            <RegisterForm />
-
-            {/* <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={[font.body, registerScreenStyles.noAccountText]}>
-                I already have an account
-              </Text>
-            </TouchableOpacity> */}
+            <RegisterHeader />
+            <RegisterForm auth={auth} />
           </ScrollView>
         </SafeAreaView>
       </TouchableWithoutFeedback>
@@ -262,7 +190,6 @@ export default function Register({ navigation }) {
 
 const registerScreenStyles = StyleSheet.create({
   backArrowText: {
-    fontFamily: font.fontFamily.medium,
     color: color.darkGray,
     marginLeft: layout.spacing.sm,
   },
@@ -274,3 +201,9 @@ const registerScreenStyles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const mapStateToProps = state => {
+  return { auth: state.auth };
+};
+
+export default connect(mapStateToProps)(Register);

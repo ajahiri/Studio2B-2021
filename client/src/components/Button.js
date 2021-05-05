@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Text,
   TouchableHighlight,
-  View,
 } from 'react-native';
 
 import { color, font, layout } from '../constants';

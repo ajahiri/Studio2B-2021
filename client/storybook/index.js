@@ -4,7 +4,7 @@ import {
   addDecorator,
 } from '@storybook/react-native';
 import { withKnobs } from '@storybook/addon-knobs';
-import { loadStories } from './storyLoader';
+// import { loadStories } from './storyLoader';
 
 import './rn-addons';
 

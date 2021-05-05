@@ -41,8 +41,8 @@ const formikInputStyles = StyleSheet.create({
     marginBottom: layout.spacing.sm,
   },
   textInputMessage: {
-    color: color.error,
-    // fontFamily: font.fontFamily.medium,
+    color: color.danger,
+    fontFamily: font.fontFamily.regular,
     marginHorizontal: layout.spacing.md,
   },
   textInputContainer: {

@@ -13,6 +13,7 @@ export const size = {
 
 export const fontFamily = {
   regular: 'Montserrat_400Regular',
+  medium: 'Montserrat_500Medium',
   bold: 'Montserrat_700Bold',
 };
 
