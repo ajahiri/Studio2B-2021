@@ -1,6 +1,6 @@
 {
   "name": "studio2b-2021",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "scripts": {
     "install-deps": "npm install && npm run install-deps:client && npm run install-deps:server",
     "install-deps:client": "cd ./client && npm install",
