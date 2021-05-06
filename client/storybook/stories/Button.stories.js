@@ -1,10 +1,13 @@
 import React from 'react';
-import { View } from 'react-native';
-
 import { storiesOf } from '@storybook/react-native';
 import { action } from '@storybook/addon-actions';
 
+import Decorator from './Decorator';
 import Button from '../../src/components/Button';
+
+export const actions = {
+  onPress: action('onPress'),
+};
 
 const args = {
   title: 'Button',
@@ -16,12 +19,8 @@ const smallArgs = {
   size: 'small',
 };
 
-export const actions = {
-  onPress: action('onPress'),
-};
-
 storiesOf('Button', module)
-  .addDecorator(story => <View style={{ margin: 20 }}>{story()}</View>)
+  .addDecorator(story => <Decorator>{story()}</Decorator>)
   .add('Primary Large', () => <Button type="primary" {...args} />)
   .add('Primary Small', () => <Button type="primary" {...smallArgs} />)
   .add('Secondary Large', () => <Button type="secondary" {...args} />)

@@ -19,7 +19,7 @@ import * as authActions from '../redux/actions/authActions';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-import { Button, FormikInput } from '../components';
+import { Banner, Button, FormikInput } from '../components';
 import { color, font, layout } from '../constants';
 
 const formSchema = yup.object({
@@ -72,8 +72,9 @@ function LoginForm({ auth }) {
               field="password"
               placeholder="Password"
             />
-            {auth.errors && auth.errors !== '' ? (
-              <Text style={{ color: color.error }}>ERROR: {auth.errors}</Text>
+
+            {!auth.isLoading && auth.errors && auth.errors !== '' ? (
+              <Banner type="error" message={auth.errors} />
             ) : null}
             <LoginFooter
               disabled={

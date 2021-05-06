@@ -9,6 +9,43 @@ import {
 
 import { color, font, layout } from '../constants';
 
+const commonContainerStyle = {
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderWidth: 2,
+  borderBottomWidth: 5,
+};
+
+const defaultBorderColor = color.black;
+const disabledBorderColor = color.gray;
+
+function makeButtonStyles(sizeStyles, colorStyles) {
+  return StyleSheet.create({
+    defaultContainer: {
+      ...commonContainerStyle,
+      height: sizeStyles.container.height,
+      borderRadius: sizeStyles.container.borderRadius,
+      backgroundColor: colorStyles.container.default.backgroundColor ?? 'blue',
+      borderColor: colorStyles.container.default.borderColor,
+    },
+    disabledContainer: {
+      ...commonContainerStyle,
+      height: sizeStyles.container.height,
+      borderRadius: sizeStyles.container.borderRadius,
+      backgroundColor: colorStyles.container.disabled.backgroundColor ?? 'blue',
+      borderColor: colorStyles.container.disabled.borderColor,
+    },
+    defaultTitle: {
+      ...sizeStyles.title,
+      color: colorStyles.title.default.color,
+    },
+    disabledTitle: {
+      ...sizeStyles.title,
+      color: colorStyles.title.disabled.color,
+    },
+  });
+}
+
 export default function Button({
   title,
   type,
@@ -18,44 +55,128 @@ export default function Button({
   onPress,
   ...props
 }) {
-  const sizeStyle = (size => {
+  const sizeStyles = (size => {
     switch (size) {
       case 'small':
-        return smallSizeStyle;
-      case 'large':
+        return {
+          container: {
+            height: 40,
+            borderRadius: layout.radius.md,
+          },
+          title: font.largeBold,
+        };
+      case 'large': /* FALLTHROUGH */
       default:
-        return largeSizeStyle;
+        return {
+          container: {
+            height: 60,
+            borderRadius: layout.radius.lg,
+          },
+          title: font.h3,
+        };
     }
   })(size);
 
-  const [colorStyle, focusedColor] = (type => {
+  const colorStyles = (type => {
     switch (type) {
       case 'primary':
-        return [primaryColorStyle, color.accentFocused];
+        return {
+          container: {
+            default: {
+              backgroundColor: color.yellow500,
+              borderColor: defaultBorderColor,
+            },
+            focused: {
+              backgroundColor: color.accentFocused,
+              borderColor: defaultBorderColor,
+            },
+            disabled: {
+              backgroundColor: color.accentDisabled,
+              borderColor: disabledBorderColor,
+            },
+          },
+          title: {
+            default: {
+              color: color.black,
+            },
+            disabled: {
+              color: color.gray,
+            },
+          },
+        };
       case 'danger':
-        return [dangerColorStyle, color.dangerFocused];
+        return {
+          container: {
+            default: {
+              backgroundColor: color.danger,
+              borderColor: defaultBorderColor,
+            },
+            focused: {
+              backgroundColor: color.dangerFocused,
+              borderColor: defaultBorderColor,
+            },
+            disabled: {
+              backgroundColor: color.dangerDisabled,
+              borderColor: disabledBorderColor,
+            },
+          },
+          title: {
+            default: {
+              color: color.white,
+            },
+            disabled: {
+              color: color.gray300,
+            },
+          },
+        };
+      case 'secondary': /* FALLTHROUGH */
       default:
-        return [secondaryColorStyle, color.lightGray];
+        return {
+          container: {
+            default: {
+              backgroundColor: color.white,
+              borderColor: defaultBorderColor,
+            },
+            focused: {
+              backgroundColor: color.gray200,
+              borderColor: defaultBorderColor,
+            },
+            disabled: {
+              backgroundColor: color.white,
+              borderColor: disabledBorderColor,
+            },
+          },
+          title: {
+            default: {
+              color: color.black,
+            },
+            disabled: {
+              color: color.gray,
+            },
+          },
+        };
     }
   })(type);
+
+  const buttonStyles = makeButtonStyles(sizeStyles, colorStyles);
 
   return (
     <TouchableHighlight
       disabled={disabled}
       onPress={onPress}
-      underlayColor={focusedColor}
+      underlayColor={colorStyles.container.focused.backgroundColor}
       style={[
-        sizeStyle.container,
-        disabled ? colorStyle.disabled : colorStyle.default,
+        disabled
+          ? buttonStyles.disabledContainer
+          : buttonStyles.defaultContainer,
         props.style,
       ]}>
       {isLoading ? (
-        <ActivityIndicator color={colorStyle.defaultText} />
+        <ActivityIndicator color={buttonStyles.defaultTitle.color} />
       ) : (
         <Text
           style={[
-            sizeStyle.title,
-            disabled ? colorStyle.disabledText : colorStyle.defaultText,
+            disabled ? buttonStyles.disabledTitle : buttonStyles.defaultTitle,
           ]}>
           {title}
         </Text>
@@ -81,88 +202,3 @@ Button.defaultProps = {
   isLoading: false,
   onPress: () => {},
 };
-
-const commonContainerStyle = {
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderWidth: 2,
-};
-
-const largeSizeStyle = StyleSheet.create({
-  container: {
-    ...commonContainerStyle,
-    height: 60,
-    borderRadius: layout.radius.lg,
-    borderWidth: 2,
-    borderBottomWidth: 5,
-  },
-  title: {
-    ...font.h3,
-  },
-});
-
-const smallSizeStyle = StyleSheet.create({
-  container: {
-    ...commonContainerStyle,
-    height: 40,
-    borderRadius: layout.radius.md,
-    borderBottomWidth: 5,
-  },
-  title: {
-    ...font.largeBold,
-  },
-});
-
-const defaultBorderColor = color.black;
-const disabledBorderColor = color.gray;
-
-const primaryColorStyle = StyleSheet.create({
-  default: {
-    backgroundColor: color.accent,
-    borderColor: defaultBorderColor,
-  },
-  disabled: {
-    backgroundColor: color.accentDisabled,
-    borderColor: disabledBorderColor,
-  },
-  defaultText: {
-    color: color.black,
-  },
-  disabledText: {
-    color: color.gray,
-  },
-});
-
-const secondaryColorStyle = StyleSheet.create({
-  default: {
-    backgroundColor: color.white,
-    borderColor: defaultBorderColor,
-  },
-  disabled: {
-    backgroundColor: color.white,
-    borderColor: disabledBorderColor,
-  },
-  defaultText: {
-    color: color.black,
-  },
-  disabledText: {
-    color: color.gray,
-  },
-});
-
-const dangerColorStyle = StyleSheet.create({
-  default: {
-    backgroundColor: color.danger,
-    borderColor: defaultBorderColor,
-  },
-  disabled: {
-    backgroundColor: color.dangerDisabled,
-    borderColor: disabledBorderColor,
-  },
-  defaultText: {
-    color: color.white,
-  },
-  disabledText: {
-    color: color.lightGray,
-  },
-});

@@ -1,29 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
 
-import { useDispatch } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
 import { AddSubjectCard, SubjectCard } from '../components/cards';
 import { font, layout } from '../constants';
 
-export default function Dashboard({ ...props }) {
+function Dashboard({ user }) {
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  React.useEffect(() => {
     const loadUser = async () => {
       dispatch(authActions.getThisUserSaga());
     };
 
     loadUser();
   }, []);
-
-  const {
-    userFullName = 'NULL',
-    userUniversity = 'NULL',
-    permissionLevel = 'student',
-    userEmail = 'NULL',
-  } = props;
 
   const subjects = [
     { subjectName: 'Software Engineering Studio 2B' },
@@ -37,6 +30,7 @@ export default function Dashboard({ ...props }) {
         marginTop: layout.defaultScreenMargins.vertical,
         marginHorizontal: layout.defaultScreenMargins.horizontal,
       }}>
+      <Text style={[font.smallBold]}>Hello, {user.firstName ?? 'NULL'}</Text>
       <Text style={[font.h3]}>My Classrooms</Text>
       <View
         style={{
@@ -45,8 +39,9 @@ export default function Dashboard({ ...props }) {
           justifyContent: 'space-between',
           marginTop: layout.spacing.lg,
         }}>
-        {subjects.map(subject => (
+        {subjects.map((subject, idx) => (
           <SubjectCard
+            key={`SubjectCard-${idx}`}
             style={{ marginBottom: layout.spacing.lg }}
             subjectName={subject.subjectName}
           />
@@ -56,3 +51,10 @@ export default function Dashboard({ ...props }) {
     </View>
   );
 }
+
+const mapStateToProps = state => {
+  const { user } = state.auth;
+  return { user };
+};
+
+export default connect(mapStateToProps)(Dashboard);

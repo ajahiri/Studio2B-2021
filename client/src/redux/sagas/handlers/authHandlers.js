@@ -39,7 +39,7 @@ export function* handleRegisterUser(action) {
       yield put(setAuthIsLoading(false));
     }
   } catch (error) {
-    yield put(authUserError(error.response.data.message));
+    yield put(authUserError(error.response?.data?.message ?? `${error}`));
     yield put(setAuthIsLoading(false));
   }
 }

@@ -240,7 +240,7 @@ export default function Register() {
           <ScrollView>
             <TouchableHighlight
               style={{ width: 85, borderRadius: layout.radius.md }}
-              underlayColor={color.lightGray}
+              underlayColor={color.gray200}
               onPress={() => navigation.goBack()}>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons
