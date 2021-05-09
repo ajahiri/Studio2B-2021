@@ -10,6 +10,8 @@ import TeacherCreateSession from './TeacherCreateSession';
 import TeacherViewSession from './TeacherViewSession';
 import StudentJoinSession from './StudentJoinSession';
 
+import reg_index from './registration/reg_index';
+
 export {
   // Onboarding
   SplashScreen,
@@ -23,4 +25,5 @@ export {
   TeacherCreateSession,
   TeacherViewSession,
   StudentJoinSession,
+  reg_index
 };

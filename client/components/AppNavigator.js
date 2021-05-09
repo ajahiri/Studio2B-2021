@@ -14,6 +14,7 @@ import {
   TeacherCreateSession,
   TeacherViewSession,
   StudentJoinSession,
+  registration
 } from '../screens';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
 
@@ -76,6 +77,11 @@ function AppNavigator(props) {
           <Stack.Screen
             name="StudentJoinSession"
             component={StudentJoinSession}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen 
+            name="reg_index"
+            component={reg_index}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
