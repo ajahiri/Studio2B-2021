@@ -14,3 +14,14 @@ export function requestCreateNewSession(session, authToken) {
     },
   });
 }
+
+export function requestGetUserSessions(authToken) {
+  return axios.request({
+    method: 'post',
+    url: `/api/sessions/getUserSessions`,
+    baseURL: BASE_API_URL,
+    headers: {
+      'auth-token': authToken,
+    },
+  });
+}

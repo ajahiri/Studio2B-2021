@@ -6,7 +6,7 @@ import {
   watchGetThisUser,
 } from './authSagas';
 
-import { watchCreateNewSession } from './sessionSagas';
+import { watchCreateNewSession, watchGetUserSessions } from './sessionSagas';
 
 export default function* rootSaga() {
   yield all([
@@ -15,5 +15,6 @@ export default function* rootSaga() {
     watchLogoutUser(),
     watchGetThisUser(),
     watchCreateNewSession(),
+    watchGetUserSessions(),
   ]);
 }

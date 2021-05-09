@@ -84,7 +84,6 @@ export function* handleGetThisUser(action) {
     const token = yield SecureStore.getItemAsync('userToken');
     const response = yield call(requestGetUser, null, token);
     const { data } = response;
-    console.log('handleGetThisUser', data.message);
     yield put(setUser(data.data));
   } catch (error) {
     console.log('ERROR doing get user:', error);

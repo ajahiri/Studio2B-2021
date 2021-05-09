@@ -6,7 +6,15 @@ import { connect, useDispatch } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';
 import jwtDecode from 'jwt-decode';
 
-import { GroundZero, Login, Register, Dashboard } from '../screens';
+import {
+  GroundZero,
+  Login,
+  Register,
+  Dashboard,
+  TeacherCreateSession,
+  TeacherViewSession,
+  StudentJoinSession,
+} from '../screens';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
 
 const Stack = createStackNavigator();
@@ -53,6 +61,21 @@ function AppNavigator(props) {
           <Stack.Screen
             name="GroundZero"
             component={GroundZero}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="TeacherCreateSession"
+            component={TeacherCreateSession}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="TeacherViewSession"
+            component={TeacherViewSession}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="StudentJoinSession"
+            component={StudentJoinSession}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

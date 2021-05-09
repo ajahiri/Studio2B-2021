@@ -154,7 +154,7 @@ router.post('/getUser', verifyToken, getUserValidation, async (req, res) => {
   // console.log('about to get a user of ID:', req.body.userID);
 
   // Get user object for checking perms
-  const userObject = await User.findOne({ _id: req.user._id });
+  const userObject = await User.findOne({ _id: req.user._id }, {password: 0});
 
   try {
     if (userObject.permissionLevel !== 'admin') {

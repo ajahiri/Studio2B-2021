@@ -5,14 +5,17 @@ import { StyleSheet, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import Card from './Card';
-import { color } from '../../constants';
+import { color, font } from '../../constants';
 
 export default function AddSubjectCard({ subjectName, onPress, ...props }) {
   return (
     <Card
       onPress={onPress}
       style={[addSubjectCardStyles.container, props.style]}>
-      <Ionicons name="add" size={60} color={color.gray} />
+      <Text ellipsizeMode="tail" style={[font.mediumBold]}>
+        Add New Class
+      </Text>
+      <Ionicons name="add" size={40} color={color.gray} />
     </Card>
   );
 }
@@ -29,9 +32,11 @@ AddSubjectCard.defaultProps = {
 
 const addSubjectCardStyles = StyleSheet.create({
   container: {
+    height: 80,
     borderColor: color.gray,
     borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 15,
   },
 });
