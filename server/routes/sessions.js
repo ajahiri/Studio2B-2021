@@ -73,6 +73,12 @@ router.post(
     try {
       const savedSession = await newClass.save();
       console.log(savedSession);
+      // Update user obj to add the session ID to their user obj
+      await User.updateOne(
+        userObject._id,
+        { $push: { sessions: savedSession._id } },
+        { upsert: true },
+      );
       res
         .status(200)
         .send({ message: 'Session was saved to DB.', data: savedSession });
@@ -188,4 +194,25 @@ router.post(
       .send({ message: 'Found session', data: targetSession });
   },
 );
+
+router.post('/getUserSessions', verifyToken, async (req, res) => {
+  // Get user object for checking perms
+  const userObject = await User.findOne({ _id: req.user._id });
+  // const sessionData = [];
+  // List of session IDs to get for each
+  const { sessions } = userObject;
+
+  // Map object ids
+  sessions.map(session => {
+    return mongoose.Types.ObjectId(session);
+  });
+
+  // Find all the sessions
+  const sessionData = await Session.find({ _id: { $in: sessions } });
+
+  return res
+    .status(200)
+    .send({ message: 'Session list gathered', data: sessionData });
+});
+
 module.exports = router;

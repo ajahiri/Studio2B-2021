@@ -1,12 +1,15 @@
 import {
   CREATE_NEW_SESSION_SAGA,
+  GET_USER_SESSIONS_SAGA,
   SET_CURRENT_CREATED_SESSION,
   SET_SESSION_LOADING,
+  SET_USER_SESSIONS_HISTORY,
 } from '../types';
 
 const initialState = {
   currentJoinedSession: {}, // From student's perspective (student joins)
   currentCreatedSession: {}, // From teacher's perspective (teacher creates)
+  sessionHistory: [],
   errors: '',
   isLoading: false,
 };
@@ -26,6 +29,15 @@ export default function (state = initialState, action) {
       return {
         ...state,
         isLoading: action.payload,
+      };
+    case GET_USER_SESSIONS_SAGA:
+      return {
+        ...state,
+      };
+    case SET_USER_SESSIONS_HISTORY:
+      return {
+        ...state,
+        sessionHistory: action.payload,
       };
     default:
       return state;

@@ -6,6 +6,10 @@ import Register from './Register';
 import GroundZero from './GroundZero';
 import Dashboard from './Dashboard';
 
+import TeacherCreateSession from './TeacherCreateSession';
+import TeacherViewSession from './TeacherViewSession';
+import StudentJoinSession from './StudentJoinSession';
+
 export {
   // Onboarding
   SplashScreen,
@@ -15,4 +19,8 @@ export {
   // Main screens
   GroundZero,
   Dashboard,
+  // Teacher and Student screens
+  TeacherCreateSession,
+  TeacherViewSession,
+  StudentJoinSession,
 };

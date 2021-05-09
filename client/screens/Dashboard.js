@@ -3,16 +3,20 @@ import { Text, View } from 'react-native';
 
 import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
+import * as sessionActions from '../redux/actions/sessionActions';
 
 import { AddSubjectCard, SubjectCard } from '../components/cards';
 import { font, layout } from '../constants';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-function Dashboard({ user }) {
+function Dashboard(props) {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     const loadUser = async () => {
       dispatch(authActions.getThisUserSaga());
+      dispatch(sessionActions.setSessionLoading(true));
+      dispatch(sessionActions.getUserSessionsSaga());
     };
 
     loadUser();
@@ -24,14 +28,46 @@ function Dashboard({ user }) {
     { subjectName: 'System Security' },
   ];
 
+  const { user, isSessionLoading, sessionHistory, navigation } = props;
+
+  console.log('user in dashboard', user);
+
+  const handleCardPress = session => {
+    console.log('pressed session', session);
+    navigation.navigate('TeacherViewSession', { session });
+  };
+
   return (
     <View
       style={{
         marginTop: layout.defaultScreenMargins.vertical,
         marginHorizontal: layout.defaultScreenMargins.horizontal,
       }}>
-      <Text style={[font.smallBold]}>Hello, {user.firstName ?? 'NULL'}</Text>
-      <Text style={[font.h3]}>My Classrooms</Text>
+      <Text style={[font.smallBold]}>
+        Hello, {user.firstName ?? 'NULL'} ({user.permissionLevel || ''})
+      </Text>
+
+      {user.permissionLevel === 'admin' && (
+        <>
+          <Text style={[font.h3]}>Admin Dashboard</Text>
+        </>
+      )}
+
+      {user.permissionLevel === 'teacher' && (
+        <>
+          <Text style={[font.h3]}>My Sessions</Text>
+        </>
+      )}
+
+      {user.permissionLevel === 'student' && (
+        <>
+          <Text style={[font.h3]}>My Session History</Text>
+        </>
+      )}
+
+      {/* List view of sessions */}
+
+      {/* Cards view */}
       <View
         style={{
           flexDirection: 'row',
@@ -39,14 +75,32 @@ function Dashboard({ user }) {
           justifyContent: 'space-between',
           marginTop: layout.spacing.lg,
         }}>
-        {subjects.map((subject, idx) => (
-          <SubjectCard
-            key={`SubjectCard-${idx}`}
-            style={{ marginBottom: layout.spacing.lg }}
-            subjectName={subject.subjectName}
-          />
-        ))}
-        <AddSubjectCard />
+        <AddSubjectCard
+          onPress={() => {
+            if (user.permissionLevel === 'teacher') {
+              navigation.navigate('StudentJoinSession');
+            } else {
+              navigation.navigate('TeacherCreateSession');
+            }
+          }}
+          isTeacher={user.permissionLevel === 'teacher'}
+        />
+        {isSessionLoading ? (
+          <Text>Loading sessions...</Text>
+        ) : (
+          <>
+            {sessionHistory.map(session => (
+              <TouchableOpacity
+                key={session._id}
+                onPress={() => handleCardPress(session)}>
+                <SubjectCard
+                  style={{ marginBottom: layout.spacing.lg }}
+                  subjectName={session.name}
+                />
+              </TouchableOpacity>
+            ))}
+          </>
+        )}
       </View>
     </View>
   );
@@ -54,7 +108,8 @@ function Dashboard({ user }) {
 
 const mapStateToProps = state => {
   const { user } = state.auth;
-  return { user };
+  const { sessionHistory, isLoading: isSessionLoading } = state.session;
+  return { user, sessionHistory, isSessionLoading };
 };
 
 export default connect(mapStateToProps)(Dashboard);

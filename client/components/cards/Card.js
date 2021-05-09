@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-
+import { StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
 import { layout } from '../../constants';
 
 export default function Card({ children, onPress, ...props }) {
@@ -26,8 +25,8 @@ Card.defaultProps = {
 
 const cardStyles = StyleSheet.create({
   container: {
-    height: 125,
-    width: 177,
+    width: Dimensions.get('window').width - layout.spacing.xl * 2,
+    height: 50,
     borderWidth: 2,
     borderRadius: layout.radius.lg,
   },
