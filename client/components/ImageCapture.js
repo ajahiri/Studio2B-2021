@@ -19,6 +19,8 @@ const ImageCapture = props => {
   const [modalVisible, setModalVisible] = useState(false);  //keep this to use for error display
   const [modalMessage, setModalMessage] = useState('Running facial auth...');
 
+  const [btnText, setBtnText] = useState('');
+
   const dispatch = useDispatch();
   const { cameraReady } = props;
 
@@ -60,14 +62,19 @@ const ImageCapture = props => {
     } else {
       setFaceDetected(true);
     }
+    handleBtnText();
   };
 
-  const setPopupText = text => {
-    setModalMessage(text);
-  };
+  const handleBtnText = () => {
+    if(props.authType === 'register') {
+      faceDetected && name ? setBtnText('REGISTER') : setBtnText('Waiting for Face Detection...');
+    } else {  // authType === 'login'
+      faceDetected ? setBtnText('LOGIN') : setBtnText('Waiting for Face Detection...');
+    }
+  }
 
   const takePhoto = authType => {
-    setModalVisible(true);
+    //setModalVisible(true);
     if (cameraInstance && cameraReady) {
       dispatch(authActions.setAuthIsLoading(true));
       cameraInstance
@@ -79,11 +86,13 @@ const ImageCapture = props => {
             authType,
             img.uri,
             authType === 'register' && name,
-            setPopupText,
+            setBtnText, 
+            setModalMessage, 
+            setModalVisible
           );
 
           dispatch(cameraActions.capturedImage(true));
-          props.submitAll();
+          //props.submitAll();
         })
         .catch(err => console.log(err));
     }
@@ -123,17 +132,9 @@ const ImageCapture = props => {
       </TextInput>
       <View style={styles.buttonContainer}>
         <Button
-          text={
-            faceDetected && name ? 'REGISTER' : 'Waiting for Face Detection...'
-          }
-          disabled={!(faceDetected && name)}
-          onPress={() => takePhoto('register')}
-          style={styles.formSubmitButton}
-        />
-        <Button
-          text={faceDetected ? 'LOGIN' : 'Waiting for Face Detection...'}
+          text={btnText}
           disabled={!faceDetected}
-          onPress={() => takePhoto('login')}
+          onPress={() => takePhoto(props.authType)}
           style={styles.formSubmitButton}
         />
       </View>

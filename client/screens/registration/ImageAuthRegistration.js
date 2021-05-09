@@ -24,7 +24,10 @@ export default function ImageAuthRegistration(props) {
           image. This image will be used for future authentication.
         </Text>
       </View>
-      <ImageCapture submitAll={props.submitAll} />
+      <ImageCapture 
+        authType='register'
+        submitAll={props.submitAll}
+      />
     </SafeAreaView>
   );
 }

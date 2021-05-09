@@ -30,10 +30,12 @@ export function* handleRegisterUser(action) {
     // TODO: fix this as axios doesn't need a "success" boolean
     if (responseData?.success) {
       yield put(setUser(responseData.data));
+      // create saga fucntion to run these after image registration success
       yield SecureStore.setItemAsync('userToken', responseData.token);
       yield put(setAuthToken(responseData.token));
       yield put(setAuthIsLoading(false));
       yield put(authUserError(''));
+      //----------------------------------------------------------------------
     } else {
       yield put(authUserError(responseData.message));
       yield put(setAuthIsLoading(false));

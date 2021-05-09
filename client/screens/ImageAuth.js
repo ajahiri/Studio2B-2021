@@ -23,6 +23,7 @@ export default function ImageAuth(props, { submitAll, navigation }) {
         </Text>
       </View>
       <ImageCapture
+        authType='login'
         submitAll={() => {
           console.log('Uploading...');
         }}
