@@ -107,6 +107,6 @@ dist
 .DS_Store
 ._*
 
-.vscode/*
-client/.vscode/*
-server/.vscode/*
+# .vscode/*
+# client/.vscode/*
+# server/.vscode/*
