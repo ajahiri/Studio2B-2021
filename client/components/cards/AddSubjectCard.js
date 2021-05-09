@@ -7,13 +7,18 @@ import { Ionicons } from '@expo/vector-icons';
 import Card from './Card';
 import { color, font } from '../../constants';
 
-export default function AddSubjectCard({ subjectName, onPress, ...props }) {
+export default function AddSubjectCard({
+  isTeacher,
+  subjectName,
+  onPress,
+  ...props
+}) {
   return (
     <Card
       onPress={onPress}
       style={[addSubjectCardStyles.container, props.style]}>
       <Text ellipsizeMode="tail" style={[font.mediumBold]}>
-        Add New Class
+        {isTeacher ? 'Add' : 'Join'} New Class
       </Text>
       <Ionicons name="add" size={40} color={color.gray} />
     </Card>

@@ -64,11 +64,6 @@ function AppNavigator(props) {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="TeacherCreateSession"
-            component={TeacherCreateSession}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
             name="TeacherViewSession"
             component={TeacherViewSession}
             options={{ headerShown: false }}
@@ -76,6 +71,11 @@ function AppNavigator(props) {
           <Stack.Screen
             name="StudentJoinSession"
             component={StudentJoinSession}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="TeacherCreateSession"
+            component={TeacherCreateSession}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

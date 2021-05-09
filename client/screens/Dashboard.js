@@ -7,6 +7,7 @@ import * as sessionActions from '../redux/actions/sessionActions';
 
 import { AddSubjectCard, SubjectCard } from '../components/cards';
 import { font, layout } from '../constants';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function Dashboard(props) {
   const dispatch = useDispatch();
@@ -27,9 +28,14 @@ function Dashboard(props) {
     { subjectName: 'System Security' },
   ];
 
-  const { user, isSessionLoading, sessionHistory } = props;
+  const { user, isSessionLoading, sessionHistory, navigation } = props;
 
   console.log('user in dashboard', user);
+
+  const handleCardPress = session => {
+    console.log('pressed session', session);
+    navigation.navigate('TeacherViewSession', { session });
+  };
 
   return (
     <View
@@ -69,17 +75,29 @@ function Dashboard(props) {
           justifyContent: 'space-between',
           marginTop: layout.spacing.lg,
         }}>
-        <AddSubjectCard />
+        <AddSubjectCard
+          onPress={() => {
+            if (user.permissionLevel === 'teacher') {
+              navigation.navigate('StudentJoinSession');
+            } else {
+              navigation.navigate('TeacherCreateSession');
+            }
+          }}
+          isTeacher={user.permissionLevel === 'teacher'}
+        />
         {isSessionLoading ? (
           <Text>Loading sessions...</Text>
         ) : (
           <>
             {sessionHistory.map(session => (
-              <SubjectCard
+              <TouchableOpacity
                 key={session._id}
-                style={{ marginBottom: layout.spacing.lg }}
-                subjectName={session.name}
-              />
+                onPress={() => handleCardPress(session)}>
+                <SubjectCard
+                  style={{ marginBottom: layout.spacing.lg }}
+                  subjectName={session.name}
+                />
+              </TouchableOpacity>
             ))}
           </>
         )}

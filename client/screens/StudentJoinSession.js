@@ -9,21 +9,15 @@ import {
   Alert,
 } from 'react-native';
 
-import {
-  Container,
-  Header,
-  Content,
-  Input,
-  Item,
-  Text,
-  Button,
-} from 'native-base';
+import { Container, Header, Content, Input, Item, Text } from 'native-base';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { connect } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';
 
 import axios from 'axios';
 import { resolveBaseURL } from '../globals/globals';
+
+import { Button } from '../components';
 
 const BASE_API_URL = resolveBaseURL();
 
@@ -117,21 +111,21 @@ const StudentJoinSession = props => {
                   <Text style={styles.startsession}>USE SCAN QR CODE</Text>
                 </TouchableOpacity>
                 {useScanner && (
-                  <>
+                  <View>
                     <BarCodeScanner
                       onBarCodeScanned={
                         scanned ? undefined : handleBarCodeScanned
                       }
+                      style={{ width: 300, height: 300 }}
                       barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-                      style={{ width: 100, height: 300 }}
                     />
                     {scanned && (
                       <Button
-                        title={'Tap to Scan Again'}
+                        title="Tap to Scan Again"
                         onPress={() => setScanned(false)}
                       />
                     )}
-                  </>
+                  </View>
                 )}
               </View>
 
