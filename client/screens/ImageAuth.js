@@ -24,9 +24,9 @@ export default function ImageAuth(props, { submitAll, navigation }) {
       </View>
       <ImageCapture
         authType='login'
-        submitAll={() => {
-          console.log('Uploading...');
-        }}
+        // submitAll={() => {
+        //   console.log('Uploading...');
+        // }}
       />
     </SafeAreaView>
   );
