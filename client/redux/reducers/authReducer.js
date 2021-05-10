@@ -8,6 +8,7 @@ import {
   LOG_OUT_USER_SAGA,
   LOGIN_USER_SAGA,
   GET_THIS_USER_SAGA,
+  SET_REG_INDEX,
 } from '../types';
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
   errors: '',
   isLoading: false,
   authToken: null,
+  reg_index: 0,
 };
 
 export default function (state = initialState, action) {
@@ -57,6 +59,11 @@ export default function (state = initialState, action) {
       };
     case GET_THIS_USER_SAGA:
       return { ...state };
+    case SET_REG_INDEX:
+      return {
+        ...state,
+        reg_index: action.payload,
+      };
     default:
       return state;
   }

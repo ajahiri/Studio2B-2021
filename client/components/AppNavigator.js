@@ -9,12 +9,10 @@ import jwtDecode from 'jwt-decode';
 import {
   GroundZero,
   Login,
-  Register,
-  Dashboard,
   TeacherCreateSession,
   TeacherViewSession,
   StudentJoinSession,
-  registration
+  reg_index,
 } from '../screens';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
 
@@ -51,9 +49,14 @@ function AppNavigator(props) {
             component={Login}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="Register"
             component={Register}
+            options={{ headerShown: false }}
+          /> */}
+          <Stack.Screen
+            name="RegisterIndex"
+            component={reg_index}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>
@@ -77,11 +80,6 @@ function AppNavigator(props) {
           <Stack.Screen
             name="StudentJoinSession"
             component={StudentJoinSession}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen 
-            name="reg_index"
-            component={reg_index}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

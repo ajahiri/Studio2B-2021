@@ -8,12 +8,31 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+
+import * as SecureStore from 'expo-secure-store';
 
 import { ImageCapture } from '../../components/index';
+import { authUserError, setAuthToken } from '../../redux/actions/authActions';
 
 export default function ImageAuthRegistration(props) {
   const returnImage = require('../../assets/Login/Union.png');
   const imagePlaceholder = require('../../assets/Login/profile-placeholder.png');
+  const dispatch = useDispatch();
+
+  const onSubmission = result => {
+    console.log(result);
+    if (result?.status === 1) {
+      console.log(
+        'success register image, setting user token:',
+        props.userToken,
+      );
+      SecureStore.setItemAsync('userToken', props.userToken).then(token => {
+        dispatch(setAuthToken(token));
+        dispatch(authUserError(''));
+      });
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -24,9 +43,10 @@ export default function ImageAuthRegistration(props) {
           image. This image will be used for future authentication.
         </Text>
       </View>
-      <ImageCapture 
-        authType='register'
-        submitAll={props.submitAll}
+      <ImageCapture
+        userID={props.userID}
+        authType="register"
+        onSubmission={onSubmission}
       />
     </SafeAreaView>
   );
@@ -41,7 +61,7 @@ const styles = StyleSheet.create({
   //returnImage not used
   returnImage: {
     paddingTop: 40,
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   returnButton: {
     width: 20,

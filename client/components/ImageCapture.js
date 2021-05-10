@@ -8,27 +8,24 @@ import * as FaceDetector from 'expo-face-detector';
 import Button from './Button';
 import { colours as C, layout as L, typography as T } from '../constants';
 
-import * as cameraActions from '../redux/actions/cameraActions';
 import * as authActions from '../redux/actions/authActions';
 
 import TextInput from './TextInput';
 import handleFaceAuth from '../helpers/handleFaceAuth';
 
 const ImageCapture = props => {
-  const [name, onChangeName] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);  //keep this to use for error display
+  const [modalVisible, setModalVisible] = useState(false); //keep this to use for error display
   const [modalMessage, setModalMessage] = useState('Running facial auth...');
 
   const [btnText, setBtnText] = useState('');
-
-  const dispatch = useDispatch();
-  const { cameraReady } = props;
 
   // put the take photo btn in here and call the onSubmit function in reg_index inside of the updatePhoto function.
 
   const [hasPermission, setHasPermission] = useState(null);
   const [faceDetected, setFaceDetected] = useState(false);
   const [cameraInstance, setCameraInstance] = useState({});
+  const [cameraReady, setcameraReady] = useState(false);
+  const [captureLoading, setcaptureLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -54,6 +51,19 @@ const ImageCapture = props => {
     return <Text>No access to camera.</Text>;
   }
 
+  // Response object structure
+  // Status 1 = success, 2 = fail, message is reason
+  // const response = {
+  //   status: 0,
+  //   message: '',
+  //   data: '', // Will be the ID on successful auth
+  // }
+  const handleFaceAuthResponse = response => {
+    setcaptureLoading(false);
+    // Handle any modal messages here
+    props.onSubmission(response);
+  };
+
   const FacesDetected = ({ faces }) => {
     const face = faces[0];
     if (!face) {
@@ -66,33 +76,32 @@ const ImageCapture = props => {
   };
 
   const handleBtnText = () => {
-    if(props.authType === 'register') {
-      faceDetected && name ? setBtnText('REGISTER') : setBtnText('Waiting for Face Detection...');
-    } else {  // authType === 'login'
-      faceDetected ? setBtnText('LOGIN') : setBtnText('Waiting for Face Detection...');
+    if (props.authType === 'register') {
+      faceDetected
+        ? setBtnText('REGISTER')
+        : setBtnText('Waiting for Face Detection...');
+    } else {
+      // authType === 'login'
+      faceDetected
+        ? setBtnText('LOGIN')
+        : setBtnText('Waiting for Face Detection...');
     }
-  }
+  };
 
   const takePhoto = authType => {
     //setModalVisible(true);
     if (cameraInstance && cameraReady) {
-      dispatch(authActions.setAuthIsLoading(true));
+      setcaptureLoading(true);
       cameraInstance
         .takePictureAsync()
-        .then(async img => {
-          dispatch(cameraActions.imgURI(img.uri));
-
+        .then(img => {
           handleFaceAuth(
             authType,
             img.uri,
-            authType === 'register' && name,
-            setBtnText, 
-            setModalMessage, 
-            setModalVisible
+            setBtnText,
+            props.userID,
+            handleFaceAuthResponse,
           );
-
-          dispatch(cameraActions.capturedImage(true));
-          //props.submitAll();
         })
         .catch(err => console.log(err));
     }
@@ -104,7 +113,7 @@ const ImageCapture = props => {
         <Camera
           //ref={ref => setCameraInstance(ref)}
           ref={ref => setCameraInstance(ref)}
-          onCameraReady={() => dispatch(cameraActions.cameraReady(true))}
+          onCameraReady={() => setcameraReady(true)}
           style={styles.camera}
           type={Camera.Constants.Type.front}
           autoFocus={true}
@@ -119,26 +128,19 @@ const ImageCapture = props => {
           }}
           onMountError={err => console.log(err)}></Camera>
       </View>
-      <TextInput
-        onChangeText={onChangeName}
-        value={name}
-        placeholder="Username"
-        style={{
-          borderColor: 'blue',
-          borderWidth: 1,
-          margin: 10,
-          padding: 20,
-        }}>
-      </TextInput>
       <View style={styles.buttonContainer}>
-        <Button
-          text={btnText}
-          disabled={!faceDetected}
-          onPress={() => takePhoto(props.authType)}
-          style={styles.formSubmitButton}
-        />
+        {captureLoading ? (
+          <Text>Loading...</Text>
+        ) : (
+          <Button
+            title={btnText}
+            disabled={!faceDetected}
+            onPress={() => takePhoto(props.authType)}
+            style={styles.formSubmitButton}
+          />
+        )}
       </View>
-      <Modal
+      {/* <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -155,18 +157,12 @@ const ImageCapture = props => {
             </Pressable>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 };
 
-const mapStateToProps = state => {
-  return {
-    cameraReady: state.camera.cameraReady,
-  };
-};
-
-export default connect(mapStateToProps)(ImageCapture);
+export default ImageCapture;
 
 const styles = StyleSheet.create({
   container: {

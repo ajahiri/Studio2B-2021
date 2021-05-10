@@ -102,7 +102,7 @@ function LoginFooter({ disabled, isLoading, onSubmit }) {
         isLoading={isLoading}
         onPress={onSubmit}
       />
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+      <TouchableOpacity onPress={() => navigation.navigate('RegisterIndex')}>
         <Text style={[font.medium, loginScreenStyles.noAccountText]}>
           I don't have an account
         </Text>

@@ -5,6 +5,7 @@ import {
   setAuthIsLoading,
   setUser,
   setAuthToken,
+  setRegIndex,
 } from '../../actions/authActions';
 import {
   requestLoginUser,
@@ -29,11 +30,11 @@ export function* handleRegisterUser(action) {
     // I have to use data.data cause of axios
     // TODO: fix this as axios doesn't need a "success" boolean
     if (responseData?.success) {
-      yield put(setUser(responseData.data));
-      yield SecureStore.setItemAsync('userToken', responseData.token);
-      yield put(setAuthToken(responseData.token));
+      yield put(
+        setUser({ ...responseData.user, userToken: responseData.token }),
+      );
       yield put(setAuthIsLoading(false));
-      yield put(authUserError(''));
+      yield put(setRegIndex(1));
     } else {
       yield put(authUserError(responseData.message));
       yield put(setAuthIsLoading(false));

@@ -2,11 +2,17 @@ import { RNS3 } from 'react-native-upload-aws-s3';
 import { AWS_ACCESS_KEY, AWS_SECRET_KEY, AWS_FACESEARCH_API } from '@env';
 import axios from 'axios';
 
-  async function handleFaceAuth(authType, uri, name, setBtnText, setModalMessage, setModalVisible) {
+function handleFaceAuth(
+  authType,
+  uri,
+  setBtnText,
+  fileName,
+  handleFaceAuthResponse,
+) {
   setBtnText(authType === 'register' ? 'Uploading...' : 'Authenticating...');
   const file = {
     uri,
-    name: authType === 'register' ? name : 'auth-request',
+    name: authType === 'register' ? fileName : 'auth-request',
     type: 'image/png',
   };
 
@@ -18,32 +24,55 @@ import axios from 'axios';
     successActionStatus: 201,
   };
 
-  const setModal = msg => {
-    setModalVisible(true);
-    setModalMessage(msg);
-    console.log(msg);
-  }
+  // Status 1 = success, 2 = fail, message is reason
+  // const response = {
+  //   status: 0,
+  //   message: '',
+  //   data: '', // Will be the ID on successful auth
+  // }
 
   try {
     RNS3.put(file, options).then(response => {
       if (authType === 'login') {
         axios.get(`${AWS_FACESEARCH_API}?filename=auth-request`).then(res => {
-          if (res.data.IDs.length === 0) setModal('No student found');
-          else setBtnText(`Welcome ${res.data.IDs[0].ExternalImageId}`);
+          if (res.data.IDs.length === 0)
+            return handleFaceAuthResponse({
+              status: 0,
+              message: 'No facial authentication match was found.',
+              data: null,
+            });
+          else
+            return handleFaceAuthResponse({
+              status: 1,
+              message: 'Successful login.',
+              data: res.data.IDs[0].ExternalImageId,
+            });
         });
       } else {
         if (response.status === 201) {
           // console.log('Successfully uploaded: ', response.body);
-          return setBtnText('Registered');
+          return handleFaceAuthResponse({
+            status: 1,
+            message: 'Successfully registered user image.',
+            data: null,
+          });
         } else {
           console.log('Failed to upload image to S3: ', response);
-          return setModal('Failed');
+          return handleFaceAuthResponse({
+            status: 0,
+            message: 'Failed to upload image to S3.',
+            data: null,
+          });
         }
       }
     });
   } catch (error) {
     console.log(error);
-    return setModal('Failed');
+    return handleFaceAuthResponse({
+      status: 0,
+      message: 'Failed to upload image to S3.',
+      data: null,
+    });
   }
 }
 

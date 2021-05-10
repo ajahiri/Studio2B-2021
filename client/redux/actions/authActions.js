@@ -8,6 +8,7 @@ import {
   LOG_OUT_USER_SAGA,
   LOGIN_USER_SAGA,
   GET_THIS_USER_SAGA,
+  SET_REG_INDEX,
 } from '../types';
 
 export const registerUser = user => ({
@@ -46,4 +47,9 @@ export const loginUser = user => ({ type: LOGIN_USER_SAGA, payload: user });
 export const setAuthIsLoading = isLoading => ({
   type: SET_AUTH_LOADING,
   payload: isLoading,
+});
+
+export const setRegIndex = newIndex => ({
+  type: SET_REG_INDEX,
+  payload: newIndex,
 });
