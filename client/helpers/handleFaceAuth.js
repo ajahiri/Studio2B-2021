@@ -41,11 +41,17 @@ function handleFaceAuth(
               message: 'No facial authentication match was found.',
               data: null,
             });
+          // TODO: On login this might change as the face detected may be associated with multiple accounts,
+          // to handle this, we will change the client side check for login so that we check that the user ID
+          // exists in the array rather than checking if each ID matches. i.e. the data attribute will now return
+          // an array of user IDs instead of a single ID.
           else
             return handleFaceAuthResponse({
               status: 1,
               message: 'Successful login.',
-              data: res.data.IDs[0].ExternalImageId,
+              data: res.data.IDs.map(id => {
+                return id.ExternalImageId;
+              }),
             });
         });
       } else {
