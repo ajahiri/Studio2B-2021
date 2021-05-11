@@ -1,4 +1,4 @@
-import React /*, { useEffect, useState }*/ from 'react'; /* HN */
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,73 +6,59 @@ import {
   SafeAreaView,
   ScrollView,
   KeyboardAvoidingView,
+  Text,
 } from 'react-native';
 
-import { Container, Header, Content, Spinner, Text } from 'native-base';
-
-import { AntDesign } from '@expo/vector-icons';
+import { Button, Container, Content, Spinner } from 'native-base';
 
 import QRCode from 'react-native-qrcode-generator';
-
-import { connect } from 'react-redux';
 
 /* The start session button seems to activate even on the white part of the screen :( I wasn't sure how to  */
 /* The back button needs to be linked. atm it doesn't work */
 
 const TeacherViewSession = props => {
+  console.log(props);
   const { name, description, maxStudents, shortID, createdAt } =
-    props.currentCreatedSession || {};
+    props?.route?.params?.session || {};
+
+  const [showQRCode, setshowQRCode] = useState(false);
   return (
     <SafeAreaView>
       <KeyboardAvoidingView>
         <ScrollView>
-          {props.isLoading ? (
-            <Container>
-              <Content>
-                <Spinner color="blue" />
-              </Content>
-            </Container>
-          ) : (
-            <>
-              <View /* Title */ style={styles.container}>
-                <Text style={styles.title}>{name}</Text>
-                <Text>Description: {description}</Text>
-                <Text>Max Students: {maxStudents}</Text>
-                <Text>JOIN CODE: {shortID}</Text>
-                <Text>Created At: {createdAt}</Text>
-                <Text>QR Join Code:</Text>
-                <QRCode
-                  value={shortID || ''}
-                  size={200}
-                  bgColor="black"
-                  fgColor="white"
-                />
-              </View>
+          <View /* Title */ style={styles.container}>
+            <Text style={styles.title}>{name}</Text>
+            <Text>Description: {description}</Text>
+            <Text>Max Students: {maxStudents}</Text>
+            <Text>JOIN CODE: {shortID}</Text>
+            <Text>Created At: {createdAt}</Text>
+            <Button onPress={() => setshowQRCode(true)}>
+              <Text>Generate QR Code</Text>
+            </Button>
+            {showQRCode && (
+              <QRCode
+                value={shortID || ''}
+                size={200}
+                bgColor="black"
+                fgColor="white"
+              />
+            )}
+          </View>
 
-              <View style={styles.studentcontainer}>
-                <Text style={styles.students}>Students</Text>
-              </View>
+          <View style={styles.studentcontainer}>
+            <Text style={styles.students}>Students</Text>
+          </View>
 
-              <TouchableOpacity style={styles.startsessioncontainer}>
-                <Text style={styles.startsession}>START SESSION</Text>
-              </TouchableOpacity>
-            </>
-          )}
+          <TouchableOpacity style={styles.startsessioncontainer}>
+            <Text style={styles.startsession}>START SESSION</Text>
+          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const { currentCreatedSession, isLoading } = state.session;
-  return {
-    currentCreatedSession,
-    isLoading,
-  };
-};
-
-export default connect(mapStateToProps)(TeacherViewSession);
+export default TeacherViewSession;
 
 const styles = StyleSheet.create({
   container: {
