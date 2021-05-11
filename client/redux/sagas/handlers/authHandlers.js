@@ -31,7 +31,7 @@ export function* handleRegisterUser(action) {
     // TODO: fix this as axios doesn't need a "success" boolean
     if (responseData?.success) {
       yield put(
-        setUser({ ...responseData.user, userToken: responseData.token }),
+        setUser({ _id: responseData?.data?.id, userToken: responseData.token }),
       );
       yield put(setAuthIsLoading(false));
       yield put(setRegIndex(1));

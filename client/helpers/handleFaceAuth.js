@@ -9,6 +9,7 @@ function handleFaceAuth(
   fileName,
   handleFaceAuthResponse,
 ) {
+  console.log('!!!SAVING WITH FILENAME!!!', fileName);
   setBtnText(authType === 'register' ? 'Uploading...' : 'Authenticating...');
   const file = {
     uri,
