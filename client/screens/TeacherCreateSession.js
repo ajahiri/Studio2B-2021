@@ -133,6 +133,10 @@ const TeacherCreateSession = props => {
     // console.log(classDetails, sessionQuestions);
   };
 
+  const ImageAuthPassed = () => {
+    setCreateClassIndex(1);
+  }
+
   return (
     <SafeAreaView>
       <KeyboardAvoidingView>

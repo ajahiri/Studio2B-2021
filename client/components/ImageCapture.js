@@ -6,6 +6,7 @@ import { Camera } from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
 
 import Button from './Button';
+import Banner from './Banner';
 import { colours as C, layout as L, typography as T } from '../constants';
 
 import * as authActions from '../redux/actions/authActions';
@@ -16,6 +17,7 @@ import handleFaceAuth from '../helpers/handleFaceAuth';
 const ImageCapture = props => {
   const [modalVisible, setModalVisible] = useState(false); //keep this to use for error display
   const [modalMessage, setModalMessage] = useState('Running facial auth...');
+  const [faceRecoError, setFaceRecoError] = useState('');
 
   const [btnText, setBtnText] = useState('');
 
@@ -65,8 +67,7 @@ const ImageCapture = props => {
       props.onSubmission(response);
     }
     else{
-      setModalMessage(response.message);
-      setModalVisible(true);
+      setFaceRecoError(response.message);
     }
   };
 
@@ -133,6 +134,9 @@ const ImageCapture = props => {
           }}
           onMountError={err => console.log(err)}></Camera>
       </View>
+      {!captureLoading && faceRecoError !== '' ? (
+        <Banner type="error" message={faceRecoError}/>
+      ) : null}
       <View style={styles.buttonContainer}>
         {captureLoading ? (
           <Text>Loading...</Text>
@@ -219,6 +223,7 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     paddingRight: 30,
     paddingTop: 15,
+    paddingBottom: 15,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',

@@ -18,22 +18,29 @@ function ImageAuth(props, { submitAll, navigation }) {
     const [tries, setTries] = useState(3);
 
     const onSubmission = result => {
-        if (result?.status === 1) {
-            result.data.map(id => {
-                if (id === user?._id) {
-                    return props.setCreateClassIndex(1);
-                }
-            });
+        if (result.data.includes(user?._id) && !props.isTeacher) {
+            // face auth success and matched with student user
+            return console.log(
+                'Student Face Auth Success!'
+                );
+            //iterate to next screen on student join class flow here
+        } else if (result.data.includes(user?._id) && !props.isTeacher) {
+            // face auth success and matched with teacher user
+            return props.setCreateClassIndex(1);
+
         } else if (!props.isTeacher && tries >= 0) {
-            setTries(tries-1);
-            return console.log(`Facial Recognition Failed. You have ${tries} attempts left`);
+            // student face auth FAIL (retry)
+            setTries(tries - 1);
+            return console.log(
+                `Student Facial Recognition Failed. You have ${tries} attempts left`
+            );
         } else if (!props.isTeacher && tries === -1) {
             // student continues with failed Face Auth
-            console.log('Face Authentication Failed. You have no attempts left.')
-            return setCreateClassIndex(1);
+            return console.log('Student Face Authentication Failed. You have no attempts left.')
+            //iterate to next screen on student join class flow here
         }
         // display error
-        return console.log('face does not match with current user.');
+        return console.log('face does not match with current user ID.');
     };
 
 
