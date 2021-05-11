@@ -15,23 +15,27 @@ import { ImageCapture } from '../components';
 function ImageAuth(props, { submitAll, navigation }) {
     const { user } = props;
 
+    const [tries, setTries] = useState(3);
+
     const onSubmission = result => {
-        console.log(result);
         if (result?.status === 1) {
             result.data.map(id => {
-                //
-                // if(id === user?._id){
-                //     props.setCreateClassIndex(1);
-                // } else {
-                //     // report error
-                //     console.log('face does not match current user');
-                // }
+                if (id === user?._id) {
+                    return props.setCreateClassIndex(1);
+                }
             });
-        } else {
-            //report error
-            console.log(response?.message);
+        } else if (!props.isTeacher && tries >= 0) {
+            setTries(tries-1);
+            return console.log(`Facial Recognition Failed. You have ${tries} attempts left`);
+        } else if (!props.isTeacher && tries === -1) {
+            // student continues with failed Face Auth
+            console.log('Face Authentication Failed. You have no attempts left.')
+            return setCreateClassIndex(1);
         }
+        // display error
+        return console.log('face does not match with current user.');
     };
+
 
     return (
         <SafeAreaView>

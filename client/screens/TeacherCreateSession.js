@@ -142,6 +142,7 @@ const TeacherCreateSession = props => {
               <ImageAuth 
                 msg="this is the message" 
                 setCreateClassIndex={setcreateClassIndex}
+                isTeacher={true}
               />
             </View>
           )}

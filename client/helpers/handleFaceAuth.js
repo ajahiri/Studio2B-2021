@@ -46,9 +46,7 @@ function handleFaceAuth(
           // to handle this, we will change the client side check for login so that we check that the user ID
           // exists in the array rather than checking if each ID matches. i.e. the data attribute will now return
           // an array of user IDs instead of a single ID.
-          else{
-            console.log('---------LOOK HERE------------------------------')
-            console.log(res.data.IDs);
+          else
             return handleFaceAuthResponse({
               status: 1,
               message: 'Successful login.',
@@ -56,7 +54,6 @@ function handleFaceAuth(
                 return id.ExternalImageId;
               }),
             });
-          }
         });
       } else {
         if (response.status === 201) {
