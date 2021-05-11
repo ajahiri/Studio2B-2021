@@ -25,6 +25,8 @@ import {
   setSessionLoading,
 } from '../redux/actions/sessionActions';
 
+import ImageAuth from './ImageAuth';
+
 const createClassroomSchema = yup.object({
   sessionName: yup
     .string()
@@ -137,6 +139,14 @@ const TeacherCreateSession = props => {
         <ScrollView>
           {createClassIndex === 0 && (
             <View style={styles.pageContainer}>
+              <ImageAuth 
+                msg="this is the message" 
+                setCreateClassIndex={setcreateClassIndex}
+              />
+            </View>
+          )}
+          {createClassIndex === 1 && (
+            <View style={styles.pageContainer}>
               <Formik
                 initialValues={{
                   sessionName: classDetails.sessionName,
@@ -177,7 +187,7 @@ const TeacherCreateSession = props => {
               </Formik>
             </View>
           )}
-          {createClassIndex === 1 && (
+          {createClassIndex === 2 && (
             <View style={styles.pageContainer}>
               <Text>Questions</Text>
               <Text>

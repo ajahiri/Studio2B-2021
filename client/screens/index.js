@@ -11,6 +11,7 @@ import TeacherViewSession from './TeacherViewSession';
 import StudentJoinSession from './StudentJoinSession';
 
 import reg_index from './registration/reg_index';
+import ImageAuth from './ImageAuth';
 
 export {
   // Onboarding
@@ -25,5 +26,6 @@ export {
   TeacherCreateSession,
   TeacherViewSession,
   StudentJoinSession,
-  reg_index
+  reg_index,
+  ImageAuth
 };

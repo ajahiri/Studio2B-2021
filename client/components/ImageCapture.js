@@ -60,8 +60,14 @@ const ImageCapture = props => {
   // }
   const handleFaceAuthResponse = response => {
     setcaptureLoading(false);
-    // Handle any modal messages here
-    props.onSubmission(response);
+    if(response?.status === 1){
+      // Handle any modal messages here
+      props.onSubmission(response);
+    }
+    else{
+      setModalMessage(response.message);
+      setModalVisible(true);
+    }
   };
 
   const FacesDetected = ({ faces }) => {
@@ -111,7 +117,6 @@ const ImageCapture = props => {
     <View>
       <View style={styles.imageContainer}>
         <Camera
-          //ref={ref => setCameraInstance(ref)}
           ref={ref => setCameraInstance(ref)}
           onCameraReady={() => setcameraReady(true)}
           style={styles.camera}

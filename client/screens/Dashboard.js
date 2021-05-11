@@ -31,6 +31,10 @@ function Dashboard(props) {
 
   console.log('user in dashboard', user);
 
+  const onCreateNewSession = () => {
+    props.navigation.navigate("TeacherCreateSession");
+  };
+
   return (
     <View
       style={{
@@ -69,7 +73,7 @@ function Dashboard(props) {
           justifyContent: 'space-between',
           marginTop: layout.spacing.lg,
         }}>
-        <AddSubjectCard />
+        <AddSubjectCard onPress={onCreateNewSession}/>
         {isSessionLoading ? (
           <Text>Loading sessions...</Text>
         ) : (
