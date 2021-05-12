@@ -2,7 +2,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
-  "files.autoSave": "off",
+  "files.autoSave": "afterDelay",
   "files.exclude": {
     "**/._*": true,
     "**/.DS_Store": true,
