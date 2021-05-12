@@ -24,7 +24,7 @@ function ImageAuth(props, { submitAll, navigation }) {
                 'Student Face Auth Success!'
                 );
             //iterate to next screen on student join class flow here
-        } else if (result.data.includes(user?._id) && !props.isTeacher) {
+        } else if (result.data.includes(user?._id) && props.isTeacher) {
             // face auth success and matched with teacher user
             return props.setCreateClassIndex(1);
 
