@@ -77,7 +77,7 @@ function Dashboard(props) {
         }}>
         <AddSubjectCard
           onPress={() => {
-            if (user.permissionLevel === 'teacher') {
+            if (user.permissionLevel === 'student') {
               navigation.navigate('StudentJoinSession');
             } else {
               navigation.navigate('TeacherCreateSession');
