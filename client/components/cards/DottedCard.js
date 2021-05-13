@@ -1,49 +1,45 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, Text, View } from 'react-native';
-
 import { Ionicons } from '@expo/vector-icons';
 
 import Card from './Card';
 import { color, font, layout } from '../../constants';
 
-export default function AddSubjectCard({
-  subjectName,
-  isTeacher,
-  onPress,
-  ...props
-}) {
+export default function DottedCard({ icon, message, onPress, ...props }) {
   return (
-    <Card onPress={onPress} style={[addSubjectCardStyles.card, props.style]}>
-      <View style={[addSubjectCardStyles.cardContent]}>
-        <Ionicons name="add" size={40} color={color.gray} />
+    <Card onPress={onPress} style={[dottedCardStyles.card, props.style]}>
+      <View style={[dottedCardStyles.cardContent]}>
+        <Ionicons name={icon} size={40} color={color.gray} />
         <Text
+          numberOfLines={1}
           ellipsizeMode="tail"
-          style={[font.largeBold, addSubjectCardStyles.cardText]}>
-          {isTeacher ? 'Add' : 'Join'} New Class
+          style={[font.largeBold, dottedCardStyles.cardText]}>
+          {message}
         </Text>
       </View>
     </Card>
   );
 }
 
-AddSubjectCard.propTypes = {
-  subjectName: PropTypes.string.isRequired,
-  isTeacher: PropTypes.bool,
+DottedCard.propTypes = {
+  icon: PropTypes.string,
+  message: PropTypes.string,
   onPress: PropTypes.func,
 };
 
-AddSubjectCard.defaultProps = {
-  subjectName: 'Subject',
-  isTeacher: false,
+DottedCard.defaultProps = {
+  icon: 'add',
+  message: '',
   onPress: () => {},
 };
 
-const addSubjectCardStyles = StyleSheet.create({
+const dottedCardStyles = StyleSheet.create({
   card: {
     height: 80,
     borderColor: color.gray,
     borderStyle: 'dashed',
+    // backgroundColor: color.white,
   },
   cardContent: {
     flexGrow: 1,

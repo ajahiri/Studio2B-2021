@@ -25,8 +25,6 @@ Card.defaultProps = {
 
 const cardStyles = StyleSheet.create({
   container: {
-    width: Dimensions.get('window').width - layout.spacing.xl * 2,
-    height: 50,
     borderWidth: 2,
     borderRadius: layout.radius.lg,
   },

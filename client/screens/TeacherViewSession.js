@@ -21,7 +21,7 @@ const TeacherViewSession = props => {
   const { name, description, maxStudents, shortID, createdAt } =
     props?.route?.params?.session || {};
 
-  const [showQRCode, setshowQRCode] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false);
   return (
     <SafeAreaView>
       <KeyboardAvoidingView>
@@ -32,7 +32,7 @@ const TeacherViewSession = props => {
             <Text>Max Students: {maxStudents}</Text>
             <Text>JOIN CODE: {shortID}</Text>
             <Text>Created At: {createdAt}</Text>
-            <Button onPress={() => setshowQRCode(true)}>
+            <Button onPress={() => setShowQRCode(true)}>
               <Text>Generate QR Code</Text>
             </Button>
             {showQRCode && (
@@ -45,12 +45,12 @@ const TeacherViewSession = props => {
             )}
           </View>
 
-          <View style={styles.studentcontainer}>
+          <View style={styles.studentContainer}>
             <Text style={styles.students}>Students</Text>
           </View>
 
-          <TouchableOpacity style={styles.startsessioncontainer}>
-            <Text style={styles.startsession}>START SESSION</Text>
+          <TouchableOpacity style={styles.startSessionContainer}>
+            <Text style={styles.startSession}>START SESSION</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -64,26 +64,22 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
   },
-
   title: {
     fontSize: 30,
     marginTop: 25,
     fontWeight: 'bold',
   },
-
   students: {
     marginTop: 10,
     marginLeft: 40,
     fontSize: 16,
   },
-
   pageBackButton: {
     position: 'absolute',
     marginTop: 40,
     marginLeft: 70,
   },
-
-  startsession: {
+  startSession: {
     fontWeight: 'bold',
     fontSize: 18,
     borderWidth: 1,

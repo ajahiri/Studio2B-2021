@@ -56,7 +56,7 @@ export default function Button({
   onPress,
   ...props
 }) {
-  const sizeStyles = (size => {
+  const sizeStyles = (() => {
     switch (size) {
       case 'small':
         return {
@@ -76,9 +76,9 @@ export default function Button({
           title: font.h3,
         };
     }
-  })(size);
+  })();
 
-  const colorStyles = (type => {
+  const colorStyles = (() => {
     switch (type) {
       case 'primary':
         return {
@@ -157,7 +157,7 @@ export default function Button({
           },
         };
     }
-  })(type);
+  })();
 
   const buttonStyles = makeButtonStyles(sizeStyles, colorStyles);
 

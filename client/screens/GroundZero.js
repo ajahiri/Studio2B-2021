@@ -5,16 +5,19 @@ import { Ionicons } from '@expo/vector-icons';
 
 import Dashboard from './Dashboard';
 import Profile from './Profile';
-import { color } from '../constants';
+import { color, layout } from '../constants';
 
 const Tab = createBottomTabNavigator();
 
 export default function GroundZero() {
   return (
     <Tab.Navigator
-      tabBarOptions={{ activeTintColor: color.accentFocused }}
+      tabBarOptions={{
+        activeTintColor: color.accentFocused,
+        showLabel: false,
+      }}
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ focused, color }) => {
           let iconName;
 
           switch (route.name) {
@@ -27,7 +30,7 @@ export default function GroundZero() {
               break;
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={30} color={color} />;
         },
       })}>
       <Tab.Screen name="Dashboard" component={Dashboard} />
