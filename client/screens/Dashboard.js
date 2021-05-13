@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
 import {
   useSafeAreaInsets,
@@ -34,8 +28,8 @@ function Header({ user, ...props }) {
       ]}>
       <View style={headerStyles.content}>
         <View style={headerStyles.textContainer}>
-          <Text style={[font.medium]}>Welcome</Text>
-          <Text style={[font.largeBold]}>
+          <Text style={[font.medium, { flexGrow: 1 }]}>Welcome</Text>
+          <Text numberOfLines={1} style={[font.largeBold, { flexGrow: 1 }]}>
             {fullName} ({user.permissionLevel ?? 'NONE'})
           </Text>
         </View>
@@ -64,7 +58,7 @@ const headerStyles = StyleSheet.create({
     marginBottom: layout.spacing.md,
   },
   textContainer: {
-    /* empty */
+    flex: 1,
   },
   divider: {
     marginHorizontal: layout.defaultScreenMargins.horizontal,
@@ -74,18 +68,27 @@ const headerStyles = StyleSheet.create({
   },
 });
 
-function SessionList({ user, isSessionLoading, sessionHistory }) {
-  console.log({ sessionHistory });
+function SessionList({ user, isSessionLoading: _, sessionHistory }) {
   const navigation = useNavigation();
-
   const isTeacher = user.permissionLevel === 'teacher';
 
-  const renderSessionItem = ({ item }) => {
+  const renderSessionItem = ({ item, index }) => {
     return (
       <SessionCard
         subjectName={item.name}
         style={{ marginBottom: layout.spacing.lg }}
       />
+    );
+  };
+
+  const renderEmptySessionHistory = () => {
+    return (
+      <View style={{ alignItems: 'center' }}>
+        <Text
+          style={[font.large, { textAlign: 'center', color: color.gray500 }]}>
+          You don't have any previous sessions.
+        </Text>
+      </View>
     );
   };
 
@@ -112,30 +115,14 @@ function SessionList({ user, isSessionLoading, sessionHistory }) {
       <FlatList
         data={sessionHistory}
         renderItem={renderSessionItem}
-        keyExtractor={item => `${item.id}`}
         style={{ marginTop: layout.spacing.lg }}
+        ListEmptyComponent={renderEmptySessionHistory}
       />
-      {/* {isSessionLoading ? (
-        <Text>Loading sessions...</Text>
-      ) : (
-        <>
-          {sessionHistory.map(session => (
-            <TouchableOpacity
-              key={session._id}
-              onPress={() => handleCardPress(session)}>
-              <SubjectCard
-                style={{ marginBottom: layout.spacing.lg }}
-                name={session.name}
-              />
-            </TouchableOpacity>
-          ))}
-        </>
-      )} */}
     </View>
   );
 }
 
-function Dashboard({ user, isSessionLoading, sessionHistory }) {
+function Dashboard({ user, isSessionLoading, sessionHistory: _ }) {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
@@ -150,17 +137,25 @@ function Dashboard({ user, isSessionLoading, sessionHistory }) {
 
   console.log('user in dashboard', user);
 
+  const sessionHistory = [
+    { id: 0, name: 'Subject ABC' },
+    { id: 1, name: 'Subject DEF' },
+    { id: 2, name: 'Subject GHI' },
+    // { id: 3, name: 'Subject JKL' },
+    // { id: 4, name: 'Subject MNO' },
+    // { id: 5, name: 'Subject PQR' },
+    // { id: 6, name: 'Subject STU' },
+    // { id: 7, name: 'Subject VWX' },
+    // { id: 8, name: 'Subject YZ' },
+  ];
+
   return (
     <View style={{ flex: 1 }}>
       <Header user={user} />
       <SessionList
         user={user}
         isSessionLoading={isSessionLoading}
-        sessionHistory={[
-          { id: 0, name: 'Software Engineering Studio 2B' },
-          { id: 1, name: 'Fundamentals of C Programming' },
-          { id: 2, name: 'System Security' },
-        ]}
+        sessionHistory={sessionHistory}
       />
     </View>
   );

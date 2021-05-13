@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, Text, View } from 'react-native';
 
 import TextInput from './TextInput';
@@ -7,10 +8,10 @@ import { color, font, layout } from '../constants';
 export default function FormikInput({
   formikProps,
   field,
-  placeholder = '',
-  keyboardType = 'default',
-  secureTextEntry = false,
-  autoComplete = 'off',
+  placeholder,
+  keyboardType,
+  secureTextEntry,
+  autoComplete,
   ...props
 }) {
   return (
@@ -35,6 +36,22 @@ export default function FormikInput({
     </View>
   );
 }
+
+FormikInput.propTypes = {
+  formikProps: PropTypes.object.isRequired,
+  field: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  keyboardType: PropTypes.string,
+  secureTextEntry: PropTypes.bool,
+  autoComplete: PropTypes.string,
+};
+
+FormikInput.defaultTypes = {
+  placeholder: '',
+  keyboardType: 'default',
+  secureTextEntry: false,
+  autoComplete: 'off',
+};
 
 const formikInputStyles = StyleSheet.create({
   textInput: {

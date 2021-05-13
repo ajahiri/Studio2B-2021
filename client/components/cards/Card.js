@@ -1,13 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native';
-import { layout } from '../../constants';
+import { StyleSheet, TouchableHighlight, View } from 'react-native';
+
+import { color, layout } from '../../constants';
 
 export default function Card({ children, onPress, ...props }) {
   return onPress ? (
-    <TouchableOpacity onPress={onPress}>
-      <View style={[cardStyles.container, props.style]}>{children}</View>
-    </TouchableOpacity>
+    <TouchableHighlight
+      underlayColor={color.gray200}
+      style={[cardStyles.container, props.style]}
+      onPress={onPress}>
+      {children}
+    </TouchableHighlight>
   ) : (
     children
   );

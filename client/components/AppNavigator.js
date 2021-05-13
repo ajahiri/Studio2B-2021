@@ -15,6 +15,7 @@ import {
   reg_index,
 } from '../screens';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
+import { color } from '../constants';
 
 const Stack = createStackNavigator();
 
@@ -61,7 +62,11 @@ function AppNavigator(props) {
           />
         </Stack.Navigator>
       ) : (
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerBackTitleVisible: false,
+            headerTintColor: color.accentFocused,
+          }}>
           <Stack.Screen
             name="GroundZero"
             component={GroundZero}
@@ -71,27 +76,21 @@ function AppNavigator(props) {
             name="TeacherViewSession"
             component={TeacherViewSession}
             options={{
-              headerShown: true,
               title: 'Session Details',
-              headerBackTitleVisible: false,
             }}
           />
           <Stack.Screen
             name="StudentJoinSession"
             component={StudentJoinSession}
             options={{
-              headerShown: true,
-              title: 'Join Session',
-              headerBackTitleVisible: false,
+              title: 'Join New Session',
             }}
           />
           <Stack.Screen
             name="TeacherCreateSession"
             component={TeacherCreateSession}
             options={{
-              headerShown: true,
               title: 'Create New Session',
-              headerBackTitleVisible: false,
             }}
           />
         </Stack.Navigator>

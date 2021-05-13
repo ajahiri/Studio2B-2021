@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Text, View } from 'react-native';
 
-import { Button } from '../components';
+import { Button, TextInput } from '../components';
 import { font, layout } from '../constants';
 
 import { useDispatch } from 'react-redux';
