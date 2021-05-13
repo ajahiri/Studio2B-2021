@@ -22,12 +22,6 @@ function Dashboard(props) {
     loadUser();
   }, []);
 
-  const subjects = [
-    { subjectName: 'Software Engineering Studio 2B' },
-    { subjectName: 'Fundamentals of C Programming' },
-    { subjectName: 'System Security' },
-  ];
-
   const { user, isSessionLoading, sessionHistory, navigation } = props;
 
   console.log('user in dashboard', user);
@@ -44,26 +38,32 @@ function Dashboard(props) {
         marginHorizontal: layout.defaultScreenMargins.horizontal,
       }}>
       <Text style={[font.smallBold]}>
-        Hello, {user.firstName ?? 'NULL'} ({user.permissionLevel || ''})
+        Hello, {user.firstName ?? 'NULL'} ({user.permissionLevel ?? 'NONE'})
       </Text>
 
-      {user.permissionLevel === 'admin' && (
-        <>
-          <Text style={[font.h3]}>Admin Dashboard</Text>
-        </>
-      )}
-
-      {user.permissionLevel === 'teacher' && (
-        <>
-          <Text style={[font.h3]}>My Sessions</Text>
-        </>
-      )}
-
-      {user.permissionLevel === 'student' && (
-        <>
-          <Text style={[font.h3]}>My Session History</Text>
-        </>
-      )}
+      {(() => {
+        switch (user.permissionLevel) {
+          case 'admin':
+            return (
+              <>
+                <Text style={[font.h3]}>Admin Dashboard</Text>
+              </>
+            );
+          case 'teacher':
+            return (
+              <>
+                <Text style={[font.h3]}>Teacher Dashboard</Text>
+              </>
+            );
+          case 'student':
+          default:
+            return (
+              <>
+                <Text style={[font.h3]}>Student Dashboard</Text>
+              </>
+            );
+        }
+      })()}
 
       {/* List view of sessions */}
 
@@ -95,7 +95,7 @@ function Dashboard(props) {
                 onPress={() => handleCardPress(session)}>
                 <SubjectCard
                   style={{ marginBottom: layout.spacing.lg }}
-                  subjectName={session.name}
+                  name={session.name}
                 />
               </TouchableOpacity>
             ))}

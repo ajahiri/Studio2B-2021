@@ -8,8 +8,8 @@ import Card from './Card';
 import { color, font } from '../../constants';
 
 export default function AddSubjectCard({
-  isTeacher,
   subjectName,
+  isTeacher,
   onPress,
   ...props
 }) {
@@ -27,11 +27,13 @@ export default function AddSubjectCard({
 
 AddSubjectCard.propTypes = {
   subjectName: PropTypes.string.isRequired,
+  isTeacher: PropTypes.bool,
   onPress: PropTypes.func,
 };
 
 AddSubjectCard.defaultProps = {
   subjectName: 'Subject',
+  isTeacher: false,
   onPress: () => {},
 };
 
