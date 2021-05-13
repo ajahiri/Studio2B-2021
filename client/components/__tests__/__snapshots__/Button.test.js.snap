@@ -1,0 +1,333 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button test large buttons test large loading buttons renders a disabled large loading button 1`] = `
+<View
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#FAFAFA",
+        "borderBottomWidth": 5,
+        "borderColor": "#8F8F8F",
+        "borderRadius": 16,
+        "borderWidth": 2,
+        "height": 60,
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+  testID="button-container"
+>
+  <ActivityIndicator
+    animating={true}
+    color="#141414"
+    hidesWhenStopped={true}
+    size="small"
+    testID="button-activity-indicator"
+  />
+</View>
+`;
+
+exports[`Button test large buttons test large loading buttons renders an enabled large loading button 1`] = `
+<View
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#FAFAFA",
+        "borderBottomWidth": 5,
+        "borderColor": "#141414",
+        "borderRadius": 16,
+        "borderWidth": 2,
+        "height": 60,
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+  testID="button-container"
+>
+  <ActivityIndicator
+    animating={true}
+    color="#141414"
+    hidesWhenStopped={true}
+    size="small"
+    testID="button-activity-indicator"
+  />
+</View>
+`;
+
+exports[`Button test large buttons test large text buttons renders a disabled large text button 1`] = `
+<View
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#FAFAFA",
+        "borderBottomWidth": 5,
+        "borderColor": "#8F8F8F",
+        "borderRadius": 16,
+        "borderWidth": 2,
+        "height": 60,
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+  testID="button-container"
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#8F8F8F",
+          "fontFamily": "Montserrat_700Bold",
+          "fontSize": 24,
+        },
+      ]
+    }
+    testID="button-text"
+  >
+    My Button
+  </Text>
+</View>
+`;
+
+exports[`Button test large buttons test large text buttons renders an enabled large text button 1`] = `
+<View
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#FAFAFA",
+        "borderBottomWidth": 5,
+        "borderColor": "#141414",
+        "borderRadius": 16,
+        "borderWidth": 2,
+        "height": 60,
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+  testID="button-container"
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#141414",
+          "fontFamily": "Montserrat_700Bold",
+          "fontSize": 24,
+        },
+      ]
+    }
+    testID="button-text"
+  >
+    My Button
+  </Text>
+</View>
+`;
+
+exports[`Button test small buttons test small loading buttons renders a disabled small loading button 1`] = `
+<View
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#FAFAFA",
+        "borderBottomWidth": 5,
+        "borderColor": "#8F8F8F",
+        "borderRadius": 12,
+        "borderWidth": 2,
+        "height": 40,
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+  testID="button-container"
+>
+  <ActivityIndicator
+    animating={true}
+    color="#141414"
+    hidesWhenStopped={true}
+    size="small"
+    testID="button-activity-indicator"
+  />
+</View>
+`;
+
+exports[`Button test small buttons test small loading buttons renders an enabled small loading button 1`] = `
+<View
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#FAFAFA",
+        "borderBottomWidth": 5,
+        "borderColor": "#141414",
+        "borderRadius": 12,
+        "borderWidth": 2,
+        "height": 40,
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+  testID="button-container"
+>
+  <ActivityIndicator
+    animating={true}
+    color="#141414"
+    hidesWhenStopped={true}
+    size="small"
+    testID="button-activity-indicator"
+  />
+</View>
+`;
+
+exports[`Button test small buttons test small text buttons renders a disabled small text button 1`] = `
+<View
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#FAFAFA",
+        "borderBottomWidth": 5,
+        "borderColor": "#8F8F8F",
+        "borderRadius": 12,
+        "borderWidth": 2,
+        "height": 40,
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+  testID="button-container"
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#8F8F8F",
+          "fontFamily": "Montserrat_700Bold",
+          "fontSize": 18,
+        },
+      ]
+    }
+    testID="button-text"
+  >
+    My Button
+  </Text>
+</View>
+`;
+
+exports[`Button test small buttons test small text buttons renders an enabled small text button 1`] = `
+<View
+  accessible={true}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#FAFAFA",
+        "borderBottomWidth": 5,
+        "borderColor": "#141414",
+        "borderRadius": 12,
+        "borderWidth": 2,
+        "height": 40,
+        "justifyContent": "center",
+      },
+      undefined,
+    ]
+  }
+  testID="button-container"
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#141414",
+          "fontFamily": "Montserrat_700Bold",
+          "fontSize": 18,
+        },
+      ]
+    }
+    testID="button-text"
+  >
+    My Button
+  </Text>
+</View>
+`;

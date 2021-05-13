@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import { color, font, layout } from '../constants';
 
 const TextInput = styled.TextInput`
-  height: 60px;
+  height: ${layout.buttonSizes.large}px;
   background-color: ${color.white};
   border-color: ${props => (props.error ? color.danger : color.gray200)};
   border-radius: ${layout.radius.md}px;
