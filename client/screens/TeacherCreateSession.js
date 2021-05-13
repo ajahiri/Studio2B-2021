@@ -26,6 +26,7 @@ import {
 } from '../redux/actions/sessionActions';
 
 import ImageAuth from './ImageAuth';
+import LocationAuth from './LocationAuth';
 
 const createClassroomSchema = yup.object({
   sessionName: yup
@@ -139,11 +140,12 @@ const TeacherCreateSession = props => {
         <ScrollView>
           {createClassIndex === 0 && (
             <View style={styles.pageContainer}>
-              <ImageAuth 
+              <LocationAuth />
+              {/* <ImageAuth 
                 msg="this is the message" 
                 setCreateClassIndex={setcreateClassIndex}
                 isTeacher={true}
-              />
+              /> */}
             </View>
           )}
           {createClassIndex === 1 && (
