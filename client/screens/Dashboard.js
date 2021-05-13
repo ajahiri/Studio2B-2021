@@ -5,7 +5,6 @@ import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 import * as sessionActions from '../redux/actions/sessionActions';
 
-import { TextInput } from '../components';
 import { AddSubjectCard, SubjectCard } from '../components/cards';
 import { font, layout } from '../constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';

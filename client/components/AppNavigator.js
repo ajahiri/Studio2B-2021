@@ -70,17 +70,29 @@ function AppNavigator(props) {
           <Stack.Screen
             name="TeacherViewSession"
             component={TeacherViewSession}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: true,
+              title: 'Session Details',
+              headerBackTitleVisible: false,
+            }}
           />
           <Stack.Screen
             name="StudentJoinSession"
             component={StudentJoinSession}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: true,
+              title: 'Join Session',
+              headerBackTitleVisible: false,
+            }}
           />
           <Stack.Screen
             name="TeacherCreateSession"
             component={TeacherCreateSession}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: true,
+              title: 'Create New Session',
+              headerBackTitleVisible: false,
+            }}
           />
         </Stack.Navigator>
       )}

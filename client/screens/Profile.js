@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 
 import { Button } from '../components';
 import { font, layout } from '../constants';
@@ -11,7 +11,10 @@ export default function Profile() {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(authActions.logoutUserSaga());
+    Alert.alert('Log Out', 'Are you sure you want to log out?', [
+      { text: 'Log Out', onPress: () => dispatch(authActions.logoutUser()) },
+      { text: 'Cancel', style: 'cancel' },
+    ]);
   };
 
   return (
