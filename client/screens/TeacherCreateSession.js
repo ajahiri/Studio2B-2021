@@ -11,7 +11,7 @@ import {
 import { List, ListItem } from 'native-base';
 
 // Form validation
-import { Formik } from 'formik';
+import { Formik, validateYupSchema } from 'formik';
 import * as yup from 'yup';
 import FormikInput from '../components/FormikInput';
 
@@ -83,10 +83,21 @@ const TeacherCreateSession = props => {
 
   const [sessionQuestions, setsessionQuestions] = useState([]);
 
+  const [locationCoordinates, setLocationCoordinates] = useState({});
+
+  const onLocationAuthSubmit = values => {
+    console.log('returned from location auth', values);
+    setLocationCoordinates({
+      latitude: values?.latitude,
+      longitude: values?.longitude,
+    });
+    setcreateClassIndex(2);
+  };
+
   const onCreateClassroomSubmit = values => {
     console.log(values);
     setclassDetails(values);
-    setcreateClassIndex(1);
+    setcreateClassIndex(3);
   };
 
   const goBackStep = () => {
@@ -126,12 +137,12 @@ const TeacherCreateSession = props => {
       description: classDetails.sessionDescription,
       maxStudents: classDetails.maxStudents,
       questions: sessionQuestions,
+      locationCoordinates,
     };
     dispatch(createNewSessionSaga(sessionObject));
     setsessionQuestions([]);
     setcreateClassIndex(0);
-    props.navigation.navigate('ViewSession');
-    // console.log(classDetails, sessionQuestions);
+    props.navigation.navigate('TeacherViewSession');
   };
 
   return (
@@ -140,15 +151,20 @@ const TeacherCreateSession = props => {
         <ScrollView>
           {createClassIndex === 0 && (
             <View style={styles.pageContainer}>
-              <LocationAuth />
-              {/* <ImageAuth 
-                msg="this is the message" 
+              <ImageAuth
+                msg="this is the message"
                 setCreateClassIndex={setcreateClassIndex}
                 isTeacher={true}
-              /> */}
+              />
             </View>
           )}
           {createClassIndex === 1 && (
+            <LocationAuth
+              onLocationAuthSubmit={onLocationAuthSubmit}
+              isTeacher={true}
+            />
+          )}
+          {createClassIndex === 2 && (
             <View style={styles.pageContainer}>
               <Formik
                 initialValues={{
@@ -190,7 +206,7 @@ const TeacherCreateSession = props => {
               </Formik>
             </View>
           )}
-          {createClassIndex === 2 && (
+          {createClassIndex === 3 && (
             <View style={styles.pageContainer}>
               <Text>Questions</Text>
               <Text>

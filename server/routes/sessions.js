@@ -46,36 +46,43 @@ router.post(
     // Get user object for checking perms
     const userObject = await User.findOne({ _id: req.user._id });
 
-    // Get permission level, default to student if no exist
-    const { permissionLevel = 'student' } = userObject;
-    if (permissionLevel === 'student') {
-      return res
-        .status(401)
-        .send('No permission to create a new class/session!');
+    if (!userObject) {
+      return res.status(400).send({
+        success: false,
+        message: 'User not found.',
+      });
     }
 
-    console.log('creating a new session', req.body);
-
-    // Create the new session associated with this teacher user
-    const newClass = new Session({
-      shortID: nanoid(10),
-      name: req.body.name,
-      description: req.body.description || 'test',
-      maxStudents: req.body.maxStudents,
-      owner: userObject._id,
-      participants: [],
-      questions: req.body.questions,
-      startTime: null,
-      endTime: null,
-      active: false,
-    });
-
     try {
+      // Get permission level, default to student if no exist
+      const { permissionLevel = 'student' } = userObject;
+      if (permissionLevel === 'student') {
+        return res
+          .status(401)
+          .send('No permission to create a new class/session!');
+      }
+
+      console.log('creating a new session', req.body);
+
+      // Create the new session associated with this teacher user
+      const newClass = new Session({
+        shortID: nanoid(10),
+        name: req.body.name,
+        description: req.body.description || 'test',
+        maxStudents: req.body.maxStudents,
+        locationCoordinates: req.body.locationCoordinates,
+        owner: userObject._id,
+        participants: [],
+        questions: req.body.questions,
+        startTime: null,
+        endTime: null,
+        active: false,
+      });
       const savedSession = await newClass.save();
       console.log(savedSession);
       // Update user obj to add the session ID to their user obj
       await User.updateOne(
-        userObject._id,
+        { _id: userObject._id },
         { $push: { sessions: savedSession._id } },
         { upsert: true },
       );
@@ -83,6 +90,7 @@ router.post(
         .status(200)
         .send({ message: 'Session was saved to DB.', data: savedSession });
     } catch (error) {
+      console.log('error creating session', error);
       res.status(400).send({ error });
     }
   },

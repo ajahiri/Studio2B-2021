@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, connect } from 'react-redux';
 import * as Location from 'expo-location';
+import MapView from 'react-native-maps';
 import {
   View,
   Text,
@@ -8,43 +9,118 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
+  Dimensions,
 } from 'react-native';
 
-import { ImageCapture } from '../components';
+import { Banner, Button } from '../components';
+import { color, font, layout } from '../constants';
 
 const LocationAuth = props => {
   const { user } = props;
 
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [statusText, setStatusText] = useState('Getting your location..');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [allowNext, setAllowNext] = useState(false);
 
-  useEffect(() => {
-    (async () => {
+  const [region, setRegion] = useState({
+    latitude: -33.9657,
+    longitude: 151.1338,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  });
+
+  const getLocation = async () => {
+    try {
+      console.log('Trying to get curr location');
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
+        setAllowNext(false);
         setErrorMsg('Permission to access location was denied');
+        setStatusText('');
         return;
       }
 
       let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+      setRegion({
+        ...region,
+        latitude: location?.coords?.latitude || region.latitude,
+        longitude: location?.coords?.longitude || region.longitude,
+      });
+      setStatusText('');
+      setAllowNext(true);
+    } catch (error) {
+      setErrorMsg('Location provider is unavailable, please retry');
+      setStatusText('');
+      setAllowNext(false);
+      console.log('Error getting location:', error);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      await getLocation();
     })();
   }, []);
 
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
-
-  const onSubmission = result => {};
+  const onSubmission = () => {
+    props.onLocationAuthSubmit(region);
+  };
 
   return (
     <SafeAreaView>
-      <View style={styles.textContainer}>
+      <View style={styles.container}>
         <Text style={styles.title}>Location Authentication</Text>
-        <Text style={styles.desc}>{text}</Text>
+        <Text style={styles.bodyText}>
+          Your current location will be used for location authentication. You
+          cannot proceed without a valid current location.{' '}
+          {props.isTeacher
+            ? 'Students in the depicted vicinity will be successfully authenticated, this is a 500m radius.'
+            : ''}
+        </Text>
+        <MapView style={styles.map} region={region}>
+          <MapView.Marker
+            coordinate={{
+              latitude: region.latitude,
+              longitude: region.longitude,
+            }}
+            title="Your Location"
+            description="This is your current location, will be used for location authentication."
+          />
+          <MapView.Circle
+            center={{
+              latitude: region.latitude,
+              longitude: region.longitude,
+            }}
+            radius={500}
+            strokeWidth={3}
+            fillColor="rgba(200, 100, 200, 0.3)"
+          />
+        </MapView>
+        {errorMsg !== '' && (
+          <Banner style={styles.errorMsg} type="error" message={errorMsg} />
+        )}
+        {statusText !== '' && (
+          <Banner
+            style={styles.statusMsg}
+            type="generic"
+            message={statusText}
+          />
+        )}
+        <Button
+          style={styles.button}
+          type="secondary"
+          size="small"
+          title="Get Current Location"
+          onPress={() => getLocation()}
+        />
+        <Button
+          style={styles.button}
+          type="primary"
+          size="small"
+          title="Next"
+          disabled={!allowNext}
+          onPress={() => onSubmission()}
+        />
       </View>
     </SafeAreaView>
   );
@@ -61,84 +137,30 @@ export default connect(mapStateToProps)(LocationAuth);
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
-    paddingLeft: 20,
-    paddingRight: 20,
+    marginLeft: layout.spacing.xl,
+    marginRight: layout.spacing.xl,
+    marginTop: layout.spacing.huge,
   },
-  //returnImage not used
-  returnImage: {
-    paddingTop: 40,
-    paddingBottom: 20,
-  },
-  returnButton: {
-    width: 20,
-    paddingTop: 40,
-    paddingBottom: 10,
+  map: {
+    width: Dimensions.get('window').width - layout.spacing.xl * 2,
+    height: Dimensions.get('window').height / 3,
+    marginBottom: layout.spacing.md,
   },
   title: {
-    fontSize: 30,
-    textAlign: 'center',
-    paddingBottom: 10,
+    ...font.h2,
+    marginBottom: layout.spacing.sm,
   },
-  desc: {
-    fontSize: 15,
-    textAlign: 'center',
+  bodyText: {
+    ...font.medium,
+    marginBottom: layout.spacing.md,
   },
-  textContainer: {
-    paddingTop: 60,
-    paddingLeft: 20,
-    paddingRight: 20,
+  errorMsg: {
+    marginBottom: layout.spacing.md,
   },
-  image: {
-    width: 160,
-    height: 160,
-    borderRadius: 100,
-    borderWidth: 2,
-    borderColor: '#3D3ABF',
-    overflow: 'hidden',
+  statusMsg: {
+    marginBottom: layout.spacing.md,
   },
-  imageContainer: {
-    height: 300,
-    paddingLeft: 30,
-    paddingRight: 30,
-    paddingTop: 15,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-
-  nextButton: {
-    height: 52,
-    backgroundColor: '#3D3ABF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-    marginTop: 20,
-  },
-  photoButton: {
-    height: 52,
-    backgroundColor: 'white',
-    borderWidth: 2,
-    borderColor: 'black',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    margin: 'auto',
-    fontWeight: 'bold',
-  },
-  buttonContainer: {
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 60,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-  },
-  buttonTextPhoto: {
-    color: 'black',
-    fontWeight: 'bold',
+  button: {
+    marginBottom: layout.spacing.xl,
   },
 });
