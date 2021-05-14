@@ -154,6 +154,12 @@ router.post(
       return res.status(404).send('Session with that ID was not found.');
     }
 
+    // Check for max students
+    if (targetSession.participants.length >= targetSession.maxStudents)
+      return res
+        .status(403)
+        .send('Max students was reached, cannot enroll to session.');
+
     // Add session ID to user object "sessions"
     await User.updateOne(
       { _id: userObject._id },
@@ -216,11 +222,62 @@ router.post('/getUserSessions', verifyToken, async (req, res) => {
   });
 
   // Find all the sessions
-  const sessionData = await Session.find({ _id: { $in: sessions } });
+  const sessionData = await Session.find({ _id: { $in: sessions } }).sort({
+    createdAt: -1,
+  });
 
   return res
     .status(200)
     .send({ message: 'Session list gathered', data: sessionData });
 });
+
+const getSessionParticipantsValidation = [
+  check('sessionID')
+    .isLength({ min: 10 })
+    .withMessage('Session code is required, codes are minimum 10 characters.'),
+];
+router.post(
+  '/getSessionParticipants',
+  verifyToken,
+  getSessionParticipantsValidation,
+  async (req, res) => {
+    // Validation check
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    // Get user object for checking perms
+    const userObject = await User.findOne({ _id: req.user._id });
+
+    const targetSession = await Session.findOne({ _id: req.body.sessionID });
+
+    if (!userObject || userObject?.permissionLevel === 'student') {
+      return res
+        .status(401)
+        .send('No permission to get this participant list!');
+    }
+
+    if (!targetSession) {
+      return res.status(404).send('Session with that ID was not found.');
+    }
+
+    try {
+      const userList = await User.find({
+        _id: { $in: targetSession.participants },
+      });
+      const participantList = userList.map(user => {
+        return `${user.firstName} ${user.lastName} (${user.email})`;
+      });
+      return res
+        .status(200)
+        .send({ message: 'Participant list gathered', data: participantList });
+    } catch (error) {
+      console.log('error getting mapping list of participants');
+      return res.status(500).send('Error getting list of participants.');
+    }
+  },
+);
 
 module.exports = router;

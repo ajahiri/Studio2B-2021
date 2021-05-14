@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Alert,
+  ScrollView,
 } from 'react-native';
 
 import { List, ListItem } from 'native-base';
@@ -16,7 +17,6 @@ import * as yup from 'yup';
 import FormikInput from '../components/FormikInput';
 
 import { colours as C, layout as L, typography as T } from '../constants';
-import { FlatList, ScrollView } from 'react-native-gesture-handler';
 
 import Button from '../components/Button';
 import { useDispatch, connect } from 'react-redux';

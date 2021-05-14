@@ -1,5 +1,5 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Text, View, ScrollView, RefreshControl } from 'react-native';
 
 import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
@@ -8,17 +8,18 @@ import * as sessionActions from '../redux/actions/sessionActions';
 import { AddSubjectCard, SubjectCard } from '../components/cards';
 import { font, layout } from '../constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { wait } from '../globals/globals';
 
 function Dashboard(props) {
   const dispatch = useDispatch();
 
-  React.useEffect(() => {
-    const loadUser = async () => {
-      dispatch(authActions.getThisUserSaga());
-      dispatch(sessionActions.setSessionLoading(true));
-      dispatch(sessionActions.getUserSessionsSaga());
-    };
+  const loadUser = async () => {
+    dispatch(authActions.getThisUserSaga());
+    dispatch(sessionActions.setSessionLoading(true));
+    dispatch(sessionActions.getUserSessionsSaga());
+  };
 
+  useEffect(() => {
     loadUser();
   }, []);
 
@@ -30,15 +31,27 @@ function Dashboard(props) {
 
   const { user, isSessionLoading, sessionHistory, navigation } = props;
 
-  console.log('user in dashboard', user);
+  // console.log('user in dashboard', user);
 
   const handleCardPress = session => {
-    console.log('pressed session', session);
+    // console.log('pressed session', session);
     navigation.navigate('TeacherViewSession', { session });
   };
 
+  const [showQRCode, setshowQRCode] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    loadUser();
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
   return (
-    <View
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       style={{
         marginTop: layout.defaultScreenMargins.vertical,
         marginHorizontal: layout.defaultScreenMargins.horizontal,
@@ -102,7 +115,7 @@ function Dashboard(props) {
           </>
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 

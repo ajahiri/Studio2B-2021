@@ -22,7 +22,7 @@ export function* handleCreateNewSession(action) {
     const { data } = response;
     yield put(setCurrentCreatedSession(data.data));
     yield put(setSessionLoading(false));
-    console.log('in session create handler', data.message, data.data);
+    // console.log('in session create handler', data.message, data.data);
   } catch (error) {
     yield put(setSessionLoading(false));
     Alert.alert(
@@ -48,7 +48,7 @@ export function* handleGetUserSessions(action) {
     // Response data.data is an array
     yield put(setUserSessionsHistory(data.data));
     yield put(setSessionLoading(false));
-    console.log('in get user session history handler', data.message, data.data);
+    // console.log('in get user session history handler', data.message, data.data);
   } catch (error) {
     yield put(setSessionLoading(false));
     Alert.alert(

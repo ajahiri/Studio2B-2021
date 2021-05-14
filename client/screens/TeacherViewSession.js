@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,25 +7,66 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Text,
+  RefreshControl,
 } from 'react-native';
 
 import { Button, Container, Content, Spinner } from 'native-base';
 
 import QRCode from 'react-native-qrcode-generator';
+import axios from 'axios';
 
-/* The start session button seems to activate even on the white part of the screen :( I wasn't sure how to  */
-/* The back button needs to be linked. atm it doesn't work */
+import { resolveBaseURL, wait } from '../globals/globals';
+import { connect } from 'react-redux';
+
+const BASE_API_URL = resolveBaseURL();
 
 const TeacherViewSession = props => {
-  console.log(props);
-  const { name, description, maxStudents, shortID, createdAt } =
+  const { authToken } = props;
+  const { _id: sessionID, name, description, maxStudents, shortID, createdAt } =
     props?.route?.params?.session || {};
 
+  const getSessionParticipants = async () => {
+    try {
+      console.log('about to get participant list with ', sessionID);
+      const participantList = await axios.request({
+        method: 'post',
+        url: `/api/sessions/getSessionParticipants`,
+        baseURL: BASE_API_URL,
+        data: { sessionID },
+        headers: {
+          'auth-token': authToken,
+        },
+      });
+      console.log('got list of participants', participantList.data.data);
+      setParticipantList(participantList.data.data);
+    } catch (error) {
+      console.log('retrieving stuff for session error', error);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      await getSessionParticipants();
+    })();
+  }, []);
+
+  const [participantList, setParticipantList] = useState([]);
   const [showQRCode, setshowQRCode] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getSessionParticipants();
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
   return (
     <SafeAreaView>
       <KeyboardAvoidingView>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
           <View /* Title */ style={styles.container}>
             <Text style={styles.title}>{name}</Text>
             <Text>Description: {description}</Text>
@@ -46,11 +87,14 @@ const TeacherViewSession = props => {
           </View>
 
           <View style={styles.studentcontainer}>
-            <Text style={styles.students}>Students</Text>
+            <Text style={styles.students}>Students Enrolled</Text>
+            {participantList.map(participant => {
+              return <Text key={participant}>{participant}</Text>;
+            })}
           </View>
 
           <TouchableOpacity style={styles.startsessioncontainer}>
-            <Text style={styles.startsession}>START SESSION</Text>
+            <Text style={styles.startsession}>BEGIN SESSION</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -58,7 +102,12 @@ const TeacherViewSession = props => {
   );
 };
 
-export default TeacherViewSession;
+const mapStateToProps = state => {
+  const { user, authToken } = state.auth;
+  return { user, authToken };
+};
+
+export default connect(mapStateToProps)(TeacherViewSession);
 
 const styles = StyleSheet.create({
   container: {

@@ -54,13 +54,22 @@ const StudentJoinSession = props => {
       const authToken = await SecureStore.getItemAsync('userToken');
       const response = await axios.request({
         method: 'post',
-        url: `/api/sessions/getSession`,
+        url: `/api/sessions/joinSession`,
         baseURL: BASE_API_URL,
         data: { sessionCode: joinCode },
         headers: {
           'auth-token': authToken,
         },
       });
+      // const response = await axios.request({
+      //   method: 'post',
+      //   url: `/api/sessions/getSession`,
+      //   baseURL: BASE_API_URL,
+      //   data: { sessionCode: joinCode },
+      //   headers: {
+      //     'auth-token': authToken,
+      //   },
+      // });
       Alert.alert('response.message', JSON.stringify(response.data.data), [
         { text: 'OK' },
       ]);
@@ -132,11 +141,11 @@ const StudentJoinSession = props => {
               <TouchableOpacity
                 onPress={getSession}
                 style={styles.startsessioncontainer}>
-                <Text style={styles.startsession}>GET SESSION</Text>
+                <Text style={styles.startsession}>Enroll in Session</Text>
               </TouchableOpacity>
-              {/* <TouchableOpacity style={styles.startsessioncontainer}>
+              <TouchableOpacity style={styles.startsessioncontainer}>
                 <Text style={styles.startsession}>JOIN SESSION</Text>
-              </TouchableOpacity> */}
+              </TouchableOpacity>
             </>
           )}
         </ScrollView>

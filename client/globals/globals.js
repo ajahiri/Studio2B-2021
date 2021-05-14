@@ -13,3 +13,9 @@ export const resolveBaseURL = () => {
     return defaultURL;
   }
 };
+
+export function wait(t, v) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve.bind(null, v), t);
+  });
+}
