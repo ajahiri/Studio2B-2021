@@ -155,7 +155,7 @@ router.post(
     }
 
     // Check for max students
-    if (targetSession.participants.length >= targetSession.maxStudents)
+    if (targetSession?.participants?.length >= targetSession.maxStudents)
       return res
         .status(403)
         .send('Max students was reached, cannot enroll to session.');

@@ -94,7 +94,7 @@ const TeacherViewSession = props => {
           </View>
 
           <TouchableOpacity style={styles.startsessioncontainer}>
-            <Text style={styles.startsession}>BEGIN SESSION</Text>
+            <Text style={styles.startsession}>ACTIVATE SESSION</Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>

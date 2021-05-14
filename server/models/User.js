@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   permissionLevel: { type: String, default: 'student' },
   sessions: [String],
+  authenticatedSessions: [String],
 });
 
 // Missing permissionLevel assumes "Student" permission

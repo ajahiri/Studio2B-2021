@@ -9,6 +9,7 @@ import Dashboard from './Dashboard';
 import TeacherCreateSession from './TeacherCreateSession';
 import TeacherViewSession from './TeacherViewSession';
 import StudentJoinSession from './StudentJoinSession';
+import StudentViewSession from './StudentViewSession';
 
 import reg_index from './registration/reg_index';
 import ImageAuth from './ImageAuth';
@@ -29,4 +30,5 @@ export {
   StudentJoinSession,
   reg_index,
   ImageAuth,
+  StudentViewSession,
 };

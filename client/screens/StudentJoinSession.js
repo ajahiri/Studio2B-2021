@@ -143,9 +143,6 @@ const StudentJoinSession = props => {
                 style={styles.startsessioncontainer}>
                 <Text style={styles.startsession}>Enroll in Session</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.startsessioncontainer}>
-                <Text style={styles.startsession}>JOIN SESSION</Text>
-              </TouchableOpacity>
             </>
           )}
         </ScrollView>

@@ -35,7 +35,11 @@ function Dashboard(props) {
 
   const handleCardPress = session => {
     // console.log('pressed session', session);
-    navigation.navigate('TeacherViewSession', { session });
+    if (user.permissionLevel == 'teacher' || user.permissionLevel == 'admin') {
+      navigation.navigate('TeacherViewSession', { session });
+    } else {
+      navigation.navigate('StudentViewSession', { session });
+    }
   };
 
   const [showQRCode, setshowQRCode] = useState(false);
