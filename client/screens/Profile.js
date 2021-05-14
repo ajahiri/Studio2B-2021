@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Alert, Text, View, Image, StyleSheet } from 'react-native';
 
 import { Button, TextInput } from '../components';
 import { font, layout } from '../constants';
@@ -7,7 +7,11 @@ import { font, layout } from '../constants';
 import { useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
+import { Card } from '../components/cards';
+
 export default function Profile() {
+
+  //const fullName = `${firstName ?? '???'} ${lastName ?? '???'}`;
   const dispatch = useDispatch();
 
   const handleEditProfile = () => {
@@ -33,6 +37,14 @@ export default function Profile() {
       <Text style={[font.h3, { marginBottom: layout.spacing.lg }]}>
         My Profile
       </Text>
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <Image source={require("../assets/Login/profile-placeholder.png")} style={styles.image}/>
+        <View>
+          <Text style={[font.mediumBold, { marginBottom: layout.spacing.lg }]}>Name: </Text>
+          <Text style={[font.mediumBold, { marginBottom: layout.spacing.lg }]}>Email: </Text>
+          <Text style={[font.mediumBold, { marginBottom: layout.spacing.lg }]}>University: </Text>
+        </View>
+      </View>
       <Button
         style={{ marginBottom: 16 }}
         size="small"
@@ -48,3 +60,12 @@ export default function Profile() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  image: {
+    borderRadius: 210,
+    height: 210,
+    width: 210,
+    marginBottom: layout.spacing.lg,
+  }
+})

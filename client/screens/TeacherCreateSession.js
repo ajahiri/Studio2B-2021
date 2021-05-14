@@ -78,7 +78,7 @@ const TeacherCreateSession = props => {
     maxStudents: '',
   });
 
-  const [createClassIndex, setcreateClassIndex] = useState(1);
+  const [createClassIndex, setcreateClassIndex] = useState(0);
 
   const [sessionQuestions, setsessionQuestions] = useState([]);
 
