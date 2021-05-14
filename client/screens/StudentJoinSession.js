@@ -28,10 +28,10 @@ const StudentJoinSession = props => {
   const [joinCode, setJoinCode] = useState('');
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [useScanner, setuseScanner] = useState(false);
+  const [useScanner, setUseScanner] = useState(false);
 
   const toggleQRScanner = () => {
-    setuseScanner(!useScanner);
+    setUseScanner(!useScanner);
   };
 
   useEffect(() => {
@@ -116,8 +116,8 @@ const StudentJoinSession = props => {
                 <Text>OR:</Text>
                 <TouchableOpacity
                   onPress={toggleQRScanner}
-                  style={styles.startsessioncontainer}>
-                  <Text style={styles.startsession}>USE SCAN QR CODE</Text>
+                  style={styles.startSessionContainer}>
+                  <Text style={styles.startSession}>USE SCAN QR CODE</Text>
                 </TouchableOpacity>
                 {useScanner && (
                   <View>
@@ -165,26 +165,22 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
   },
-
   title: {
     fontSize: 30,
     marginTop: 25,
     fontWeight: 'bold',
   },
-
   students: {
     marginTop: 10,
     marginLeft: 40,
     fontSize: 16,
   },
-
   pageBackButton: {
     position: 'absolute',
     marginTop: 40,
     marginLeft: 70,
   },
-
-  startsession: {
+  startSession: {
     fontWeight: 'bold',
     fontSize: 18,
     borderWidth: 1,

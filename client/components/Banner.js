@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, Text } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
 
 import { color, font, layout } from '../constants';

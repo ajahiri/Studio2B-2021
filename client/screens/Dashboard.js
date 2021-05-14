@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Text, View, ScrollView, RefreshControl } from 'react-native';
 
 import { connect, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import * as authActions from '../redux/actions/authActions';
 import * as sessionActions from '../redux/actions/sessionActions';
 
@@ -10,7 +11,7 @@ import { font, layout } from '../constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { wait } from '../globals/globals';
 
-function Dashboard(props) {
+function Dashboard({ user, isSessionLoading, sessionHistory: _ }) {
   const dispatch = useDispatch();
 
   const loadUser = async () => {
@@ -129,4 +130,4 @@ const mapStateToProps = state => {
   return { user, sessionHistory, isSessionLoading };
 };
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps)(withSafeAreaInsets(Dashboard));

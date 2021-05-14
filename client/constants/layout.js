@@ -26,3 +26,8 @@ export const defaultScreenMargins = {
   horizontal: spacing.xl,
   vertical: spacing.huge,
 };
+
+export const buttonSizes = {
+  large: 60,
+  small: 40,
+};

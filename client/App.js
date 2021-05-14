@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 
 import { StatusBar } from 'expo-status-bar';
 import { Provider } from 'react-redux';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppLoading from 'expo-app-loading';
 
 import {
@@ -32,8 +33,10 @@ export default function App() {
   } else {
     return (
       <Provider store={store}>
-        <StatusBar style="dark" />
-        <AppNavigator />
+        <SafeAreaProvider>
+          <StatusBar style="dark" />
+          <AppNavigator />
+        </SafeAreaProvider>
       </Provider>
     );
   }

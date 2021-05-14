@@ -4,7 +4,6 @@ import Login from './Login';
 import Register from './Register';
 
 import GroundZero from './GroundZero';
-import Dashboard from './Dashboard';
 
 import TeacherCreateSession from './TeacherCreateSession';
 import TeacherViewSession from './TeacherViewSession';
@@ -23,7 +22,6 @@ export {
   Register,
   // Main screens
   GroundZero,
-  Dashboard,
   // Teacher and Student screens
   TeacherCreateSession,
   TeacherViewSession,

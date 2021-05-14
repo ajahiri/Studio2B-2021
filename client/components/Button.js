@@ -9,15 +9,16 @@ import {
 
 import { color, font, layout } from '../constants';
 
+export const BUTTON_CONTAINER_ID = 'button-container';
+export const BUTTON_TEXT_ID = 'button-text';
+export const BUTTON_ACTIVITY_INDICATOR_ID = 'button-activity-indicator';
+
 const commonContainerStyle = {
   alignItems: 'center',
   justifyContent: 'center',
   borderWidth: 2,
   borderBottomWidth: 5,
 };
-
-const defaultBorderColor = color.black;
-const disabledBorderColor = color.gray;
 
 function makeButtonStyles(sizeStyles, colorStyles) {
   return StyleSheet.create({
@@ -55,12 +56,12 @@ export default function Button({
   onPress,
   ...props
 }) {
-  const sizeStyles = (size => {
+  const sizeStyles = (() => {
     switch (size) {
       case 'small':
         return {
           container: {
-            height: 40,
+            height: layout.buttonSizes.small,
             borderRadius: layout.radius.md,
           },
           title: font.largeBold,
@@ -69,38 +70,38 @@ export default function Button({
       default:
         return {
           container: {
-            height: 60,
+            height: layout.buttonSizes.large,
             borderRadius: layout.radius.lg,
           },
           title: font.h3,
         };
     }
-  })(size);
+  })();
 
-  const colorStyles = (type => {
+  const colorStyles = (() => {
     switch (type) {
       case 'primary':
         return {
           container: {
             default: {
               backgroundColor: color.yellow500,
-              borderColor: defaultBorderColor,
+              borderColor: color.defaultBorderColor,
             },
             focused: {
               backgroundColor: color.accentFocused,
-              borderColor: defaultBorderColor,
+              borderColor: color.defaultBorderColor,
             },
             disabled: {
               backgroundColor: color.accentDisabled,
-              borderColor: disabledBorderColor,
+              borderColor: color.disabledBorderColor,
             },
           },
           title: {
             default: {
-              color: color.black,
+              color: color.defaultDarkTextColor,
             },
             disabled: {
-              color: color.gray,
+              color: color.disabledDarkTextColor,
             },
           },
         };
@@ -109,23 +110,23 @@ export default function Button({
           container: {
             default: {
               backgroundColor: color.danger,
-              borderColor: defaultBorderColor,
+              borderColor: color.defaultBorderColor,
             },
             focused: {
               backgroundColor: color.dangerFocused,
-              borderColor: defaultBorderColor,
+              borderColor: color.defaultBorderColor,
             },
             disabled: {
               backgroundColor: color.dangerDisabled,
-              borderColor: disabledBorderColor,
+              borderColor: color.disabledBorderColor,
             },
           },
           title: {
             default: {
-              color: color.white,
+              color: color.defaultLightTextColor,
             },
             disabled: {
-              color: color.gray300,
+              color: color.disabledLightTextColor,
             },
           },
         };
@@ -135,34 +136,35 @@ export default function Button({
           container: {
             default: {
               backgroundColor: color.white,
-              borderColor: defaultBorderColor,
+              borderColor: color.defaultBorderColor,
             },
             focused: {
               backgroundColor: color.gray200,
-              borderColor: defaultBorderColor,
+              borderColor: color.defaultBorderColor,
             },
             disabled: {
               backgroundColor: color.white,
-              borderColor: disabledBorderColor,
+              borderColor: color.disabledBorderColor,
             },
           },
           title: {
             default: {
-              color: color.black,
+              color: color.defaultDarkTextColor,
             },
             disabled: {
-              color: color.gray,
+              color: color.disabledDarkTextColor,
             },
           },
         };
     }
-  })(type);
+  })();
 
   const buttonStyles = makeButtonStyles(sizeStyles, colorStyles);
 
   return (
     <TouchableHighlight
-      disabled={disabled}
+      testID={BUTTON_CONTAINER_ID}
+      disabled={disabled || isLoading}
       onPress={onPress}
       underlayColor={colorStyles.container.focused.backgroundColor}
       style={[
@@ -172,9 +174,14 @@ export default function Button({
         props.style,
       ]}>
       {isLoading ? (
-        <ActivityIndicator color={buttonStyles.defaultTitle.color} />
+        <ActivityIndicator
+          testID={BUTTON_ACTIVITY_INDICATOR_ID}
+          size="small"
+          color={buttonStyles.defaultTitle.color}
+        />
       ) : (
         <Text
+          testID={BUTTON_TEXT_ID}
           style={[
             disabled ? buttonStyles.disabledTitle : buttonStyles.defaultTitle,
           ]}>

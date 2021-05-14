@@ -176,7 +176,7 @@ const TeacherCreateSession = props => {
                 validationSchema={createClassroomSchema}>
                 {props => (
                   <View>
-                    <Text>Class Info</Text>
+                    <Text style={[font.h3, { marginBottom: layout.spacing.lg, marginTop: layout.spacing.lg, textAlign: 'center' }]}>Class Info</Text>
                     <FormikInput
                       formikProps={props}
                       field="sessionName"
@@ -196,7 +196,7 @@ const TeacherCreateSession = props => {
                       style={styles.formikField}
                     />
                     <Button
-                      text="Next"
+                      title="Next"
                       disabled={!props.isValid}
                       onPress={props.handleSubmit}
                       style={styles.formSubmitButton}
@@ -208,15 +208,15 @@ const TeacherCreateSession = props => {
           )}
           {createClassIndex === 3 && (
             <View style={styles.pageContainer}>
-              <Text>Questions</Text>
-              <Text>
+              <Text style={[font.h3, { marginBottom: layout.spacing.lg, marginTop: layout.spacing.lg, textAlign: 'center' }]}>Questions</Text>
+              <Text style={[font.md, { marginBottom: layout.spacing.lg, textAlign: 'center' }]}>
                 Add Questions for "{classDetails.sessionName}" class interactive
                 authentication. These may be relevant to the content of the
                 class to ensure students are actively participating.
               </Text>
 
               {sessionQuestions.length > 0 && (
-                <Text>Current Question Set:</Text>
+                <Text style={[font.h3, { marginBottom: layout.spacing.lg, textAlign: 'center' }]}>Current Question Set:</Text>
               )}
 
               {/* !!This list needs to be improved, looks horrible ATM!! */}
@@ -224,9 +224,18 @@ const TeacherCreateSession = props => {
                 {sessionQuestions.map((question, index) => {
                   return (
                     <ListItem key={index}>
-                      <Text>
-                        Q: {question.questionString} A: {question.answer}
-                      </Text>
+                      <View>
+                        <View>
+                          <Text>
+                            Q: {question.questionString}
+                          </Text>
+                        </View>
+                        <View>
+                          <Text>
+                            A: {question.answer}
+                          </Text>
+                        </View>
+                      </View>
                     </ListItem>
                   );
                 })}
@@ -282,7 +291,7 @@ const TeacherCreateSession = props => {
                       style={styles.formikField}
                     />
                     <Button
-                      text="Add"
+                      title="Add"
                       disabled={!props.isValid}
                       onPress={props.handleSubmit}
                       style={styles.formSubmitButton}
@@ -291,12 +300,12 @@ const TeacherCreateSession = props => {
                 )}
               </Formik>
               <Button
-                text="Finish"
+                title="Finish"
                 onPress={onFinalSubmission}
                 style={styles.formSubmitButton}
               />
               <Button
-                text="Back"
+                title="Back"
                 onPress={goBackStep}
                 style={styles.formSubmitButton}
               />
@@ -322,18 +331,17 @@ const styles = StyleSheet.create({
     marginTop: L.spacing.xxl,
     marginBottom: L.spacing.xl,
   },
-  formikField: {
-    marginBottom: L.spacing.l,
-  },
+
   formSubmitButton: {
-    marginTop: L.spacing.m,
+    marginTop: L.spacing.md,
+    marginLeft: L.spacing.md,
+    marginRight: L.spacing.md,
   },
 
   formikField: {
-    marginBottom: L.spacing.l,
-  },
-  formSubmitButton: {
-    marginTop: L.spacing.m,
+    marginBottom: L.spacing.sm,
+    marginLeft: L.spacing.md,
+    marginRight: L.spacing.md,
   },
 
   createclassroomcontainer: {},

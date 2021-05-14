@@ -73,7 +73,7 @@ const TeacherViewSession = props => {
             <Text>Max Students: {maxStudents}</Text>
             <Text>JOIN CODE: {shortID}</Text>
             <Text>Created At: {createdAt}</Text>
-            <Button onPress={() => setshowQRCode(true)}>
+            <Button onPress={() => setShowQRCode(true)}>
               <Text>Generate QR Code</Text>
             </Button>
             {showQRCode && (
@@ -113,26 +113,22 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
   },
-
   title: {
     fontSize: 30,
     marginTop: 25,
     fontWeight: 'bold',
   },
-
   students: {
     marginTop: 10,
     marginLeft: 40,
     fontSize: 16,
   },
-
   pageBackButton: {
     position: 'absolute',
     marginTop: 40,
     marginLeft: 70,
   },
-
-  startsession: {
+  startSession: {
     fontWeight: 'bold',
     fontSize: 18,
     borderWidth: 1,
