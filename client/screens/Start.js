@@ -13,7 +13,7 @@ import { color, font, layout } from '../constants';
 const welcomeBanner = require('../assets/Start/welcome-banner.jpg');
 
 export default function Start({ navigation }) {
-  const screenHeight = useWindowDimensions().height;
+  const { height: screenHeight } = useWindowDimensions();
   return (
     <View style={{ flex: 1 }}>
       <Image
@@ -31,8 +31,8 @@ export default function Start({ navigation }) {
           justifyContent: 'center',
         }}>
         <View style={{ marginTop: layout.spacing.lg }}>
-          <Text style={{ ...font.h2 }}>Welcome to</Text>
-          <Text style={{ ...font.title, color: color.accent }}>AuthMe</Text>
+          <Text style={[font.h2]}>Welcome to</Text>
+          <Text style={[font.title, { color: color.accent }]}>AuthMe</Text>
         </View>
         <View style={{ marginVertical: layout.spacing.xl }}>
           <Button

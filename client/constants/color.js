@@ -2,6 +2,7 @@ export const gray700 = '#4E4E4E';
 export const gray500 = '#8F8F8F';
 export const gray300 = '#B1B1B1';
 export const gray200 = '#D2D2D2';
+export const gray100 = '#EFEFEF';
 
 export const red700 = '#A02B2B';
 export const red500 = '#E53E3E';
@@ -34,3 +35,11 @@ export const accentDisabled = yellow300;
 export const danger = red500;
 export const dangerFocused = red700;
 export const dangerDisabled = red300;
+
+export const defaultBorderColor = black;
+export const disabledBorderColor = gray500;
+
+export const defaultDarkTextColor = black;
+export const defaultLightTextColor = white;
+export const disabledDarkTextColor = gray500;
+export const disabledLightTextColor = gray200;

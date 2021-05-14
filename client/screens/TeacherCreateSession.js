@@ -85,7 +85,7 @@ const TeacherCreateSession = props => {
   const onCreateClassroomSubmit = values => {
     console.log(values);
     setclassDetails(values);
-    setcreateClassIndex(1);
+    setcreateClassIndex(2);
   };
 
   const goBackStep = () => {
@@ -139,8 +139,8 @@ const TeacherCreateSession = props => {
         <ScrollView>
           {createClassIndex === 0 && (
             <View style={styles.pageContainer}>
-              <ImageAuth 
-                msg="this is the message" 
+              <ImageAuth
+                msg="this is the message"
                 setCreateClassIndex={setcreateClassIndex}
                 isTeacher={true}
               />

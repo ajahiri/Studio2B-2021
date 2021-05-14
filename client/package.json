@@ -25,11 +25,11 @@
   },
   "jest": {
     "preset": "jest-expo",
-    "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base)"
-    ],
     "setupFilesAfterEnv": [
       "./__mocks__/globalMock.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base)"
     ]
   },
   "dependencies": {
@@ -65,7 +65,7 @@
     "react-native-gesture-handler": "~1.8.0",
     "react-native-qrcode-generator": "^1.2.2",
     "react-native-reanimated": "~1.13.0",
-    "react-native-safe-area-context": "3.1.9",
+    "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "~2.15.2",
     "react-native-upload-aws-s3": "^0.8.1",
     "react-native-web": "~0.13.12",
@@ -86,11 +86,13 @@
     "@storybook/addon-ondevice-knobs": "^5.3.25",
     "@storybook/react-native": "^5.3.25",
     "@storybook/react-native-server": "^5.3.23",
+    "@testing-library/jest-native": "^4.0.1",
     "@testing-library/react-native": "^7.2.0",
     "babel-loader": "^8.2.2",
     "jest": "^26.6.3",
     "jest-expo": "^40.0.2",
-    "react-native-storybook-loader": "^2.0.3"
+    "react-native-storybook-loader": "^2.0.3",
+    "react-test-renderer": "^16.13.1"
   },
   "rnpm": {
     "assets": [
