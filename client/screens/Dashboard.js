@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Text, View, ScrollView, RefreshControl } from 'react-native';
 
 import { connect, useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
 import * as authActions from '../redux/actions/authActions';
 import * as sessionActions from '../redux/actions/sessionActions';
 
@@ -10,8 +9,9 @@ import { AddSubjectCard, SubjectCard } from '../components/cards';
 import { font, layout } from '../constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { wait } from '../globals/globals';
+import { withSafeAreaInsets } from 'react-native-safe-area-context';
 
-function Dashboard({ user, isSessionLoading, sessionHistory: _ }) {
+function Dashboard(props) {
   const dispatch = useDispatch();
 
   const loadUser = async () => {
@@ -23,12 +23,6 @@ function Dashboard({ user, isSessionLoading, sessionHistory: _ }) {
   useEffect(() => {
     loadUser();
   }, []);
-
-  const subjects = [
-    { subjectName: 'Software Engineering Studio 2B' },
-    { subjectName: 'Fundamentals of C Programming' },
-    { subjectName: 'System Security' },
-  ];
 
   const { user, isSessionLoading, sessionHistory, navigation } = props;
 
@@ -42,8 +36,6 @@ function Dashboard({ user, isSessionLoading, sessionHistory: _ }) {
       navigation.navigate('StudentViewSession', { session });
     }
   };
-
-  const [showQRCode, setshowQRCode] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
@@ -82,10 +74,6 @@ function Dashboard({ user, isSessionLoading, sessionHistory: _ }) {
           <Text style={[font.h3]}>My Session History</Text>
         </>
       )}
-
-      {/* List view of sessions */}
-
-      {/* Cards view */}
       <View
         style={{
           flexDirection: 'row',
@@ -130,4 +118,4 @@ const mapStateToProps = state => {
   return { user, sessionHistory, isSessionLoading };
 };
 
-export default connect(mapStateToProps)(withSafeAreaInsets(Dashboard));
+export default connect(mapStateToProps)(Dashboard);

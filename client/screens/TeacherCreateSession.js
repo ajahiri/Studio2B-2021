@@ -16,7 +16,13 @@ import { Formik, validateYupSchema } from 'formik';
 import * as yup from 'yup';
 import FormikInput from '../components/FormikInput';
 
-import { colours as C, layout as L, typography as T } from '../constants';
+import {
+  colours as C,
+  layout as L,
+  typography as T,
+  font,
+  layout,
+} from '../constants';
 
 import Button from '../components/Button';
 import { useDispatch, connect } from 'react-redux';
@@ -176,7 +182,17 @@ const TeacherCreateSession = props => {
                 validationSchema={createClassroomSchema}>
                 {props => (
                   <View>
-                    <Text style={[font.h3, { marginBottom: layout.spacing.lg, marginTop: layout.spacing.lg, textAlign: 'center' }]}>Class Info</Text>
+                    <Text
+                      style={[
+                        font.h3,
+                        {
+                          marginBottom: layout.spacing.lg,
+                          marginTop: layout.spacing.lg,
+                          textAlign: 'center',
+                        },
+                      ]}>
+                      Class Info
+                    </Text>
                     <FormikInput
                       formikProps={props}
                       field="sessionName"
@@ -208,15 +224,35 @@ const TeacherCreateSession = props => {
           )}
           {createClassIndex === 3 && (
             <View style={styles.pageContainer}>
-              <Text style={[font.h3, { marginBottom: layout.spacing.lg, marginTop: layout.spacing.lg, textAlign: 'center' }]}>Questions</Text>
-              <Text style={[font.md, { marginBottom: layout.spacing.lg, textAlign: 'center' }]}>
+              <Text
+                style={[
+                  font.h3,
+                  {
+                    marginBottom: layout.spacing.lg,
+                    marginTop: layout.spacing.lg,
+                    textAlign: 'center',
+                  },
+                ]}>
+                Questions
+              </Text>
+              <Text
+                style={[
+                  font.md,
+                  { marginBottom: layout.spacing.lg, textAlign: 'center' },
+                ]}>
                 Add Questions for "{classDetails.sessionName}" class interactive
                 authentication. These may be relevant to the content of the
                 class to ensure students are actively participating.
               </Text>
 
               {sessionQuestions.length > 0 && (
-                <Text style={[font.h3, { marginBottom: layout.spacing.lg, textAlign: 'center' }]}>Current Question Set:</Text>
+                <Text
+                  style={[
+                    font.h3,
+                    { marginBottom: layout.spacing.lg, textAlign: 'center' },
+                  ]}>
+                  Current Question Set:
+                </Text>
               )}
 
               {/* !!This list needs to be improved, looks horrible ATM!! */}
@@ -226,14 +262,10 @@ const TeacherCreateSession = props => {
                     <ListItem key={index}>
                       <View>
                         <View>
-                          <Text>
-                            Q: {question.questionString}
-                          </Text>
+                          <Text>Q: {question.questionString}</Text>
                         </View>
                         <View>
-                          <Text>
-                            A: {question.answer}
-                          </Text>
+                          <Text>A: {question.answer}</Text>
                         </View>
                       </View>
                     </ListItem>

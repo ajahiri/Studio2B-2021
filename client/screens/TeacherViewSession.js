@@ -22,8 +22,14 @@ const BASE_API_URL = resolveBaseURL();
 
 const TeacherViewSession = props => {
   const { authToken } = props;
-  const { _id: sessionID, name, description, maxStudents, shortID, createdAt } =
-    props?.route?.params?.session || {};
+  const {
+    _id: sessionID,
+    name,
+    description,
+    maxStudents,
+    shortID,
+    createdAt,
+  } = props?.route?.params?.session || {};
 
   const getSessionParticipants = async () => {
     try {
@@ -73,7 +79,7 @@ const TeacherViewSession = props => {
             <Text>Max Students: {maxStudents}</Text>
             <Text>JOIN CODE: {shortID}</Text>
             <Text>Created At: {createdAt}</Text>
-            <Button onPress={() => setShowQRCode(true)}>
+            <Button onPress={() => setshowQRCode(true)}>
               <Text>Generate QR Code</Text>
             </Button>
             {showQRCode && (
@@ -113,22 +119,26 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
   },
+
   title: {
     fontSize: 30,
     marginTop: 25,
     fontWeight: 'bold',
   },
+
   students: {
     marginTop: 10,
     marginLeft: 40,
     fontSize: 16,
   },
+
   pageBackButton: {
     position: 'absolute',
     marginTop: 40,
     marginLeft: 70,
   },
-  startSession: {
+
+  startsession: {
     fontWeight: 'bold',
     fontSize: 18,
     borderWidth: 1,

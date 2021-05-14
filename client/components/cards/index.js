@@ -1,5 +1,5 @@
 import Card from './Card';
-import DottedCard from './DottedCard';
-import SessionCard from './SessionCard';
+import AddSubjectCard from './AddSubjectCard';
+import SubjectCard from './SubjectCard';
 
-export { Card, DottedCard, SessionCard };
+export { Card, AddSubjectCard, SubjectCard };
