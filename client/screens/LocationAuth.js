@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
   container: {
     marginLeft: layout.spacing.xl,
     marginRight: layout.spacing.xl,
-    marginTop: layout.spacing.huge,
+    marginTop: layout.spacing.sm,
   },
   map: {
     width: Dimensions.get('window').width - layout.spacing.xl * 2,

@@ -158,7 +158,7 @@ const TeacherCreateSession = props => {
           {createClassIndex === 0 && (
             <View style={styles.pageContainer}>
               <ImageAuth
-                msg="this is the message"
+                msg="Please complete the facial recognition authentication."
                 setCreateClassIndex={setcreateClassIndex}
                 isTeacher={true}
               />
