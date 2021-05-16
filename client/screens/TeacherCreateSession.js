@@ -151,6 +151,10 @@ const TeacherCreateSession = props => {
     props.navigation.navigate('TeacherViewSession');
   };
 
+  const ImageAuthPassed = () => {
+    setCreateClassIndex(1);
+  }
+
   return (
     <SafeAreaView>
       <KeyboardAvoidingView>
