@@ -169,10 +169,12 @@ const TeacherCreateSession = props => {
             </View>
           )}
           {createClassIndex === 1 && (
-            <LocationAuth
-              onLocationAuthSubmit={onLocationAuthSubmit}
-              isTeacher={true}
-            />
+            <View style={styles.container}>
+              <LocationAuth
+                onLocationAuthSubmit={onLocationAuthSubmit}
+                isTeacher={true}
+              />
+            </View>
           )}
           {createClassIndex === 2 && (
             <View style={styles.pageContainer}>
@@ -357,7 +359,7 @@ export default TeacherCreateSession;
 const styles = StyleSheet.create({
   pageContainer: {
     marginHorizontal: L.pageMarginHorizontal,
-    minHeight: 1500, // Hack fix so scrollview doesnt cut off content
+    // minHeight: 1500, // Hack fix so scrollview doesnt cut off content
   },
   pageBackButton: {
     position: 'absolute',

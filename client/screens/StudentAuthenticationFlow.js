@@ -9,6 +9,8 @@ import {
   Dimensions,
 } from 'react-native';
 
+import { Picker, Icon, Form, Item, Content } from 'native-base';
+
 import { Banner, Button } from '../components';
 import { color, font, layout } from '../constants';
 
@@ -24,27 +26,16 @@ import { setSessionLoading } from '../redux/actions/sessionActions';
 const BASE_API_URL = resolveBaseURL();
 
 const StudentAuthenticationFlow = props => {
-  // const { name, description, maxStudents, shortID, createdAt } =
-  //   props.currentJoinedSession || {};
+  const session = props?.route?.params?.sessionDetails || {};
+
+  const answerArray = new Array(session?.questions?.length).fill('');
 
   const [studentAuthIndex, setStudentAuthIndex] = useState(0);
   const [facialAuthResult, setfacialAuthResult] = useState(false);
+  const [locationAuthResult, setLocationAuthResult] = useState({});
+  const [questionAnswers, setquestionAnswers] = useState(answerArray);
 
-  const getSession = async () => {
-    try {
-      const authToken = await SecureStore.getItemAsync('userToken');
-      const response = await axios.request({
-        method: 'post',
-        url: `/api/sessions/joinSession`,
-        baseURL: BASE_API_URL,
-        data: { sessionCode: joinCode },
-        headers: {
-          'auth-token': authToken,
-        },
-      });
-      console.log(response.data);
-    } catch (error) {}
-  };
+  console.log('Passed session details:', session);
 
   // Result is just a true/false
   const onStudentFaceAuth = result => {
@@ -54,7 +45,23 @@ const StudentAuthenticationFlow = props => {
 
   // Result is a {lat, lng}
   const onLocationAuthSubmit = result => {
+    setLocationAuthResult(result);
+    setStudentAuthIndex(2);
     console.log('location auth submitted', result);
+  };
+
+  const onAnswerSelect = (value, questionIndex) => {
+    console.log('value:', value, questionIndex);
+    const updatedArray = questionAnswers;
+    updatedArray[questionIndex] =
+      session.questions[questionIndex].options[value];
+    setquestionAnswers(updatedArray);
+  };
+
+  const submitStudentResponse = () => {
+    console.log('Facial result', facialAuthResult);
+    console.log('Location result', locationAuthResult);
+    console.log('Interactive result', questionAnswers);
   };
 
   return (
@@ -71,14 +78,60 @@ const StudentAuthenticationFlow = props => {
             </View>
           )}
           {studentAuthIndex === 1 && (
-            <LocationAuth
-              onLocationAuthSubmit={onLocationAuthSubmit}
-              isTeacher={false}
-            />
+            <View>
+              <LocationAuth
+                onLocationAuthSubmit={onLocationAuthSubmit}
+                isTeacher={false}
+              />
+            </View>
           )}
           {studentAuthIndex === 2 && (
             <View style={styles.container}>
               <Text style={styles.title}>Interactive Authentication</Text>
+              <Text style={styles.bodyText}>
+                Please answer the below questions to the best of your ability.
+              </Text>
+              {session.questions.map((question, indexQuestion) => {
+                return (
+                  <Content key={`${indexQuestion}-QUESTION`}>
+                    <Form>
+                      <Text style={styles.subHeading}>
+                        {question.questionString}
+                      </Text>
+                      <Item picker>
+                        <Picker
+                          mode="dropdown"
+                          iosIcon={<Icon name="arrow-down" />}
+                          placeholder="Select answer"
+                          placeholderStyle={{ color: '#111' }}
+                          placeholderIconColor="#007aff"
+                          style={{ height: 50 }}
+                          onValueChange={itemValue => {
+                            onAnswerSelect(itemValue, indexQuestion);
+                          }}>
+                          {question.options.map((option, indexAnswer) => {
+                            return (
+                              <Picker.Item
+                                key={`${indexAnswer}-${indexQuestion}-ANSWER`}
+                                label={option}
+                                value={indexAnswer}
+                              />
+                            );
+                          })}
+                        </Picker>
+                      </Item>
+                    </Form>
+                  </Content>
+                );
+              })}
+              <Button
+                type={'primary'}
+                onPress={() => {
+                  submitStudentResponse();
+                }}
+                title={'Submit'}
+                style={styles.lastButton}
+              />
             </View>
           )}
         </ScrollView>
@@ -101,7 +154,7 @@ const styles = StyleSheet.create({
   container: {
     marginLeft: layout.spacing.xl,
     marginRight: layout.spacing.xl,
-    marginTop: layout.spacing.xl,
+    marginTop: layout.spacing.huge,
   },
   map: {
     width: Dimensions.get('window').width - layout.spacing.xl * 2,
@@ -127,7 +180,7 @@ const styles = StyleSheet.create({
     marginBottom: layout.spacing.xl,
   },
   lastButton: {
-    marginTop: layout.spacing.md,
+    marginTop: layout.spacing.xxl,
     marginBottom: layout.spacing.xxl,
   },
 });

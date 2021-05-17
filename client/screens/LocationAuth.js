@@ -16,7 +16,7 @@ import { Banner, Button } from '../components';
 import { color, font, layout } from '../constants';
 
 const LocationAuth = props => {
-  const { user } = props;
+  const { user, isTeacher } = props;
 
   const [statusText, setStatusText] = useState('Getting your location..');
   const [errorMsg, setErrorMsg] = useState('');
@@ -74,7 +74,7 @@ const LocationAuth = props => {
 
   return (
     <SafeAreaView>
-      <View style={styles.container, {marginTop: topMargin}}>
+      <View style={[styles.container, { marginTop: topMargin }]}>
         <Text style={styles.title}>Location Authentication</Text>
         <Text style={styles.bodyText}>
           Your current location will be used for location authentication. You
