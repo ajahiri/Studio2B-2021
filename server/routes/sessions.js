@@ -140,12 +140,14 @@ router.post(
     try {
       targetSession = await findAndGetSession(req.body.sessionCode, userObject);
     } catch (error) {
-      return res.status(403).send(error);
+      return res
+        .status(403)
+        .send('Could not find and get session based on passed info.');
     }
 
     // Check if user is already enrolled in that session
     if (userObject.sessions) {
-      if (userObject.sessions.includes(req.body.sessionCode)) {
+      if (userObject.sessions.includes(targetSession._id)) {
         return res.status(403).send('Cannot join session if already enrolled.');
       }
     }
@@ -200,7 +202,7 @@ router.post(
     try {
       targetSession = await findAndGetSession(req.body.sessionCode, userObject);
     } catch (error) {
-      return res.status(403).send(error);
+      return res.status(403).send({ error: 'Could not find session' });
     }
 
     return res
@@ -276,6 +278,60 @@ router.post(
     } catch (error) {
       console.log('error getting mapping list of participants');
       return res.status(500).send('Error getting list of participants.');
+    }
+  },
+);
+
+const activateSessionByIDValidation = [
+  check('sessionID')
+    .isLength({ min: 10 })
+    .withMessage('Session code is required, codes are minimum 10 characters.'),
+  check('sessionBoolean')
+    .isBoolean()
+    .withMessage('Invalid session active state passed.'),
+];
+router.post(
+  '/activateSessionByID',
+  verifyToken,
+  activateSessionByIDValidation,
+  async (req, res) => {
+    // Validation check
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    // Get user object for checking perms
+    const userObject = await User.findOne({ _id: req.user._id });
+
+    const targetSession = await Session.findOne({ _id: req.body.sessionID });
+
+    if (!userObject || userObject?.permissionLevel === 'student') {
+      return res.status(401).send('No permission to activate this session!');
+    }
+
+    if (!targetSession) {
+      return res.status(404).send('Session with that ID was not found.');
+    }
+
+    if (targetSession.owner !== req.user._id) {
+      return res.status(401).send('No permission to activate this session!');
+    }
+
+    try {
+      const updateResponse = await Session.updateOne(
+        { _id: req.body.sessionID },
+        { $set: { active: req.body.sessionBoolean } },
+      );
+      // console.log('No errors activating session', updateResponse);
+      return res.status(200).send({
+        message: 'Session was activated.',
+        data: { success: true },
+      });
+    } catch (error) {
+      console.log('Error activating session by ID.', error);
+      return res.status(500).send('Error activating session.');
     }
   },
 );

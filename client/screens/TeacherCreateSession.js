@@ -148,12 +148,12 @@ const TeacherCreateSession = props => {
     dispatch(createNewSessionSaga(sessionObject));
     setsessionQuestions([]);
     setcreateClassIndex(0);
-    props.navigation.navigate('TeacherViewSession');
+    props.navigation.navigate('Dashboard');
   };
 
   const ImageAuthPassed = () => {
     setCreateClassIndex(1);
-  }
+  };
 
   return (
     <SafeAreaView>
@@ -259,7 +259,6 @@ const TeacherCreateSession = props => {
                 </Text>
               )}
 
-              {/* !!This list needs to be improved, looks horrible ATM!! */}
               <List>
                 {sessionQuestions.map((question, index) => {
                   return (

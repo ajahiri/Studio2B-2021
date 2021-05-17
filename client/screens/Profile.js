@@ -1,17 +1,18 @@
 import React from 'react';
 import { Alert, Text, View, Image, StyleSheet } from 'react-native';
 
+import { connect, useDispatch } from 'react-redux';
+
 import { Button, TextInput } from '../components';
 import { font, layout } from '../constants';
-
-import { useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 
 import { Card } from '../components/cards';
 
-export default function Profile() {
-
+const Profile = props => {
   //const fullName = `${firstName ?? '???'} ${lastName ?? '???'}`;
+  console.log(props);
+  const { user } = props;
   const dispatch = useDispatch();
 
   const handleEditProfile = () => {
@@ -28,6 +29,16 @@ export default function Profile() {
     ]);
   };
 
+  const noImage = require('../assets/Login/profile-placeholder.png');
+
+  const referenceImageURL = () => {
+    if (user._id) {
+      return `https://faceindexrico.s3.us-east-2.amazonaws.com/${user._id}`;
+    } else {
+      return noImage.uri;
+    }
+  };
+
   return (
     <View
       style={{
@@ -38,19 +49,25 @@ export default function Profile() {
         My Profile
       </Text>
       <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <Image source={require("../assets/Login/profile-placeholder.png")} style={styles.image}/>
+        <Image source={{ uri: referenceImageURL() }} style={styles.image} />
         <View>
-          <Text style={[font.mediumBold, { marginBottom: layout.spacing.lg }]}>Name: </Text>
-          <Text style={[font.mediumBold, { marginBottom: layout.spacing.lg }]}>Email: </Text>
-          <Text style={[font.mediumBold, { marginBottom: layout.spacing.lg }]}>University: </Text>
+          <Text style={[font.mediumBold, { marginBottom: layout.spacing.lg }]}>
+            Name: {`${user?.firstName} ${user?.lastName}`}
+          </Text>
+          <Text style={[font.mediumBold, { marginBottom: layout.spacing.lg }]}>
+            Email: {user?.email}
+          </Text>
+          <Text style={[font.mediumBold, { marginBottom: layout.spacing.lg }]}>
+            University: {user?.university}
+          </Text>
         </View>
       </View>
-      <Button
+      {/* <Button
         style={{ marginBottom: 16 }}
         size="small"
         title="Edit Profile"
         onPress={handleEditProfile}
-      />
+      /> */}
       <Button
         type="danger"
         size="small"
@@ -59,13 +76,20 @@ export default function Profile() {
       />
     </View>
   );
-}
+};
+
+const mapStateToProps = state => {
+  const { user } = state.auth;
+  return { user };
+};
+
+export default connect(mapStateToProps)(Profile);
 
 const styles = StyleSheet.create({
   image: {
-    borderRadius: 210,
+    borderRadius: 50,
     height: 210,
     width: 210,
     marginBottom: layout.spacing.lg,
-  }
-})
+  },
+});

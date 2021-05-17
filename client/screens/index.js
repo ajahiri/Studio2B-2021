@@ -13,6 +13,7 @@ import StudentViewSession from './StudentViewSession';
 import reg_index from './registration/reg_index';
 import ImageAuth from './ImageAuth';
 import LocationAuth from './LocationAuth';
+import StudentAuthenticationFlow from './StudentAuthenticationFlow';
 
 export {
   // Onboarding
@@ -29,4 +30,5 @@ export {
   reg_index,
   ImageAuth,
   StudentViewSession,
+  StudentAuthenticationFlow,
 };

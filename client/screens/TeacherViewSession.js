@@ -8,9 +8,15 @@ import {
   KeyboardAvoidingView,
   Text,
   RefreshControl,
+  Dimensions,
 } from 'react-native';
 
-import { Button, Container, Content, Spinner } from 'native-base';
+import { Banner, Button } from '../components';
+import { color, font, layout } from '../constants';
+
+import { List, ListItem } from 'native-base';
+
+import MapView from 'react-native-maps';
 
 import QRCode from 'react-native-qrcode-generator';
 import axios from 'axios';
@@ -29,7 +35,10 @@ const TeacherViewSession = props => {
     maxStudents,
     shortID,
     createdAt,
+    active,
   } = props?.route?.params?.session || {};
+
+  const [isSessionActive, setisSessionActive] = useState(active);
 
   const getSessionParticipants = async () => {
     try {
@@ -47,6 +56,27 @@ const TeacherViewSession = props => {
       setParticipantList(participantList.data.data);
     } catch (error) {
       console.log('retrieving stuff for session error', error);
+    }
+  };
+
+  const activateSession = async sessionBoolean => {
+    try {
+      console.log('about to activate session with ', sessionID, sessionBoolean);
+      const activateSessionResponse = await axios.request({
+        method: 'post',
+        url: `/api/sessions/activateSessionByID`,
+        baseURL: BASE_API_URL,
+        data: { sessionID, sessionBoolean },
+        headers: {
+          'auth-token': authToken,
+        },
+      });
+      if (activateSessionResponse?.data?.data?.success) {
+        console.log('confirm activation was successful');
+        setisSessionActive(sessionBoolean);
+      }
+    } catch (error) {
+      console.log('Error activating session', error);
     }
   };
 
@@ -73,35 +103,76 @@ const TeacherViewSession = props => {
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }>
-          <View /* Title */ style={styles.container}>
+          <View style={styles.container}>
             <Text style={styles.title}>{name}</Text>
-            <Text>Description: {description}</Text>
-            <Text>Max Students: {maxStudents}</Text>
-            <Text>JOIN CODE: {shortID}</Text>
-            <Text>Created At: {createdAt}</Text>
-            <Button onPress={() => setshowQRCode(true)}>
-              <Text>Generate QR Code</Text>
-            </Button>
+            <Text style={styles.bodyText}>{description}</Text>
+            <Text style={styles.bodyText}>Max Students: {maxStudents}</Text>
+            <Text style={styles.bodyText}>Code: {shortID}</Text>
+            <Text style={styles.bodyText}>Created: {createdAt}</Text>
+            <Text style={styles.bodyText}>
+              Status: {isSessionActive ? 'Active' : 'Closed'}
+            </Text>
+            <Text style={styles.subHeading}>Enrolled Students:</Text>
+            <List>
+              {participantList.map((participant, index) => {
+                return (
+                  <ListItem key={index}>
+                    <View>
+                      <View>
+                        <Text style={[styles.bodyText, {textAlign: 'center'}]} key={participant}>
+                          {participant}
+                        </Text>
+                      </View>
+                    </View>
+                  </ListItem>
+                );
+              })}
+            </List>
+            {participantList.length == 0 && (
+              <Text
+                style={
+                  (styles.bodyText,
+                  { textAlign: 'center', marginBottom: layout.spacing.xl })
+                }>
+                No students currently enrolled, (Swipe to refresh)
+              </Text>
+            )}
+            <Button
+              type="secondary"
+              title={!showQRCode ? 'Generate QR Code' : 'Hide QR Code'}
+              style={styles.button}
+              onPress={() => {
+                if (!showQRCode) {
+                  setshowQRCode(true);
+                } else {
+                  setshowQRCode(false);
+                }
+              }}
+            />
+
             {showQRCode && (
               <QRCode
+                style={styles.map}
                 value={shortID || ''}
-                size={200}
+                size={Dimensions.get('window').width - layout.spacing.xl * 2}
                 bgColor="black"
                 fgColor="white"
               />
             )}
-          </View>
 
-          <View style={styles.studentcontainer}>
-            <Text style={styles.students}>Students Enrolled</Text>
-            {participantList.map(participant => {
-              return <Text key={participant}>{participant}</Text>;
-            })}
+            <Button
+              type={isSessionActive ? 'danger' : 'primary'}
+              onPress={() => {
+                if (isSessionActive) {
+                  activateSession(false);
+                } else {
+                  activateSession(true);
+                }
+              }}
+              title={isSessionActive ? 'Close Session' : 'Activate Session'}
+              style={styles.lastButton}
+            />
           </View>
-
-          <TouchableOpacity style={styles.startsessioncontainer}>
-            <Text style={styles.startsession}>ACTIVATE SESSION</Text>
-          </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -117,37 +188,35 @@ export default connect(mapStateToProps)(TeacherViewSession);
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
+    marginLeft: layout.spacing.xl,
+    marginRight: layout.spacing.xl,
+    marginTop: layout.spacing.xl,
   },
-
+  map: {
+    width: Dimensions.get('window').width - layout.spacing.xl * 2,
+    height: Dimensions.get('window').height / 3,
+    marginBottom: layout.spacing.xxl,
+  },
   title: {
-    fontSize: 30,
-    marginTop: 25,
-    fontWeight: 'bold',
+    ...font.h2,
+    marginBottom: layout.spacing.sm,
   },
-
-  students: {
-    marginTop: 10,
-    marginLeft: 40,
-    fontSize: 16,
+  subHeading: {
+    ...font.h3,
+    marginBottom: layout.spacing.md,
   },
-
-  pageBackButton: {
-    position: 'absolute',
-    marginTop: 40,
-    marginLeft: 70,
+  bodyText: {
+    ...font.medium,
+    marginBottom: layout.spacing.md,
   },
-
-  startsession: {
-    fontWeight: 'bold',
-    fontSize: 18,
-    borderWidth: 1,
-    color: '#FFFFFF',
-    backgroundColor: '#1E4AE7',
-    margin: 45,
-    height: 40,
-    textAlign: 'center',
-    paddingVertical: 7,
-    marginTop: 100,
+  errorMsg: {
+    marginBottom: layout.spacing.md,
+  },
+  button: {
+    marginBottom: layout.spacing.xl,
+  },
+  lastButton: {
+    marginTop: layout.spacing.md,
+    marginBottom: layout.spacing.xxl,
   },
 });

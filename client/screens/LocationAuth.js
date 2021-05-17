@@ -63,12 +63,18 @@ const LocationAuth = props => {
   }, []);
 
   const onSubmission = () => {
-    props.onLocationAuthSubmit(region);
+    props.onLocationAuthSubmit({
+      latitude: region.latitude,
+      longitude: region.longitude,
+    });
   };
+
+  let topMargin = layout.spacing.sm;
+  if (!isTeacher) topMargin = layout.spacing.huge;
 
   return (
     <SafeAreaView>
-      <View style={styles.container}>
+      <View style={styles.container, {marginTop: topMargin}}>
         <Text style={styles.title}>Location Authentication</Text>
         <Text style={styles.bodyText}>
           Your current location will be used for location authentication. You
@@ -139,7 +145,6 @@ const styles = StyleSheet.create({
   container: {
     marginLeft: layout.spacing.xl,
     marginRight: layout.spacing.xl,
-    marginTop: layout.spacing.sm,
   },
   map: {
     width: Dimensions.get('window').width - layout.spacing.xl * 2,

@@ -10,4 +10,9 @@
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
   "prettier.prettierPath": "../nodule_modules/prettier",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#2B2E31",
+    "titleBar.activeBackground": "#3C4044",
+    "titleBar.activeForeground": "#F9FAFA"
+  },
 }

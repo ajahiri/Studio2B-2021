@@ -68,7 +68,7 @@ router.post('/register', registerValidation, async (req, res) => {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     university: req.body.university,
-    email: req.body.email,
+    email: req.body.email.toLowerCase(),
     password: hashPassword,
     permissionLevel: 'student',
   });
@@ -107,7 +107,7 @@ router.post('/login', loginValidation, async (req, res) => {
   }
 
   // check if email exists
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findOne({ email: req.body.email.toLowerCase() });
   if (!user)
     return res.status(400).send({
       success: false,
@@ -154,7 +154,7 @@ router.post('/getUser', verifyToken, getUserValidation, async (req, res) => {
   // console.log('about to get a user of ID:', req.body.userID);
 
   // Get user object for checking perms
-  const userObject = await User.findOne({ _id: req.user._id }, {password: 0});
+  const userObject = await User.findOne({ _id: req.user._id }, { password: 0 });
 
   try {
     if (userObject.permissionLevel !== 'admin') {

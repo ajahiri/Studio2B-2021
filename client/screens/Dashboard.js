@@ -65,13 +65,13 @@ function Dashboard(props) {
 
       {user.permissionLevel === 'teacher' && (
         <>
-          <Text style={[font.h3]}>My Sessions</Text>
+          <Text style={[font.h3]}>My Classes</Text>
         </>
       )}
 
       {user.permissionLevel === 'student' && (
         <>
-          <Text style={[font.h3]}>My Session History</Text>
+          <Text style={[font.h3]}>My Classes</Text>
         </>
       )}
       <View

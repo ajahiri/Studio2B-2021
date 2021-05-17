@@ -11,12 +11,9 @@ import {
   Dimensions,
 } from 'react-native';
 
-import { Container, Content, Spinner } from 'native-base';
-
 import { Banner, Button } from '../components';
 import { color, font, layout } from '../constants';
 
-import QRCode from 'react-native-qrcode-generator';
 import axios from 'axios';
 
 import * as authActions from '../redux/actions/authActions';
@@ -25,13 +22,14 @@ import MapView from 'react-native-maps';
 
 import { resolveBaseURL, wait } from '../globals/globals';
 import { connect, useDispatch } from 'react-redux';
-import { Fontisto } from '@expo/vector-icons';
 
 const BASE_API_URL = resolveBaseURL();
 
 const TeacherViewSession = props => {
+  // console.log(props);
   const { authToken } = props;
   const { _id: sessionCode } = props?.route?.params?.session || {};
+  const { justJoined = false } = props?.route?.params || {};
 
   const dispatch = useDispatch();
 
@@ -47,7 +45,7 @@ const TeacherViewSession = props => {
           'auth-token': authToken,
         },
       });
-      console.log('got session details', sessionDetails.data.data);
+      // console.log('got session details', sessionDetails.data.data);
       setSessionDetails(sessionDetails.data.data);
       setRegion({
         ...region,
@@ -85,6 +83,13 @@ const TeacherViewSession = props => {
     if (!sessionDetails.active) return false;
     if (props?.user?.authenticatedSessions?.includes(sessionCode)) return false;
     return true;
+  };
+
+  const onStartAuthButton = () => {
+    props.navigation.navigate({
+      name: 'StudentAuthenticationFlow',
+      params: { sessionDetails },
+    });
   };
 
   return (
@@ -139,9 +144,20 @@ const TeacherViewSession = props => {
               />
             )}
 
+            {justJoined && (
+              <Banner
+                style={styles.errorMsg}
+                type="success"
+                message="You just successfully joined this session, it will be saved in your session list."
+              />
+            )}
+
             <Button
               type="primary"
               title="Start Authentication"
+              onPress={() => {
+                onStartAuthButton();
+              }}
               disabled={!canStartAuthentication()}
               style={styles.button}
             />
@@ -163,7 +179,7 @@ const styles = StyleSheet.create({
   container: {
     marginLeft: layout.spacing.xl,
     marginRight: layout.spacing.xl,
-    marginTop: layout.spacing.huge,
+    marginTop: layout.spacing.xl,
   },
   map: {
     width: Dimensions.get('window').width - layout.spacing.xl * 2,

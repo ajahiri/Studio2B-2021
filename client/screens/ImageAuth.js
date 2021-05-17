@@ -10,36 +10,42 @@ import {
   Image,
 } from 'react-native';
 
-import { ImageCapture } from '../components';
+import { Banner, ImageCapture } from '../components';
+import { layout } from '../constants';
 
-function ImageAuth(props, { submitAll, navigation }) {
+function ImageAuth(props) {
   const { user } = props;
 
   const [tries, setTries] = useState(3);
+  const [showBanner, setshowBanner] = useState(false);
 
   const onSubmission = result => {
-    if (result.data.includes(user?._id) && !props.isTeacher) {
-      // face auth success and matched with student user
-      return console.log('Student Face Auth Success!');
-      //iterate to next screen on student join class flow here
-    } else if (result.data.includes(user?._id) && props.isTeacher) {
-      // face auth success and matched with teacher user
-      return props.setCreateClassIndex(1);
-    } else if (!props.isTeacher && tries >= 0) {
-      // student face auth FAIL (retry)
-      setTries(tries - 1);
-      return console.log(
-        `Student Facial Recognition Failed. You have ${tries} attempts left`,
-      );
-    } else if (!props.isTeacher && tries === -1) {
-      // student continues with failed Face Auth
-      return console.log(
-        'Student Face Authentication Failed. You have no attempts left.',
-      );
-      //iterate to next screen on student join class flow here
+    if (props.isTeacher) {
+      // Teacher
+      if (result.data && result.data.includes(user?._id)) {
+        // face auth success and matched with teacher user
+        props.setCreateClassIndex(1);
+      }
+      // Do nothing in fail case for teacher, they can retry as much as
+      // they like since this is NEEDED to pass to next step
+    } else {
+      // Student
+      if (result.data && result.data.includes(user?._id)) {
+        // face auth success and matched with student user
+        console.log('Student Face Auth Success!');
+        props.onStudentFaceAuth(true);
+      } else {
+        console.log('Student auth no match.');
+        setshowBanner(true);
+        if (tries > 0) {
+          // Let them know how many tries left and go again
+          setTries(tries - 1);
+        } else {
+          // No tries left, continue for student but mark as failed
+          props.onStudentFaceAuth(false);
+        }
+      }
     }
-    // display error
-    return console.log('face does not match with current user ID.');
   };
 
   return (
@@ -49,6 +55,13 @@ function ImageAuth(props, { submitAll, navigation }) {
         <Text style={styles.desc}>{props.msg}</Text>
       </View>
       <ImageCapture authType="login" onSubmission={onSubmission} />
+      {showBanner && (
+        <Banner
+          style={[styles.errorMsg, { marginTop: layout.spacing.md }]}
+          type="information"
+          message={`Authentication failed, you have ${tries} tries remaining.`}
+        />
+      )}
     </SafeAreaView>
   );
 }

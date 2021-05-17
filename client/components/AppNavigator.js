@@ -14,6 +14,7 @@ import {
   StudentJoinSession,
   StudentViewSession,
   reg_index,
+  StudentAuthenticationFlow,
 } from '../screens';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
 import { color } from '../constants';
@@ -83,13 +84,20 @@ function AppNavigator(props) {
           <Stack.Screen
             name="StudentViewSession"
             component={StudentViewSession}
-            options={{ headerShown: false }}
+            options={{ title: 'Session Details' }}
           />
           <Stack.Screen
             name="StudentJoinSession"
             component={StudentJoinSession}
             options={{
               title: 'Join New Session',
+            }}
+          />
+          <Stack.Screen
+            name="StudentAuthenticationFlow"
+            component={StudentAuthenticationFlow}
+            options={{
+              headerShown: false,
             }}
           />
           <Stack.Screen

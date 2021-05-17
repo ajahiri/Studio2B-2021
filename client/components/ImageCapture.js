@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Modal, Pressable } from 'react-native';
-import { connect, useDispatch } from 'react-redux';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { Camera } from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
@@ -9,14 +8,10 @@ import Button from './Button';
 import Banner from './Banner';
 import { colours as C, layout as L, typography as T } from '../constants';
 
-import * as authActions from '../redux/actions/authActions';
-
-import TextInput from './TextInput';
 import handleFaceAuth from '../helpers/handleFaceAuth';
+import { useIsFocused } from '@react-navigation/core';
 
 const ImageCapture = props => {
-  const [modalVisible, setModalVisible] = useState(false); //keep this to use for error display
-  const [modalMessage, setModalMessage] = useState('Running facial auth...');
   const [faceRecoError, setFaceRecoError] = useState('');
 
   const [btnText, setBtnText] = useState('');
@@ -28,6 +23,7 @@ const ImageCapture = props => {
   const [cameraInstance, setCameraInstance] = useState({});
   const [cameraReady, setcameraReady] = useState(false);
   const [captureLoading, setcaptureLoading] = useState(false);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     (async () => {
@@ -62,12 +58,12 @@ const ImageCapture = props => {
   // }
   const handleFaceAuthResponse = response => {
     setcaptureLoading(false);
-    if(response?.status === 1){
+    if (response?.status === 1) {
       // Handle any modal messages here
       props.onSubmission(response);
-    }
-    else{
+    } else {
       setFaceRecoError(response.message);
+      props.onSubmission(response);
     }
   };
 
@@ -84,14 +80,12 @@ const ImageCapture = props => {
 
   const handleBtnText = () => {
     if (props.authType === 'register') {
-      faceDetected
-        ? setBtnText('REGISTER')
-        : setBtnText('Waiting for Face Detection...');
+      faceDetected ? setBtnText('Register') : setBtnText('Looking for Face...');
     } else {
       // authType === 'login'
       faceDetected
-        ? setBtnText('LOGIN')
-        : setBtnText('Waiting for Face Detection...');
+        ? setBtnText('Authenticate')
+        : setBtnText('Looking for Face...');
     }
   };
 
@@ -114,28 +108,34 @@ const ImageCapture = props => {
     }
   };
 
+  const cameraType = Camera.Constants.Type.front;
+
   return (
     <View>
       <View style={styles.imageContainer}>
-        <Camera
-          ref={ref => setCameraInstance(ref)}
-          onCameraReady={() => setcameraReady(true)}
-          style={styles.camera}
-          type={Camera.Constants.Type.front}
-          autoFocus={true}
-          onFacesDetected={FacesDetected}
-          onFaceDetectionError={state =>
-            console.warn('Faces detection error:', state)
-          }
-          faceDetectorSettings={{
-            mode: FaceDetector.Constants.Mode.accurate,
-            detectLandmarks: FaceDetector.Constants.Landmarks.all,
-            tracking: true,
-          }}
-          onMountError={err => console.log(err)}></Camera>
+        {isFocused && (
+          <Camera
+            ref={ref => setCameraInstance(ref)}
+            onCameraReady={() => setcameraReady(true)}
+            style={styles.camera}
+            type={cameraType}
+            autoFocus={true}
+            onFacesDetected={FacesDetected}
+            onFaceDetectionError={state =>
+              console.warn('Faces detection error:', state)
+            }
+            useCamera2Api={false}
+            faceDetectorSettings={{
+              mode: FaceDetector.Constants.Mode.accurate,
+              detectLandmarks: FaceDetector.Constants.Landmarks.all,
+              tracking: false,
+            }}
+            onMountError={err => console.log(err)}
+          />
+        )}
       </View>
       {!captureLoading && faceRecoError !== '' ? (
-        <Banner type="error" message={faceRecoError}/>
+        <Banner type="error" message={faceRecoError} />
       ) : null}
       <View style={styles.buttonContainer}>
         {captureLoading ? (
@@ -149,24 +149,6 @@ const ImageCapture = props => {
           />
         )}
       </View>
-      {/* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>{modalMessage}</Text>
-            <Pressable
-              style={[styles.modalButton, styles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}>
-              <Text style={styles.textStyle}>Close</Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal> */}
     </View>
   );
 };
