@@ -5,7 +5,7 @@ import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-ta
 import { Tab } from 'native-base';
 
 const AdminViewUsers = props => {
-    const tableHead = ['ID', 'Name', 'Status', 'Toggle Status'];
+    const tableHead = ['ID', 'Name', 'Status'];
 
     const Users = [
         {
@@ -23,21 +23,15 @@ const AdminViewUsers = props => {
     const renderRow = () => {
         arr = [];
         Users.map(user => {
-            arr.push([user._id, user.name, user.status, btnStatusToggle(user)]);
+            arr.push([user._id, user.name, btnStatusToggle(user)]);
         });
         return arr;
     }
 
-    const styles = StyleSheet.create({
-        container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
-        head: { height: 40, backgroundColor: '#f1f8ff' },
-        text: { margin: 6 }
-    });
-
     const btnStatusToggle = (user) => (
         <TouchableOpacity onPress={() => _alertIndex(user.name)}>
             <View style={styles.btn}>
-                <Text style={styles.btnText}>button</Text>
+                <Text style={styles.btnText}>{user.status}</Text>
             </View>
         </TouchableOpacity>
     );
@@ -75,7 +69,7 @@ export default AdminViewUsers;
 
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
-    head: { height: 40, backgroundColor: '#808B97' },
+    head: { height: 40, backgroundColor: '#f1f8ff' },
     text: { margin: 6 },
     row: { height: 40, flexDirection: 'row', backgroundColor: '#FFF1C1' },
     btn: { width: 58, height: 18, backgroundColor: '#78B7BB', borderRadius: 2 },
