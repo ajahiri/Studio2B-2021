@@ -12,10 +12,7 @@ const Tab = createBottomTabNavigator();
 export default function GroundZero() {
   return (
     <Tab.Navigator
-      tabBarOptions={{
-        activeTintColor: color.accentFocused,
-        showLabel: false,
-      }}
+      tabBarOptions={{ activeTintColor: color.accentFocused }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color }) => {
           let iconName;
