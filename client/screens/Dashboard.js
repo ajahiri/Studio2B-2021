@@ -13,6 +13,9 @@ import { withSafeAreaInsets } from 'react-native-safe-area-context';
 
 function Dashboard(props) {
   const dispatch = useDispatch();
+  const { user, isSessionLoading, sessionHistory, navigation } = props;
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const loadUser = async () => {
     dispatch(authActions.getThisUserSaga());
@@ -21,33 +24,27 @@ function Dashboard(props) {
   };
 
   useEffect(() => {
-    loadUser();
-  }, []);
-
-  const { user, isSessionLoading, sessionHistory, navigation } = props;
-
-  // console.log('user in dashboard', user);
+    if (isRefreshing) loadUser();
+  }, [isRefreshing]);
 
   const handleCardPress = session => {
-    // console.log('pressed session', session);
     if (user.permissionLevel == 'teacher' || user.permissionLevel == 'admin') {
       navigation.navigate('TeacherViewSession', { session });
     } else {
       navigation.navigate('StudentViewSession', { session });
     }
   };
-  const [refreshing, setRefreshing] = useState(false);
 
-  const onRefresh = useCallback(() => {
-    loadUser();
-    setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+  const onRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await loadUser();
+    wait(2000).then(() => setIsRefreshing(false));
   }, []);
 
   return (
     <ScrollView
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
       }
       style={{
         marginTop: layout.defaultScreenMargins.vertical,
