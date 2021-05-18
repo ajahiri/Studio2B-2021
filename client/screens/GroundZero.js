@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -35,5 +35,3 @@ export default function GroundZero() {
     </Tab.Navigator>
   );
 }
-
-//style={{ flex: 1, justifyContent: 'center', alignItems: 'center', textAlign: 'center'}}

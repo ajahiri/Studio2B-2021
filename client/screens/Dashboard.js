@@ -1,111 +1,223 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Text, View, ScrollView, RefreshControl } from 'react-native';
+import React from 'react';
+import {
+  FlatList,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import {
+  useSafeAreaInsets,
+  withSafeAreaInsets,
+} from 'react-native-safe-area-context';
 
 import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 import * as sessionActions from '../redux/actions/sessionActions';
 
-import { AddSubjectCard, SubjectCard } from '../components/cards';
-import { font, layout } from '../constants';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { DottedCard, SessionCard } from '../components/cards';
+import { color, font, layout } from '../constants';
 import { wait } from '../globals/globals';
-import { withSafeAreaInsets } from 'react-native-safe-area-context';
+import { Banner } from '../components';
 
-function Dashboard(props) {
+function Header({ user, ...props }) {
+  const fullName = `${user.firstName ?? '???'} ${user.lastName ?? '???'}`;
+  const { top: topInset } = useSafeAreaInsets();
+
+  return (
+    <View
+      style={[
+        headerStyles.container,
+        { paddingTop: topInset + layout.spacing.xxl },
+        props.style,
+      ]}>
+      <View style={headerStyles.content}>
+        <View style={headerStyles.textContainer}>
+          <Text style={[font.medium, { flexGrow: 1 }]}>Welcome</Text>
+          <Text numberOfLines={1} style={[font.largeBold, { flexGrow: 1 }]}>
+            {fullName} ({user.permissionLevel ?? 'NONE'})
+          </Text>
+        </View>
+        <Ionicons
+          name="menu"
+          size={32}
+          color={color.black}
+          onPress={() => {}}
+        />
+      </View>
+      <View style={headerStyles.divider} />
+    </View>
+  );
+}
+
+const headerStyles = StyleSheet.create({
+  container: {
+    backgroundColor: color.accent,
+    alignContent: 'flex-end',
+  },
+  content: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: layout.defaultScreenMargins.horizontal,
+    marginBottom: layout.spacing.md,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  divider: {
+    marginHorizontal: layout.defaultScreenMargins.horizontal,
+    borderColor: color.gray500,
+    borderRadius: 1,
+    borderTopWidth: layout.border.thick,
+  },
+});
+
+function SessionList(props) {
+  const { user, isSessionLoading, sessionHistory } = props;
+
   const dispatch = useDispatch();
-  const { user, isSessionLoading, sessionHistory, navigation } = props;
+  const navigation = useNavigation();
+  const isTeacherOrAdmin =
+    user.permissionLevel === 'teacher' || user.permissionLevel === 'admin';
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = React.useState(true);
+  const [error, setError] = React.useState(null);
 
-  const loadUser = async () => {
-    dispatch(authActions.getThisUserSaga());
-    dispatch(sessionActions.setSessionLoading(true));
-    dispatch(sessionActions.getUserSessionsSaga());
-  };
+  React.useEffect(() => {
+    const loadUser = async () => {
+      try {
+        dispatch(authActions.getThisUserSaga());
+        dispatch(sessionActions.setSessionLoading(true));
+        dispatch(sessionActions.getUserSessionsSaga());
+      } catch (error) {
+        setError(error);
+        console.error(`Failed to load user: ${error.message ?? error}`);
+      }
 
-  useEffect(() => {
+      wait(2000).then(() => setIsRefreshing(false));
+    };
+
     if (isRefreshing) loadUser();
   }, [isRefreshing]);
 
-  const handleCardPress = session => {
-    if (user.permissionLevel == 'teacher' || user.permissionLevel == 'admin') {
-      navigation.navigate('TeacherViewSession', { session });
+  const onRefresh = () => setIsRefreshing(true);
+
+  const renderSessionCardItem = ({ item, index }) => {
+    const handleSessionCardItemPress = () => {
+      navigation.push(
+        isTeacherOrAdmin ? 'TeacherCreateSession' : 'StudentJoinSession',
+      );
+    };
+
+    return (
+      <SessionCard
+        key={`session-card-${index}`}
+        subjectName={item.name}
+        style={{ marginBottom: layout.spacing.lg }}
+        onPress={handleSessionCardItemPress}
+      />
+    );
+  };
+
+  const renderHeaderComponent = () => {
+    return (
+      <View>
+        <Text style={[font.h3, { marginBottom: layout.spacing.lg }]}>
+          My Sessions
+        </Text>
+        <DottedCard
+          message={`${isTeacherOrAdmin ? 'Create' : 'Join'} New Session`}
+          style={{ marginBottom: layout.spacing.lg }}
+          onPress={() => {
+            if (isTeacherOrAdmin) {
+              navigation.navigate('TeacherCreateSession');
+            } else {
+              navigation.navigate('StudentJoinSession');
+            }
+          }}
+        />
+      </View>
+    );
+  };
+
+  const renderEmptySessionHistory = () => {
+    return (
+      <View style={{ alignItems: 'center' }}>
+        <Text style={[sessionListStyles.text]}>
+          You don't have any previous sessions.
+        </Text>
+      </View>
+    );
+  };
+
+  const renderSessionList = () => {
+    if (isSessionLoading || error) {
+      return (
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+          }>
+          {renderHeaderComponent()}
+          {isSessionLoading ? (
+            <Text style={sessionListStyles.text}>Loading sessions...</Text>
+          ) : (
+            <Text style={[sessionListStyles.text, { color: color.red500 }]}>
+              An unexpected error occurred.{'\n'}Please try again later
+            </Text>
+          )}
+        </ScrollView>
+      );
     } else {
-      navigation.navigate('StudentViewSession', { session });
+      return (
+        <FlatList
+          data={sessionHistory}
+          renderItem={renderSessionCardItem}
+          refreshing={isRefreshing}
+          onRefresh={onRefresh}
+          ListHeaderComponent={renderHeaderComponent}
+          ListEmptyComponent={renderEmptySessionHistory}
+        />
+      );
     }
   };
 
-  const onRefresh = useCallback(async () => {
-    setIsRefreshing(true);
-    await loadUser();
-    wait(2000).then(() => setIsRefreshing(false));
-  }, []);
+  return (
+    <View
+      style={{
+        flexGrow: 1,
+        paddingHorizontal: layout.defaultScreenMargins.horizontal,
+        paddingTop: layout.spacing.xxl,
+      }}>
+      {renderSessionList()}
+    </View>
+  );
+}
+
+const sessionListStyles = StyleSheet.create({
+  text: {
+    ...font.large,
+    textAlign: 'center',
+    color: color.gray500,
+  },
+});
+
+function Dashboard(props) {
+  const { user, isSessionLoading, sessionHistory } = props;
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
-      }
-      style={{
-        marginTop: layout.defaultScreenMargins.vertical,
-        marginHorizontal: layout.defaultScreenMargins.horizontal,
-      }}>
-      <Text style={[font.smallBold]}>
-        Hello, {user.firstName ?? 'NULL'} ({user.permissionLevel || ''})
-      </Text>
-
-      {user.permissionLevel === 'admin' && (
-        <>
-          <Text style={[font.h3]}>Admin Dashboard</Text>
-        </>
-      )}
-
-      {user.permissionLevel === 'teacher' && (
-        <>
-          <Text style={[font.h3]}>My Classes</Text>
-        </>
-      )}
-
-      {user.permissionLevel === 'student' && (
-        <>
-          <Text style={[font.h3]}>My Classes</Text>
-        </>
-      )}
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          marginTop: layout.spacing.lg,
-        }}>
-        <AddSubjectCard
-          onPress={() => {
-            if (user.permissionLevel === 'student') {
-              navigation.navigate('StudentJoinSession');
-            } else {
-              navigation.navigate('TeacherCreateSession');
-            }
-          }}
-          isTeacher={user.permissionLevel === 'teacher'}
-        />
-        {isSessionLoading ? (
-          <Text>Loading sessions...</Text>
-        ) : (
-          <>
-            {sessionHistory.map(session => (
-              <TouchableOpacity
-                key={session._id}
-                onPress={() => handleCardPress(session)}>
-                <SubjectCard
-                  style={{ marginBottom: layout.spacing.lg }}
-                  subjectName={session.name}
-                />
-              </TouchableOpacity>
-            ))}
-          </>
-        )}
-      </View>
-    </ScrollView>
+    <View style={{ flex: 1 }}>
+      <Header user={user} />
+      <SessionList
+        user={user}
+        isSessionLoading={isSessionLoading}
+        sessionHistory={sessionHistory}
+      />
+    </View>
   );
 }
 
@@ -115,4 +227,4 @@ const mapStateToProps = state => {
   return { user, sessionHistory, isSessionLoading };
 };
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps)(withSafeAreaInsets(Dashboard));

@@ -44,7 +44,18 @@ function AppNavigator(props) {
   const { authToken } = props.auth;
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      theme={{
+        dark: false,
+        colors: {
+          primary: color.accentFocused,
+          background: color.white,
+          card: color.white,
+          text: color.black,
+          border: color.gray500,
+          notification: color.red500,
+        },
+      }}>
       {authToken === null ? (
         <Stack.Navigator>
           <Stack.Screen
