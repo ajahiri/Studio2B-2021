@@ -8,6 +8,8 @@ import {
   LOG_OUT_USER_SAGA,
   LOGIN_USER_SAGA,
   GET_THIS_USER_SAGA,
+  SEARCH_USERS_SAGA,
+  SET_SEARCHED_USERS,
   SET_REG_INDEX,
 } from '../types';
 
@@ -37,6 +39,16 @@ export const logoutUserSaga = () => ({
 export const getThisUserSaga = () => ({
   type: GET_THIS_USER_SAGA,
   payload: null,
+});
+
+export const searchUsersSaga = email => ({
+  type: SEARCH_USERS_SAGA,
+  payload: email
+});
+
+export const setSearchedUsers = users => ({
+  type: SET_SEARCHED_USERS,
+  payload: users,
 });
 
 // Need to clear SecureStore out as well as auth reducer

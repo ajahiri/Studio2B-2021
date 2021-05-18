@@ -4,6 +4,7 @@ import {
   watchLogoutUser,
   watchRegisterUser,
   watchGetThisUser,
+  watchSearchUsers,
 } from './authSagas';
 
 import { watchCreateNewSession, watchGetUserSessions } from './sessionSagas';
@@ -16,5 +17,6 @@ export default function* rootSaga() {
     watchGetThisUser(),
     watchCreateNewSession(),
     watchGetUserSessions(),
+    watchSearchUsers(),
   ]);
 }

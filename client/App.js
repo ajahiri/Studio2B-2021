@@ -16,8 +16,6 @@ import {
 import AppNavigator from './components/AppNavigator';
 import store from './redux/store';
 
-import AdminViewUsers from './screens/AdminViewUsers';
-
 export default function App() {
   const [fontsLoaded, fontsError] = useFonts({
     Montserrat_400Regular,
@@ -37,8 +35,7 @@ export default function App() {
       <Provider store={store}>
         <SafeAreaProvider>
           <StatusBar style="dark" />
-          {/* <AppNavigator /> */}
-          <AdminViewUsers />
+          <AppNavigator />
         </SafeAreaProvider>
       </Provider>
     );

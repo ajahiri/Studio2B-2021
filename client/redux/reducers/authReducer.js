@@ -8,11 +8,14 @@ import {
   LOG_OUT_USER_SAGA,
   LOGIN_USER_SAGA,
   GET_THIS_USER_SAGA,
+  SEARCH_USERS_SAGA,
+  SET_SEARCHED_USERS,
   SET_REG_INDEX,
 } from '../types';
 
 const initialState = {
   user: {},
+  searchedUsers: [],
   errors: '',
   isLoading: false,
   authToken: null,
@@ -58,7 +61,18 @@ export default function (state = initialState, action) {
         ...state,
       };
     case GET_THIS_USER_SAGA:
-      return { ...state };
+      return { 
+        ...state 
+      };
+    case SEARCH_USERS_SAGA:
+      return {
+        ...state,
+      };
+    case SET_SEARCHED_USERS:
+      return {
+        ...state,
+        searchedUsers: action.payload,
+      }
     case SET_REG_INDEX:
       return {
         ...state,

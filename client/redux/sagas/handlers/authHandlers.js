@@ -6,11 +6,13 @@ import {
   setUser,
   setAuthToken,
   setRegIndex,
+  setSearchedUsers,
 } from '../../actions/authActions';
 import {
   requestLoginUser,
   requestRegisterUser,
   requestGetUser,
+  requestSearchUsers,
 } from '../requests/authRequests';
 import * as SecureStore from 'expo-secure-store';
 import { Alert } from 'react-native';
@@ -88,5 +90,16 @@ export function* handleGetThisUser(action) {
     yield put(setUser(data.data));
   } catch (error) {
     console.log('ERROR doing get user:', error);
+  }
+}
+
+export function* handleSearchUsers(action) {
+  try {
+    console.log('HERE');
+    const response = yield call(requestSearchUsers, action.payload);
+    const { data } = response;
+    yield put(setSearchedUsers, data);
+  } catch (error) {
+    Alert.alert('Error', 'There was an error while searching for a user.', error);
   }
 }

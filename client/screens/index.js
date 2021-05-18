@@ -15,6 +15,8 @@ import ImageAuth from './ImageAuth';
 import LocationAuth from './LocationAuth';
 import StudentAuthenticationFlow from './StudentAuthenticationFlow';
 
+import AdminViewUsers from './AdminViewUsers';
+
 export {
   // Onboarding
   SplashScreen,
@@ -31,4 +33,5 @@ export {
   ImageAuth,
   StudentViewSession,
   StudentAuthenticationFlow,
+  AdminViewUsers,
 };

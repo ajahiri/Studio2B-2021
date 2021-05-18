@@ -8,6 +8,8 @@ export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN';
 export const LOG_OUT_USER_SAGA = 'LOG_OUT_USER_SAGA';
 export const LOG_OUT_USER = 'LOG_OUT_USER';
 export const GET_THIS_USER_SAGA = 'GET_THIS_USER_SAGA';
+export const SEARCH_USERS_SAGA = 'SEARCH_USERS_SAGA';
+export const SET_SEARCHED_USERS = 'SET_SEARCHED_USERS';
 export const SET_REG_INDEX = 'SET_REG_INDEX';
 
 // Session/Class Redux Types

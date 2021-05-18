@@ -15,6 +15,7 @@ import {
   StudentViewSession,
   reg_index,
   StudentAuthenticationFlow,
+  AdminViewUsers,
 } from '../screens';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
 import { color } from '../constants';
@@ -107,6 +108,13 @@ function AppNavigator(props) {
               title: 'Create New Session',
             }}
           />
+          {/* <Stack.Screen
+            name="AdminViewUsers"
+            component={AdminViewUsers}
+            options={{
+              title: 'System Users'
+            }}
+          /> */}
         </Stack.Navigator>
       )}
     </NavigationContainer>

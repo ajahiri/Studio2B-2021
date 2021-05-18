@@ -186,4 +186,139 @@ router.post('/getUser', verifyToken, getUserValidation, async (req, res) => {
   }
 });
 
+const updateValidation = [
+  check('firstName')
+    .isLength({ min: 3 })
+    .withMessage('Your first name is required.'),
+  check('lastName')
+    .isLength({ min: 3 })
+    .withMessage('Your last name is required.'),
+  check('university')
+    .isLength({ min: 3 })
+    .withMessage('Your university name is required.')
+];
+
+const passwordUpdateValidation = [
+  check('password')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters.'),
+];
+
+const emailUpdateValidation = [
+  check('email')
+    .isEmail()
+    .withMessage('Please provide a valid email.'),
+];
+
+//Profile editing function - Enter a value for 'firstName', 'lastName' and 'univeristy'
+router.put('/updateprofile', verifyToken, updateValidation, async (req, res) => {
+
+  User.updateOne({_id: req.user._id}, {"$set": req.body})
+    .then(async result => {
+      const updatedObject = await User.findOne({_id: req.user._id});
+      res.send({ success: true, data: updatedObject});
+    })
+    .catch(err => console.log(req.user))
+});
+
+//Password editing function
+router.put('/updatepassword', verifyToken, passwordUpdateValidation, async (req, res) => {
+
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()) {
+    return res.status(422).send({errors: errors.array()})
+  }
+
+  const salt = await bcrypt.genSalt();
+  const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+  User.updateOne({_id: req.user._id}, {$set: {"password": hashPassword}})
+    .then(async result => {
+      const updatedObject = await User.findOne({_id: req.user._id});
+      res.send({ success: true, data: updatedObject});
+    })
+    .catch(err => console.log(req.user))
+});
+
+//Email editing function
+router.put('/updateemail', verifyToken, emailUpdateValidation, async (req, res) => {
+
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()) {
+    return res.status(422).send({errors: errors.array()})
+  }
+
+  const user = await User.findOne({ email: req.body.email });
+  if (user)
+    return res.status(400).send({
+      success: false,
+      message: 'User with that email is registered.',
+    });
+
+  User.updateOne({_id: req.user._id}, {$set: {"email": req.body.email}})
+    .then(async result => {
+      const updatedObject = await User.findOne({_id: req.user._id});
+      res.send({ success: true, data: updatedObject});
+    })
+    .catch(err => console.log(req.user))
+});
+
+const updatePermissionsValidation = [
+  check('permissionLevel').isIn(["student", "admin", "teacher"]).withMessage('Please set permissionLevel to student, teacher or admin'),
+];
+
+//Permission editing function, can only be used by admins.
+router.put('/updatePermissions', verifyToken, updatePermissionsValidation, async (req, res) => {
+
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()) {
+    return res.status(422).send({errors: errors.array()})
+  }
+
+  const adminObject = await User.findOne({ _id: req.user._id });
+  const targetObject = await User.findOne({_id: req.body.id});
+
+  if (adminObject.permissionLevel != "admin") {
+    return res
+      .status(401)
+      .send('Does not possess necessary permission to update permissions of other users.');
+  }
+
+  User.updateOne({_id: targetObject._id}, {$set: {"permissionLevel": req.body.permissionLevel}})
+    .then(async result => {
+      const updatedObject = await User.findOne({_id: req.body.id});
+      res.send({ success: true, data: updatedObject});
+    })
+    .catch(err => console.log(err))
+});
+
+const searchValidation = [
+  check('email').isLength({min: 1}).withMessage('Please enter a value to search by.'),
+];
+
+//Searches by email for users and returns the user/s found.
+router.post('/userSearch', verifyToken, searchValidation, async (req, res) => {
+
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()) {
+    return res.status(422).send({errors: errors.array()})
+  }
+
+  const adminObject = await User.findOne({ _id: req.user._id });
+
+  if (adminObject.permissionLevel != "admin") {
+    return res
+      .status(401)
+      .send('Does not possess necessary permission to update permissions of other users.');
+  }
+
+  const result = await User.find({email: {$regex: req.body.email}});
+  res.send({ success: true, data: result});
+
+});
+
 module.exports = router;

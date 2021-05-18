@@ -34,3 +34,12 @@ export function requestGetUser(userID, authToken) {
     },
   });
 }
+
+export function requestSearchUsers(email) {
+  return axios.request({
+    method: 'get',
+    url: `api/users/userSearch`,
+    baseURL: BASE_API_URL,
+    data: email,
+  })
+}

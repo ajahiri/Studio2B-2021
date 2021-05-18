@@ -11,6 +11,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { wait } from '../globals/globals';
 import { withSafeAreaInsets } from 'react-native-safe-area-context';
 
+import AdminViewUsers from './AdminViewUsers';
+
 function Dashboard(props) {
   const dispatch = useDispatch();
 
@@ -60,6 +62,7 @@ function Dashboard(props) {
       {user.permissionLevel === 'admin' && (
         <>
           <Text style={[font.h3]}>Admin Dashboard</Text>
+          <AdminViewUsers />
         </>
       )}
 
