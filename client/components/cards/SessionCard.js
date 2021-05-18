@@ -9,7 +9,14 @@ import { color, font, layout } from '../../constants';
 
 const ICON_SIZE = 20;
 
-export default function SessionCard({ subjectName, onPress, ...props }) {
+export default function SessionCard({
+  name,
+  description = 'No description',
+  maxStudents = 0,
+  createdAt = new Date(),
+  onPress = () => {},
+  ...props
+}) {
   return (
     <Card onPress={onPress} style={[sessionCardStyles.container, props.style]}>
       <View style={sessionCardStyles.content}>
@@ -17,16 +24,21 @@ export default function SessionCard({ subjectName, onPress, ...props }) {
           numberOfLines={1}
           ellipsizeMode="tail"
           style={[font.mediumBold, sessionCardStyles.subjectName]}>
-          {subjectName}
+          {name}
+        </Text>
+        <Text style={[font.small, sessionCardStyles.subjectDescription]}>
+          {description}
         </Text>
         <View style={sessionCardStyles.detailContainer}>
           <View style={sessionCardStyles.detail}>
             <Ionicons name="calendar" size={ICON_SIZE} />
-            <Text style={sessionCardStyles.detailText}>01/01/2021</Text>
+            <Text style={sessionCardStyles.detailText}>
+              {createdAt.toLocaleDateString()}
+            </Text>
           </View>
           <View style={sessionCardStyles.detail}>
             <Ionicons name="person" size={ICON_SIZE} />
-            <Text style={sessionCardStyles.detailText}>8</Text>
+            <Text style={sessionCardStyles.detailText}>{maxStudents}</Text>
           </View>
         </View>
       </View>
@@ -35,12 +47,18 @@ export default function SessionCard({ subjectName, onPress, ...props }) {
 }
 
 SessionCard.propTypes = {
-  subjectName: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  maxStudents: PropTypes.number,
+  createdAt: PropTypes.any,
   onPress: PropTypes.func,
 };
 
 SessionCard.defaultProps = {
-  subjectName: 'Subject',
+  name: 'Session Name',
+  description: 'No description',
+  maxStudents: 0,
+  createdAt: new Date(),
   onPress: () => {},
 };
 
@@ -48,7 +66,7 @@ const SHADOW_DEPTH = 5;
 
 const sessionCardStyles = StyleSheet.create({
   container: {
-    height: 80 + SHADOW_DEPTH,
+    height: 90 + SHADOW_DEPTH,
     borderBottomWidth: SHADOW_DEPTH,
     backgroundColor: color.white,
     borderColor: color.black,
@@ -57,6 +75,12 @@ const sessionCardStyles = StyleSheet.create({
     flex: 1,
     padding: 15,
     justifyContent: 'space-between',
+  },
+  subjectName: {
+    marginBottom: layout.spacing.sm,
+  },
+  subjectDescription: {
+    color: color.gray500,
   },
   detailContainer: {
     flexDirection: 'row',

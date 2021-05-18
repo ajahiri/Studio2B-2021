@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 import { Camera } from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
+import { useIsFocused } from '@react-navigation/core';
 
 import Button from './Button';
 import Banner from './Banner';
-import { colours as C, layout as L, typography as T } from '../constants';
 
 import handleFaceAuth from '../helpers/handleFaceAuth';
-import { useIsFocused } from '@react-navigation/core';
+import { color, font, layout } from '../constants';
 
-const ImageCapture = props => {
+const ImageCapture = (props) => {
   const [faceRecoError, setFaceRecoError] = useState('');
 
   const [btnText, setBtnText] = useState('');
@@ -21,8 +21,8 @@ const ImageCapture = props => {
   const [hasPermission, setHasPermission] = useState(null);
   const [faceDetected, setFaceDetected] = useState(false);
   const [cameraInstance, setCameraInstance] = useState({});
-  const [cameraReady, setcameraReady] = useState(false);
-  const [captureLoading, setcaptureLoading] = useState(false);
+  const [cameraReady, setCameraReady] = useState(false);
+  const [captureLoading, setCaptureLoading] = useState(false);
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const ImageCapture = props => {
         const { status } = await Camera.requestPermissionsAsync();
         setHasPermission(status === 'granted');
       } catch {
-        err => console.log(err);
+        (err) => console.log(err);
       }
     })();
   }, []);
@@ -56,8 +56,8 @@ const ImageCapture = props => {
   //   message: '',
   //   data: '', // Will be the ID on successful auth
   // }
-  const handleFaceAuthResponse = response => {
-    setcaptureLoading(false);
+  const handleFaceAuthResponse = (response) => {
+    setCaptureLoading(false);
     if (response?.status === 1) {
       // Handle any modal messages here
       props.onSubmission(response);
@@ -89,13 +89,13 @@ const ImageCapture = props => {
     }
   };
 
-  const takePhoto = authType => {
+  const takePhoto = (authType) => {
     //setModalVisible(true);
     if (cameraInstance && cameraReady) {
-      setcaptureLoading(true);
+      setCaptureLoading(true);
       cameraInstance
         .takePictureAsync()
-        .then(img => {
+        .then((img) => {
           handleFaceAuth(
             authType,
             img.uri,
@@ -104,24 +104,24 @@ const ImageCapture = props => {
             handleFaceAuthResponse,
           );
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
   };
 
   const cameraType = Camera.Constants.Type.front;
 
   return (
-    <View>
+    <View style={{ flexGrow: 1 }}>
       <View style={styles.imageContainer}>
         {isFocused && (
           <Camera
-            ref={ref => setCameraInstance(ref)}
-            onCameraReady={() => setcameraReady(true)}
+            ref={(ref) => setCameraInstance(ref)}
+            onCameraReady={() => setCameraReady(true)}
             style={styles.camera}
             type={cameraType}
             autoFocus={true}
             onFacesDetected={FacesDetected}
-            onFaceDetectionError={state =>
+            onFaceDetectionError={(state) =>
               console.warn('Faces detection error:', state)
             }
             useCamera2Api={false}
@@ -130,7 +130,7 @@ const ImageCapture = props => {
               detectLandmarks: FaceDetector.Constants.Landmarks.all,
               tracking: false,
             }}
-            onMountError={err => console.log(err)}
+            onMountError={(err) => console.log(err)}
           />
         )}
       </View>
@@ -138,16 +138,14 @@ const ImageCapture = props => {
         <Banner type="error" message={faceRecoError} />
       ) : null}
       <View style={styles.buttonContainer}>
-        {captureLoading ? (
-          <Text>Loading...</Text>
-        ) : (
-          <Button
-            title={btnText}
-            disabled={!faceDetected}
-            onPress={() => takePhoto(props.authType)}
-            style={styles.formSubmitButton}
-          />
-        )}
+        <Button
+          size="small"
+          title={btnText}
+          disabled={!faceDetected}
+          onPress={() => takePhoto(props.authType)}
+          isLoading={captureLoading}
+          style={styles.formSubmitButton}
+        />
       </View>
     </View>
   );
@@ -194,7 +192,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
   },
   buttonTextPhoto: {
     color: 'black',
@@ -211,7 +209,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   formSubmitButton: {
-    marginTop: L.spacing.m,
+    marginTop: layout.spacing.md,
   },
   centeredView: {
     flex: 1,

@@ -1,25 +1,18 @@
-import { useLinkProps } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { useDispatch, connect } from 'react-redux';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+
+import { connect, useDispatch } from 'react-redux';
 
 import { Banner, ImageCapture } from '../components';
-import { layout } from '../constants';
+import { font, layout } from '../constants';
 
 function ImageAuth(props) {
   const { user } = props;
 
   const [tries, setTries] = useState(3);
-  const [showBanner, setshowBanner] = useState(false);
+  const [showBanner, setShowBanner] = useState(false);
 
-  const onSubmission = result => {
+  const onSubmission = (result) => {
     if (props.isTeacher) {
       // Teacher
       if (result.data && result.data.includes(user?._id)) {
@@ -36,7 +29,7 @@ function ImageAuth(props) {
         props.onStudentFaceAuth(true);
       } else {
         console.log('Student auth no match.');
-        setshowBanner(true);
+        setShowBanner(true);
         if (tries > 0) {
           // Let them know how many tries left and go again
           setTries(tries - 1);
@@ -49,7 +42,7 @@ function ImageAuth(props) {
   };
 
   return (
-    <SafeAreaView>
+    <View style={{ flexGrow: 1 }}>
       <View style={styles.textContainer}>
         <Text style={styles.title}>Image Authentication</Text>
         <Text style={styles.desc}>{props.msg}</Text>
@@ -62,11 +55,11 @@ function ImageAuth(props) {
           message={`Authentication failed, you have ${tries} tries remaining.`}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { user } = state.auth;
   return {
     user,
@@ -92,18 +85,16 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   title: {
-    fontSize: 30,
+    ...font.h3,
     textAlign: 'center',
     paddingBottom: 10,
   },
   desc: {
-    fontSize: 15,
+    ...font.medium,
     textAlign: 'center',
   },
   textContainer: {
-    paddingTop: 60,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingTop: layout.spacing.huge,
   },
   image: {
     width: 160,

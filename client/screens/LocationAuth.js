@@ -15,7 +15,7 @@ import {
 import { Banner, Button } from '../components';
 import { color, font, layout } from '../constants';
 
-const LocationAuth = props => {
+const LocationAuth = (props) => {
   const { user, isTeacher } = props;
 
   const [statusText, setStatusText] = useState('Getting your location..');
@@ -132,7 +132,7 @@ const LocationAuth = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { user } = state.auth;
   return {
     user,
@@ -149,15 +149,15 @@ const styles = StyleSheet.create({
   map: {
     width: Dimensions.get('window').width - layout.spacing.xl * 2,
     height: Dimensions.get('window').height / 3,
-    marginBottom: layout.spacing.md,
+    marginVertical: layout.spacing.xl,
   },
   title: {
     ...font.h2,
+    marginTop: layout.spacing.md,
     marginBottom: layout.spacing.sm,
   },
   bodyText: {
     ...font.medium,
-    marginBottom: layout.spacing.md,
   },
   errorMsg: {
     marginBottom: layout.spacing.md,
@@ -166,6 +166,6 @@ const styles = StyleSheet.create({
     marginBottom: layout.spacing.md,
   },
   button: {
-    marginBottom: layout.spacing.xl,
+    marginBottom: layout.spacing.md,
   },
 });

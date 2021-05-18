@@ -77,37 +77,37 @@ const createQuestionSchema = yup.object({
     .max(4, 'Only 4 options, please input number between 1 and 4'),
 });
 
-const TeacherCreateSession = props => {
+const TeacherCreateSession = (props) => {
   const dispatch = useDispatch();
-  const [classDetails, setclassDetails] = useState({
+  const [classDetails, setClassDetails] = useState({
     sessionName: '',
     sessionDescription: '',
     maxStudents: '',
   });
 
-  const [createClassIndex, setcreateClassIndex] = useState(0);
+  const [createClassIndex, setCreateClassIndex] = useState(0);
 
-  const [sessionQuestions, setsessionQuestions] = useState([]);
+  const [sessionQuestions, setSessionQuestions] = useState([]);
 
   const [locationCoordinates, setLocationCoordinates] = useState({});
 
-  const onLocationAuthSubmit = values => {
+  const onLocationAuthSubmit = (values) => {
     console.log('returned from location auth', values);
     setLocationCoordinates({
       latitude: values?.latitude,
       longitude: values?.longitude,
     });
-    setcreateClassIndex(2);
+    setCreateClassIndex(2);
   };
 
-  const onCreateClassroomSubmit = values => {
+  const onCreateClassroomSubmit = (values) => {
     console.log(values);
-    setclassDetails(values);
-    setcreateClassIndex(3);
+    setClassDetails(values);
+    setCreateClassIndex(3);
   };
 
   const goBackStep = () => {
-    setcreateClassIndex(createClassIndex - 1);
+    setCreateClassIndex(createClassIndex - 1);
   };
 
   const handleAddQuestion = (values, { resetForm }) => {
@@ -123,7 +123,7 @@ const TeacherCreateSession = props => {
       options,
       answer: options[values.questionAnswer - 1],
     };
-    setsessionQuestions([...sessionQuestions, resolvedQuestion]);
+    setSessionQuestions([...sessionQuestions, resolvedQuestion]);
     resetForm();
   };
 
@@ -146,8 +146,8 @@ const TeacherCreateSession = props => {
       locationCoordinates,
     };
     dispatch(createNewSessionSaga(sessionObject));
-    setsessionQuestions([]);
-    setcreateClassIndex(0);
+    setSessionQuestions([]);
+    setCreateClassIndex(0);
     props.navigation.navigate('Dashboard');
   };
 
@@ -156,14 +156,14 @@ const TeacherCreateSession = props => {
   };
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1, height: '100%' }}>
       <KeyboardAvoidingView>
         <ScrollView>
           {createClassIndex === 0 && (
             <View style={styles.pageContainer}>
               <ImageAuth
                 msg="Please complete the facial recognition authentication."
-                setCreateClassIndex={setcreateClassIndex}
+                setCreateClassIndex={setCreateClassIndex}
                 isTeacher={true}
               />
             </View>
@@ -186,7 +186,7 @@ const TeacherCreateSession = props => {
                 }}
                 onSubmit={onCreateClassroomSubmit}
                 validationSchema={createClassroomSchema}>
-                {props => (
+                {(props) => (
                   <View>
                     <Text
                       style={[
@@ -214,6 +214,7 @@ const TeacherCreateSession = props => {
                     <FormikInput
                       formikProps={props}
                       field="maxStudents"
+                      keyboardType="numeric"
                       placeholder="Max. Number of Students"
                       style={styles.formikField}
                     />
@@ -289,7 +290,7 @@ const TeacherCreateSession = props => {
                 }}
                 onSubmit={handleAddQuestion}
                 validationSchema={createQuestionSchema}>
-                {props => (
+                {(props) => (
                   <View>
                     <FormikInput
                       formikProps={props}

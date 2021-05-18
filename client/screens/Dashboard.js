@@ -108,16 +108,19 @@ function SessionList(props) {
   const onRefresh = () => setIsRefreshing(true);
 
   const renderSessionCardItem = ({ item, index }) => {
+    console.log({ item });
+
     const handleSessionCardItemPress = () => {
-      navigation.push(
-        isTeacherOrAdmin ? 'TeacherCreateSession' : 'StudentJoinSession',
-      );
+      console.warn('Unimplemented!');
     };
 
     return (
       <SessionCard
         key={`session-card-${index}`}
-        subjectName={item.name}
+        name={item.name}
+        description={item.description}
+        maxStudents={item.maxStudents}
+        createdAt={new Date(item.createdAt)}
         style={{ marginBottom: layout.spacing.lg }}
         onPress={handleSessionCardItemPress}
       />
@@ -221,7 +224,7 @@ function Dashboard(props) {
   );
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { user } = state.auth;
   const { sessionHistory, isLoading: isSessionLoading } = state.session;
   return { user, sessionHistory, isSessionLoading };
