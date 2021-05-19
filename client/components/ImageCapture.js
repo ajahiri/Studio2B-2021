@@ -6,10 +6,12 @@ import * as FaceDetector from 'expo-face-detector';
 
 import Button from './Button';
 import Banner from './Banner';
-import { colours as C, layout as L, typography as T } from '../constants';
+import { color, layout as L, typography as T } from '../constants';
 
 import handleFaceAuth from '../helpers/handleFaceAuth';
 import { useIsFocused } from '@react-navigation/core';
+
+import { Spinner } from 'native-base';
 
 const ImageCapture = props => {
   const [faceRecoError, setFaceRecoError] = useState('');
@@ -137,18 +139,21 @@ const ImageCapture = props => {
       {!captureLoading && faceRecoError !== '' ? (
         <Banner type="error" message={faceRecoError} />
       ) : null}
-      <View style={styles.buttonContainer}>
-        {captureLoading ? (
-          <Text>Loading...</Text>
-        ) : (
-          <Button
-            title={btnText}
-            disabled={!faceDetected}
-            onPress={() => takePhoto(props.authType)}
-            style={styles.formSubmitButton}
-          />
-        )}
-      </View>
+      {captureLoading ? (
+        <Spinner color={color.yellow500} />
+      ) : (
+        <>
+          <View style={styles.buttonContainer}>
+            <Button
+              title={btnText}
+              type="primary"
+              disabled={!faceDetected}
+              onPress={() => takePhoto(props.authType)}
+              style={styles.formSubmitButton}
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 };

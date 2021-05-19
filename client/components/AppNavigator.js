@@ -15,6 +15,7 @@ import {
   StudentViewSession,
   reg_index,
   StudentAuthenticationFlow,
+  StudentResponseView,
 } from '../screens';
 import { setAuthToken, setUser } from '../redux/actions/authActions';
 import { color } from '../constants';
@@ -94,18 +95,23 @@ function AppNavigator(props) {
             }}
           />
           <Stack.Screen
-            name="StudentAuthenticationFlow"
-            component={StudentAuthenticationFlow}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
             name="TeacherCreateSession"
             component={TeacherCreateSession}
             options={{
               title: 'Create New Session',
             }}
+          />
+          <Stack.Screen
+            name="StudentResponseView"
+            component={StudentResponseView}
+            options={{
+              title: 'View Student Response',
+            }}
+          />
+          <Stack.Screen
+            name="StudentAuthenticationFlow"
+            component={StudentAuthenticationFlow}
+            options={{ headerShown: false }}
           />
         </Stack.Navigator>
       )}

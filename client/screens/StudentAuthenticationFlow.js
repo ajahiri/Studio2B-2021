@@ -23,6 +23,8 @@ import axios from 'axios';
 import { resolveBaseURL } from '../globals/globals';
 import { setSessionLoading } from '../redux/actions/sessionActions';
 
+import * as SecureStore from 'expo-secure-store';
+
 const BASE_API_URL = resolveBaseURL();
 
 const StudentAuthenticationFlow = props => {
@@ -34,12 +36,14 @@ const StudentAuthenticationFlow = props => {
   const [facialAuthResult, setfacialAuthResult] = useState(false);
   const [locationAuthResult, setLocationAuthResult] = useState({});
   const [questionAnswers, setquestionAnswers] = useState(answerArray);
+  const [isLoading, setisLoading] = useState(false);
+  const [submitError, setsubmitError] = useState('');
 
   console.log('Passed session details:', session);
 
   // Result is just a true/false
   const onStudentFaceAuth = result => {
-    setfacialAuthResult(true);
+    setfacialAuthResult(result);
     setStudentAuthIndex(1);
   };
 
@@ -53,15 +57,70 @@ const StudentAuthenticationFlow = props => {
   const onAnswerSelect = (value, questionIndex) => {
     console.log('value:', value, questionIndex);
     const updatedArray = questionAnswers;
-    updatedArray[questionIndex] =
-      session.questions[questionIndex].options[value];
+    updatedArray[questionIndex] = value;
     setquestionAnswers(updatedArray);
   };
 
-  const submitStudentResponse = () => {
+  const submitStudentResponse = async () => {
+    setisLoading(true);
     console.log('Facial result', facialAuthResult);
     console.log('Location result', locationAuthResult);
     console.log('Interactive result', questionAnswers);
+
+    // Build array of Q/A
+    const questionAnswer = [];
+    questionAnswers.forEach((qa, index) => {
+      const singleAnswer = {
+        questionString: session.questions[index].questionString,
+        responseString: session.questions[index].options[qa],
+      };
+      questionAnswer.push(singleAnswer);
+    });
+    console.log('response', questionAnswer);
+
+    try {
+      const authToken = await SecureStore.getItemAsync('userToken');
+      const response = await axios({
+        method: 'post',
+        url: `/api/sessions/processResponse`,
+        baseURL: BASE_API_URL,
+        data: {
+          sessionID: session._id,
+          facialAuthResult,
+          locationAuthResult,
+          questionAnswer,
+        },
+        headers: {
+          'auth-token': authToken,
+        },
+      });
+      console.log('Processed your response ', response);
+      setisLoading(false);
+      props.navigation.navigate({
+        name: 'StudentResponseView',
+        params: {
+          sessionID: response.data.data.data.sessionID,
+          studentID: response.data.data.data.studentID,
+        },
+      });
+    } catch (err) {
+      if (err.response) {
+        // client received an error response (5xx, 4xx)
+        console.log(err.response);
+        setsubmitError(err.response.data);
+      } else if (err.request) {
+        // client never received a response, or request never left
+        console.log(err.request);
+        setsubmitError(JSON.stringify(err.request));
+      } else {
+        // anything else
+        console.log(err);
+        setsubmitError(
+          'Unexpected error occured while submitting your response.',
+        );
+      }
+      setisLoading(false);
+    }
   };
 
   return (
@@ -98,7 +157,7 @@ const StudentAuthenticationFlow = props => {
                       <Text style={styles.subHeading}>
                         {question.questionString}
                       </Text>
-                      <Item picker>
+                      <Item style={styles.questionPicker} picker>
                         <Picker
                           mode="dropdown"
                           iosIcon={<Icon name="arrow-down" />}
@@ -131,7 +190,13 @@ const StudentAuthenticationFlow = props => {
                 }}
                 title={'Submit'}
                 style={styles.lastButton}
+                isLoading={isLoading}
               />
+              {submitError !== '' ? (
+                <Banner type="error" message={submitError} />
+              ) : (
+                <></>
+              )}
             </View>
           )}
         </ScrollView>
@@ -155,6 +220,9 @@ const styles = StyleSheet.create({
     marginLeft: layout.spacing.xl,
     marginRight: layout.spacing.xl,
     marginTop: layout.spacing.huge,
+  },
+  questionPicker: {
+    marginBottom: layout.spacing.md,
   },
   map: {
     width: Dimensions.get('window').width - layout.spacing.xl * 2,

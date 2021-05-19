@@ -1,18 +1,7 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.tabSize": 2,
-  "files.autoSave": "afterDelay",
-  "files.exclude": {
-    "**/._*": true,
-    "**/.DS_Store": true,
-  },
-  "files.insertFinalNewline": true,
-  "files.trimTrailingWhitespace": true,
-  "prettier.prettierPath": "../nodule_modules/prettier",
-  "workbench.colorCustomizations": {
-    "activityBar.background": "#2B2E31",
-    "titleBar.activeBackground": "#3C4044",
-    "titleBar.activeForeground": "#F9FAFA"
-  },
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#2B2E31",
+        "titleBar.activeBackground": "#3C4044",
+        "titleBar.activeForeground": "#F9FAFA"
+    }
 }

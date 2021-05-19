@@ -9,6 +9,7 @@ import {
   Text,
   RefreshControl,
   Dimensions,
+  Pressable,
 } from 'react-native';
 
 import { Banner, Button } from '../components';
@@ -116,11 +117,21 @@ const TeacherViewSession = props => {
             <List>
               {participantList.map((participant, index) => {
                 return (
-                  <ListItem key={index}>
+                  <ListItem
+                    onPress={() => {
+                      console.log(participant);
+                      props.navigation.navigate({
+                        name: 'StudentResponseView',
+                        params: { sessionID, studentID: participant.studentID },
+                      });
+                    }}
+                    key={index}>
                     <View>
                       <View>
-                        <Text style={[styles.bodyText, {textAlign: 'center'}]} key={participant}>
-                          {participant}
+                        <Text
+                          style={[styles.bodyText, { textAlign: 'center' }]}
+                          key={participant.studentID}>
+                          {participant.name}
                         </Text>
                       </View>
                     </View>

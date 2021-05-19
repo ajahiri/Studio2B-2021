@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 
-import { Container, Header, Content, Input, Item, Text } from 'native-base';
+import { Spinner, Container, Content, Text } from 'native-base';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { connect } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';

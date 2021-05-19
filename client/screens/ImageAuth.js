@@ -10,8 +10,8 @@ import {
   Image,
 } from 'react-native';
 
-import { Banner, ImageCapture } from '../components';
-import { layout } from '../constants';
+import { Banner, Button, ImageCapture } from '../components';
+import { color, font, layout } from '../constants';
 
 function ImageAuth(props) {
   const { user } = props;
@@ -37,7 +37,7 @@ function ImageAuth(props) {
       } else {
         console.log('Student auth no match.');
         setshowBanner(true);
-        if (tries > 0) {
+        if (tries > 1) {
           // Let them know how many tries left and go again
           setTries(tries - 1);
         } else {
@@ -50,7 +50,7 @@ function ImageAuth(props) {
 
   return (
     <SafeAreaView>
-      <View style={styles.textContainer}>
+      <View style={styles.container}>
         <Text style={styles.title}>Image Authentication</Text>
         <Text style={styles.desc}>{props.msg}</Text>
       </View>
@@ -77,9 +77,9 @@ export default connect(mapStateToProps)(ImageAuth);
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
-    paddingLeft: 20,
-    paddingRight: 20,
+    marginLeft: layout.spacing.xl,
+    marginRight: layout.spacing.xl,
+    marginTop: layout.spacing.sm,
   },
   //returnImage not used
   returnImage: {
@@ -92,9 +92,16 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   title: {
-    fontSize: 30,
-    textAlign: 'center',
-    paddingBottom: 10,
+    ...font.h2,
+    marginBottom: layout.spacing.sm,
+  },
+  subHeading: {
+    ...font.h3,
+    marginBottom: layout.spacing.md,
+  },
+  bodyText: {
+    ...font.medium,
+    marginBottom: layout.spacing.md,
   },
   desc: {
     fontSize: 15,

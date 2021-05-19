@@ -10,9 +10,12 @@ const { nanoid } = require('nanoid');
 const router = express.Router();
 
 const Session = require('../models/Session');
+const StudentResponse = require('../models/StudentResponse');
 const verifyToken = require('./verifyToken');
 const User = require('../models/User');
 const { json } = require('express');
+
+const turf = require('turf');
 
 const sessionValidation = [
   check('name')
@@ -270,7 +273,10 @@ router.post(
         _id: { $in: targetSession.participants },
       });
       const participantList = userList.map(user => {
-        return `${user.firstName} ${user.lastName} (${user.email})`;
+        return {
+          name: `${user.firstName} ${user.lastName} (${user.email})`,
+          studentID: user._id,
+        };
       });
       return res
         .status(200)
@@ -332,6 +338,232 @@ router.post(
     } catch (error) {
       console.log('Error activating session by ID.', error);
       return res.status(500).send('Error activating session.');
+    }
+  },
+);
+
+const studentResponseValidation = [
+  check('sessionID')
+    .isLength({ min: 10 })
+    .withMessage('Session code is required, codes are minimum 10 characters.'),
+  check('facialAuthResult')
+    .isBoolean()
+    .withMessage('Invalid facial auth state passed.'),
+];
+router.post(
+  '/processResponse',
+  verifyToken,
+  studentResponseValidation,
+  async (req, res) => {
+    // Validation check
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    // Get user object for checking perms
+    const userObject = await User.findOne({ _id: req.user._id });
+
+    const targetSession = await Session.findOne({ _id: req.body.sessionID });
+
+    if (!targetSession) {
+      return res.status(404).send('Session with that ID was not found.');
+    }
+
+    const foundExistingResponse = await StudentResponse.findOne({
+      sessionID: targetSession._id,
+      studentID: userObject._id,
+    });
+
+    if (foundExistingResponse)
+      return res
+        .status(403)
+        .send('Error, you have already made a response for this session.');
+
+    const {
+      locationCoordinates: sessionCoordinates,
+      questions,
+    } = targetSession;
+    if (!sessionCoordinates)
+      return res
+        .status(403)
+        .send('Session has no location information, error occurred.');
+
+    const {
+      locationAuthResult: studentCoords,
+      questionAnswer: studentQuestionAnswers,
+    } = req.body;
+
+    const sessionLocation = turf.point([
+      sessionCoordinates.latitude,
+      sessionCoordinates.longitude,
+    ]);
+    const studentLocation = turf.point([
+      studentCoords.latitude,
+      studentCoords.longitude,
+    ]);
+
+    const sphericalDistance = turf.distance(sessionLocation, studentLocation);
+
+    let gpsSuccess = false;
+    if (sphericalDistance < 0.5) gpsSuccess = true;
+
+    const facialAuthSuccess = req.body.facialAuthResult || false;
+
+    const questionResponses = [];
+
+    // Check question answers
+    questions.forEach((question, index) => {
+      const responseObj = {
+        questionString: question.questionString,
+        answerString: question.answer,
+        responseString: studentQuestionAnswers[index].responseString,
+        correct:
+          question.answer == studentQuestionAnswers[index].responseString,
+      };
+      questionResponses.push(responseObj);
+    });
+
+    const studentResponse = {
+      sessionID: targetSession._id,
+      studentID: userObject._id,
+      studentFullName: `${userObject.firstName} ${userObject.lastName}`,
+      facialAuthSuccess,
+      gpsSuccess,
+      questionResponses,
+      studentLocation: studentLocation.geometry.coordinates,
+      sessionLocation: sessionLocation.geometry.coordinates,
+      distance: sphericalDistance,
+    };
+
+    try {
+      console.log(studentResponse);
+      const studentResponseObj = new StudentResponse(studentResponse);
+      const savedResponse = await studentResponseObj.save();
+      return res.status(200).send({
+        message: 'Student response successfully recorded.',
+        data: { success: true, data: savedResponse },
+      });
+    } catch (error) {
+      console.log('Error saving student response.', error);
+      return res.status(500).send('Error saving student response.');
+    }
+  },
+);
+
+const getStudentResponseValidation = [
+  check('sessionID')
+    .isLength({ min: 10 })
+    .withMessage('Session code is required, codes are minimum 10 characters.'),
+  check('studentID')
+    .isLength({ min: 10 })
+    .withMessage('Student ID is required, IDs are minimum 10 characters.'),
+];
+router.post(
+  '/getStudentResponse',
+  verifyToken,
+  getStudentResponseValidation,
+  async (req, res) => {
+    // Validation check
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    const { sessionID, studentID } = req.body;
+
+    // Get user object for checking perms
+    const userObject = await User.findOne({ _id: req.user._id });
+
+    const targetResponse = await StudentResponse.findOne({
+      sessionID: sessionID,
+      studentID: studentID,
+    });
+
+    const relatedSession = await Session.findOne({ _id: sessionID });
+
+    // Checks and permission checks
+    if (!targetResponse) {
+      return res.status(404).send('Student response was not found.');
+    }
+
+    if (
+      userObject.permissionLevel === 'student' &&
+      targetResponse.studentID !== req.user._id
+    ) {
+      return res
+        .status(403)
+        .send('You do not have permission to view this response.');
+    }
+
+    if (
+      userObject.permissionLevel === 'teacher' &&
+      relatedSession.owner !== req.user._id
+    ) {
+      return res
+        .status(403)
+        .send('You do not have permission to view this response.');
+    }
+
+    try {
+      return res.status(200).send({
+        message: 'Student response successfully found.',
+        data: { success: true, targetResponse },
+      });
+    } catch (error) {
+      console.log('Error finding student response.', error);
+      return res.status(500).send('Error finding student response.');
+    }
+  },
+);
+
+const checkResponseValidation = [
+  check('sessionID')
+    .isLength({ min: 10 })
+    .withMessage('Session code is required, codes are minimum 10 characters.'),
+  check('studentID')
+    .isLength({ min: 10 })
+    .withMessage('Student ID is required, IDs are minimum 10 characters.'),
+];
+router.post(
+  '/checkResponse',
+  verifyToken,
+  checkResponseValidation,
+  async (req, res) => {
+    try {
+      // Validation check
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+      }
+
+      const { sessionID, studentID } = req.body;
+
+      // Get user object for checking perms
+      const userObject = await User.findOne({ _id: req.user._id });
+
+      const targetResponse = await StudentResponse.findOne({
+        sessionID: sessionID,
+        studentID: studentID,
+      });
+
+      if (targetResponse) {
+        res.status(200).send({
+          message: 'Student response successfully found.',
+          data: { success: true },
+        });
+      } else {
+        res.status(200).send({
+          message: 'No student response was found.',
+          data: { success: false },
+        });
+      }
+    } catch (error) {
+      console.log('Error finding student response.', error);
+      return res.status(500).send('Error finding student response.');
     }
   },
 );

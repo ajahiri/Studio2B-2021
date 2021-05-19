@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Text, View, ScrollView, RefreshControl } from 'react-native';
 
+import { Spinner, center } from 'native-base';
+
 import { connect, useDispatch } from 'react-redux';
 import * as authActions from '../redux/actions/authActions';
 import * as sessionActions from '../redux/actions/sessionActions';
@@ -10,6 +12,8 @@ import { font, layout } from '../constants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { wait } from '../globals/globals';
 import { withSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { useIsFocused } from '@react-navigation/native';
 
 function Dashboard(props) {
   const dispatch = useDispatch();
@@ -23,6 +27,14 @@ function Dashboard(props) {
   useEffect(() => {
     loadUser();
   }, []);
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    //Update the state you want to be updated
+    dispatch(authActions.getThisUserSaga());
+    dispatch(sessionActions.setSessionLoading(true));
+    dispatch(sessionActions.getUserSessionsSaga());
+  }, [isFocused]);
 
   const { user, isSessionLoading, sessionHistory, navigation } = props;
 

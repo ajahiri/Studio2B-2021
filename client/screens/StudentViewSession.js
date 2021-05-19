@@ -20,6 +20,8 @@ import * as authActions from '../redux/actions/authActions';
 
 import MapView from 'react-native-maps';
 
+import { useIsFocused } from '@react-navigation/native';
+
 import { resolveBaseURL, wait } from '../globals/globals';
 import { connect, useDispatch } from 'react-redux';
 
@@ -32,6 +34,28 @@ const TeacherViewSession = props => {
   const { justJoined = false } = props?.route?.params || {};
 
   const dispatch = useDispatch();
+
+  const [sessionDetails, setSessionDetails] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
+  const [hasResponse, sethasResponse] = useState(false);
+
+  const checkResponse = async sessionID => {
+    try {
+      dispatch(authActions.getThisUserSaga());
+      const checkResponse = await axios.request({
+        method: 'post',
+        url: `/api/sessions/checkResponse`,
+        baseURL: BASE_API_URL,
+        data: { sessionID, studentID: props.user._id },
+        headers: {
+          'auth-token': authToken,
+        },
+      });
+      return checkResponse.data.data.success;
+    } catch (error) {
+      console.log('Error checking response', error);
+    }
+  };
 
   const getSessionDetails = async () => {
     try {
@@ -52,19 +76,25 @@ const TeacherViewSession = props => {
         latitude: sessionDetails.data.data.locationCoordinates.latitude,
         longitude: sessionDetails.data.data.locationCoordinates.longitude,
       });
+      const checkResponseResult = await checkResponse(
+        sessionDetails.data.data._id,
+      );
+      sethasResponse(checkResponseResult);
     } catch (error) {
       console.log('retrieving stuff for session error', error);
     }
   };
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    getSessionDetails();
+  }, [isFocused]);
 
   useEffect(() => {
     (async () => {
       await getSessionDetails();
     })();
   }, []);
-
-  const [sessionDetails, setSessionDetails] = useState({});
-  const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -152,15 +182,43 @@ const TeacherViewSession = props => {
               />
             )}
 
-            <Button
-              type="primary"
-              title="Start Authentication"
-              onPress={() => {
-                onStartAuthButton();
-              }}
-              disabled={!canStartAuthentication()}
-              style={styles.button}
-            />
+            {hasResponse && (
+              <Banner
+                style={styles.errorMsg}
+                type="information"
+                message="You have already authenticated for this session"
+              />
+            )}
+
+            {!hasResponse && (
+              <Button
+                type="primary"
+                title="Start Authentication"
+                onPress={() => {
+                  onStartAuthButton();
+                }}
+                disabled={!canStartAuthentication()}
+                style={styles.button}
+              />
+            )}
+
+            {hasResponse && (
+              <Button
+                type="primary"
+                title="View Response"
+                onPress={() => {
+                  props.navigation.navigate({
+                    name: 'StudentResponseView',
+                    params: {
+                      sessionID: sessionDetails._id,
+                      studentID: props.user._id,
+                    },
+                  });
+                }}
+                disabled={!hasResponse}
+                style={styles.button}
+              />
+            )}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -179,7 +237,7 @@ const styles = StyleSheet.create({
   container: {
     marginLeft: layout.spacing.xl,
     marginRight: layout.spacing.xl,
-    marginTop: layout.spacing.xl,
+    marginTop: layout.spacing.sm,
   },
   map: {
     width: Dimensions.get('window').width - layout.spacing.xl * 2,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -12,6 +12,8 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+
+import PrivacyPolicy from './PrivacyPolicy';
 
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -91,6 +93,7 @@ function RegisterForm({ auth }) {
           email: '',
           university: '',
           password: '',
+          checkedPrivacy: false,
         }}
         validationSchema={formSchema}
         onSubmit={onSubmit}>
@@ -167,24 +170,36 @@ function RegisterFooter({ disabled, isLoading, onSubmit }) {
 }
 
 function Register({ auth }) {
+  const [completedPrivacy, setcompletedPrivacy] = useState(0);
+
+  const onPrivacyAgree = () => {
+    console.log('privacy agreed');
+    setcompletedPrivacy(1);
+  };
   return (
-    <KeyboardAvoidingView
-      enabled
-      behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-      keyboardVerticalOffset={layout.spacing.lg}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SafeAreaView
-          style={{
-            marginTop: layout.defaultScreenMargins.vertical,
-            marginHorizontal: layout.defaultScreenMargins.horizontal,
-          }}>
-          <ScrollView>
-            <RegisterHeader />
-            <RegisterForm auth={auth} />
-          </ScrollView>
-        </SafeAreaView>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    <>
+      {completedPrivacy === 0 ? (
+        <PrivacyPolicy onAgree={() => onPrivacyAgree()} />
+      ) : (
+        <KeyboardAvoidingView
+          enabled
+          behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+          keyboardVerticalOffset={layout.spacing.lg}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <SafeAreaView
+              style={{
+                marginTop: layout.defaultScreenMargins.vertical,
+                marginHorizontal: layout.defaultScreenMargins.horizontal,
+              }}>
+              <ScrollView>
+                <RegisterHeader />
+                <RegisterForm auth={auth} />
+              </ScrollView>
+            </SafeAreaView>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      )}
+    </>
   );
 }
 
@@ -199,6 +214,7 @@ const registerScreenStyles = StyleSheet.create({
   noAccountText: {
     marginTop: layout.spacing.lg,
     textAlign: 'center',
+    marginBottom: layout.spacing.xxl,
   },
 });
 
