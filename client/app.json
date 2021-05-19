@@ -2,7 +2,7 @@
   "expo": {
     "name": "@studio2b-2021/client",
     "slug": "client",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -13,17 +13,21 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FAFAFA"
-      }
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB3OBDsx_EmsmHGezM1tD9VFYHgIWTGXzY"
+        }
+      },
+      "package": "com.arianjahiri.authme"
     },
     "web": {
       "favicon": "./assets/favicon.png"

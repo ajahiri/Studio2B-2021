@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "AuthMe",
+    "icon": "./client/assets/icon.png",
+    "version": "1.0.0",
+    "slug": "authme-slug",
+    "ios": {
+      "bundleIdentifier": "com.arianjahiri.authme",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.arianjahiri.authme",
+      "versionCode": 1
+    }
+  }
+}

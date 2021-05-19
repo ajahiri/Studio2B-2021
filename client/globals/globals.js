@@ -5,7 +5,7 @@ export const resolveBaseURL = () => {
     console.log(`Found API_URL in environment file. Using: http://${API_URL}`);
     return `http://${API_URL}`;
   } else {
-    const defaultURL = 'http://authme.arianjahiri.com:3000';
+    const defaultURL = 'https://authme.arianjahiri.com:3000';
     console.log(
       'Environment variable for API_URL not found. Using default: ',
       defaultURL,
