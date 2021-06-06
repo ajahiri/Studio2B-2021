@@ -1,4 +1,5 @@
 # Studio2B-2021
+### See full demonstration of the required output for this project: https://youtu.be/ygaXbzK4RTY
 
 A multi-level authentication method and system for teaching attendance.
 
