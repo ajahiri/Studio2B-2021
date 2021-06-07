@@ -24,7 +24,7 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyB3OBDsx_EmsmHGezM1tD9VFYHgIWTGXzY"
+          "apiKey": "################################"
         }
       },
       "package": "com.arianjahiri.authme"
